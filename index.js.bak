@@ -1,0 +1,56 @@
+const { Database } = require('./core/database.js');
+const bodyParser = require('body-parser');
+const express = require('express');
+var fs = require('fs');
+var cors = require('cors')
+const app = express();
+const path = require('path');
+
+//const { User } = require('./models/user');
+
+const database = new Database();
+database.iniciar();
+/*database.writeSQL(`
+CREATE TABLE sharks
+  (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    name   VARCHAR(50) NOT NULL,
+    color   VARCHAR(50) NOT NULL,
+    weight INTEGER NOT NULL
+  );`);
+*/
+//console.log("runSQL:",database.runSQL(`INSERT INTO sharks (name, color, weight) VALUES (?, ?, ?)`,['tiburon','rojo','23l']));
+console.log("runSQL:",database.runSQL(`SELECT * FROM sharks `));
+database.sql(`SELECT * FROM sharks where 1=1`).then((data)=>{
+    console.log("data",data);
+    console.log("end");
+});
+
+
+//const user = new User({ id: 1, firstName:'jorge', lastName:'tordoya'  });
+/*const user2 = new User({ id: 1, firstName:'jorge', lastName:'tordoya'  });
+
+
+async function cargar (){
+    const users = await User.findAll();
+    console.log(users);
+}*/
+
+
+
+
+//cargar();
+//console.log(user2);
+
+
+
+const port = 9988;
+var public = path.join(__dirname, 'public');
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use('/', express.static(public));
+
+app.listen(port, () => {
+    console.log(`Servidor iniciado en puerto ${port}`)
+})
