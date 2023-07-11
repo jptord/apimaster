@@ -22,27 +22,76 @@ class CtrlApi{
     toFields(data){
         let strArr = [];
         Object.keys(data).forEach( c => {
-            strArr.push(c);
+            //evitar las subconsultas
+            if (!data[c].includes('[[') && !data[c].includes('[') ) 
+                strArr.push(c);
         });
         return strArr.join(",");
     }
     toValues(data,req){
         let strArr = [];
         Object.keys(data).forEach( c => {
-            strArr.push("'"+req[c]+"'");
+            if (!data[c].includes('[[') && !data[c].includes('[') ) 
+                strArr.push("'"+req[c]+"'");
         });
         return strArr.join(",");
     }
     toValuesUpd(data,req){
         let strArr = [];
         Object.keys(data).forEach( c => {
-            strArr.push(`${c} = '${req[c]}'`);
+            if (!data[c].includes('[[') && !data[c].includes('[') ) 
+                strArr.push(`${c} = '${req[c]}'`);
         });
         return strArr.join(",");
     }
+    toRelations(data){
+        let strArr = [];
+        Object.keys(data).forEach( c => {
+            //evitar las subconsultas
+            if (data[c].includes("[[")) {
+                let subArr = data[c].replace("[[","").replace("]]","").trim().split("|");
+                console.log("data[c]",data[c]);
+                strArr.push({name:c,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:true});
+                return;
+            }
+            if (data[c].includes("[")) {
+                let subArr = data[c].replace("[","").replace("]","").trim().split("|");
+                console.log("data[c]",data[c]);
+                strArr.push({name:c,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:false});
+                return;
+            }
+        });
+        return strArr;
+    }
 
-    constructor(dbData){
+    appendSubquerys(content,data_fields){
+        let me = this;
+        let relations = this.toRelations(data_fields);
+        console.log("relations",relations);
+        relations.forEach(r => {
+            let idArr = [];
+            content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
+            //console.log("idArr",idArr);
+            let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
+            //console.log("relGroup,",relGroup);
+            let f = me.toFields(relGroup.data['select']);          
+            //console.log("relGroup.f ",f);
+            let res_temp = me.database.db.prepare(`select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) `).all();
+            //console.log("res_temp ",res_temp);
+            content.forEach(cc => {                
+                cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
+                if (!r.array)
+                    cc[r.name] = cc[r.name].length>0?cc[r.name][0]:null;
+            });
+            //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+        });
+        return content;
+    }
+
+    constructor(dbData,dbData_global=null){
         this.dbData = dbData;
+        this.dbData_global = dbData_global;
+
         if(this.dbData!==undefined){
             console.log("db_name",this.dbData.db);
             this.database = new Database(this.dbData.db);
@@ -76,17 +125,16 @@ class CtrlApi{
         this.dbData.groups.forEach(group => {
             group.apis.forEach(api => {
                 if (api.method == "GET"){
-                    console.log(`route GET /${group.name}${api.route}`);
-                    router.get(`/${group.name}/${api.route}`, async function (req, res){
+                    console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                    router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
                         let respuesta = {content: [],
                             pagination: { pages : 0, rowsNumber: 0 }
                         };
-                        let f = me.toFields(group.data[api.out]);
+                        let f = me.toFields(group.data[api.out]);                        
 
                         if (req.query.page != undefined && req.query.size != undefined &&
-                            req.query.sortBy != undefined && req.query.descending != undefined
-                             ){
+                            req.query.sortBy != undefined && req.query.descending != undefined){
                             let page = parseInt(req.query.page);
                             let size = parseInt(req.query.size);
                             let sort = req.query.sortBy;
@@ -96,18 +144,20 @@ class CtrlApi{
                             let rowsNumber = tot[0]['total'];
                             respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
                             respuesta.pagination.rowsNumber = rowsNumber;
-
+                            console.log("sel", `select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                             respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+                            
                         }else
                             respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} `).all();
-
+                        
+                        me.appendSubquerys(respuesta.content,group.data[api.out]);
                         res.end(JSON.stringify(respuesta));
                         //res.end(f);
                     });
                 }
                 if (api.method == "POST"){
-                    console.log(`route POST /${group.name}${api.route}`);
-                    router.post(`/${group.name}/${api.route}`, async function (req, res){
+                    console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
+                    router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
                         let respuesta = {content: [],
                             pagination: { pages : 0, rowsNumber: 0 }
@@ -122,8 +172,8 @@ class CtrlApi{
                     });
                 }
                 if (api.method == "PUT"){
-                    console.log(`route PUT /${group.name}/${api.route}`);
-                    router.put(`/${group.name}/${api.route}`, async function (req, res){
+                    console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                    router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
                         let respuesta = {content: [],
                             pagination: { pages : 0, rowsNumber: 0 }
@@ -137,8 +187,8 @@ class CtrlApi{
                     });
                 }
                 if (api.method == "DELETE"){
-                    console.log(`route DELETE /${group.name}/${api.route}`);
-                    router.delete(`/${group.name}/${api.route}`, async function (req, res){
+                    console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                    router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
                         let respuesta = {content: [],
                             pagination: { pages : 0, rowsNumber: 0 }

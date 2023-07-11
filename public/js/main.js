@@ -42,7 +42,7 @@ function cargarDBs(data){
             let grupoData = $(`
             <div class="form-group form-inline bg-light ">
                 <label>Sharks</label>
-                <textarea class="form-control form-control-sm" rows="4"></textarea>
+                <textarea class="form-control form-control-sm" rows="7"></textarea>
             </div>`);
             grupoData.find("label").html(g.name);
             //grupoData.find("textarea").html(JSON.stringify(g.data.select));

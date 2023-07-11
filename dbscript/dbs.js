@@ -178,7 +178,8 @@
                         "valor_documento": "string",
                         "estado": "string",
                         "codigo_cliente": "string",
-                        "tipo_documento_id": "number"
+                        "tipo_documento_id": "number",
+                        "tipo_documentos": "[tipo_documentos|id|tipo_documento_id]"
                     },
                     "select": {
                         "id": "number|pk",
@@ -186,14 +187,16 @@
                         "valor_documento": "string",
                         "estado": "string",
                         "codigo_cliente": "string",
-                        "tipo_documento_id": "number"
+                        "tipo_documento_id": "number",
+                        "tipo_documentos": "[tipo_documentos|id|tipo_documento_id]"
                     },
                     "insert": {
                         "nombre_razon_social": "string",
                         "valor_documento": "string",
                         "estado": "string",
                         "codigo_cliente": "string",
-                        "tipo_documento_id": "number"
+                        "tipo_documento_id": "number",
+                        "tipo_documentos": "[tipo_documentos|id|tipo_documento_id]"
                     }
                 },
                 "apis": [
@@ -246,6 +249,65 @@
                         "nombre": "string",
                         "sigla": "string",
                         "descripcion": "string"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            },
+            {
+                "name": "variables_configuracion",
+                "alias" : "variables",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "tipo": "string",
+                        "descripcion": "string",
+                        "valor": "string",
+                        "estado": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "tipo": "string",
+                        "descripcion": "string",
+                        "valor": "string",
+                        "estado": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "tipo": "string",
+                        "descripcion": "string",
+                        "valor": "string",
+                        "estado": "string"
                     }
                 },
                 "apis": [

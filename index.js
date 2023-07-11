@@ -53,7 +53,7 @@ fs.readdirSync(dbscript).forEach(file => {
   console.log(db_array);
 
   db_array.forEach( (db_var) => {
-    let ctrlapi = new CtrlApi(db_var);
+    let ctrlapi = new CtrlApi(db_var,db_array);
     app.use(`/${ctrlapi.dbData.db}`, ctrlapi.publicar());
   } );
   
