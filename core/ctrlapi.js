@@ -28,6 +28,7 @@ class CtrlApi{
         });
         return strArr.join(",");
     }
+    
     toValues(data,req){
         let strArr = [];
         Object.keys(data).forEach( c => {
@@ -36,6 +37,7 @@ class CtrlApi{
         });
         return strArr.join(",");
     }
+
     toValuesUpd(data,req){
         let strArr = [];
         Object.keys(data).forEach( c => {
