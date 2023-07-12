@@ -12,6 +12,7 @@ var corsOptions = {
 class CtrlApi{
 
     toColumnName(column, value){
+
         let values = value.split("|");
         let name = values[0];
         let pk = values.includes("pk");
@@ -106,10 +107,13 @@ class CtrlApi{
                 console.log("list table.columns", dataCreate);
                 let fieldsArr = [];
                 dataCreate.forEach(c => {
-                    fieldsArr.push(this.toColumnName(c,group.data.create[c]));
+                    if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
+                        fieldsArr.push(this.toColumnName(c,group.data.create[c]));
                 });
                 let fieldStr = fieldsArr.join(",");
                 console.log("fieldStr:",fieldStr);
+                console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
                 this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
             });
         }
@@ -117,7 +121,14 @@ class CtrlApi{
             console.log("db_name",null);
         }
     }
-
+    searchInside(e,regx){
+        if (typeof e === 'object' )
+            return Object.keys(e).filter( f => { return this.searchInside(e[f],regx); } ).length>0 ;
+        
+        if (Array.isArray( e ))
+            return e.filter( f => { return this.searchInside(e,regx); } ).length>0 ;
+        return e.toString().toLowerCase().match(regx);
+    }
     publicar(){
         var me = this;
         router.all('/info',cors(corsOptions),async function (req, res){
@@ -136,7 +147,7 @@ class CtrlApi{
                         let f = me.toFields(group.data[api.out]);                        
 
                         if (req.query.page != undefined && req.query.size != undefined &&
-                            req.query.sortBy != undefined && req.query.descending != undefined){
+                            req.query.sortBy != undefined && req.query.descending != undefined ){
                             let page = parseInt(req.query.page);
                             let size = parseInt(req.query.size);
                             let sort = req.query.sortBy;
@@ -147,12 +158,27 @@ class CtrlApi{
                             respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
                             respuesta.pagination.rowsNumber = rowsNumber;
                             console.log("sel", `select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
-                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+                            //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
+                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending}  `).all();
+                            me.appendSubquerys(respuesta.content,group.data[api.out]);
+
+                            if (req.query.keyword != undefined){
+                                if (req.query.keyword != ""){
+                                    let regx = new RegExp("^.*"+req.query.keyword.toLowerCase()+".*$");
+                                    respuesta.content = respuesta.content.filter( (e) => Object.keys(e).filter( f => { return me.searchInside(e[f],regx); } ).length>0 );
+                                    respuesta.pagination.rowsNumber = respuesta.content.length;
+                                }
+                            }
+
+                            respuesta.content = respuesta.content.slice(offset,offset+size);
+
                             
-                        }else
+                        }else{
                             respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} `).all();
-                        
-                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                            me.appendSubquerys(respuesta.content,group.data[api.out]);
+                        }                        
+    
+
                         res.end(JSON.stringify(respuesta));
                         //res.end(f);
                     });

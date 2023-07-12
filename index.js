@@ -86,6 +86,29 @@ fs.readdirSync(dbscript).forEach(file => {
   })
   
 
+  app.get("/getfrontend", (req,res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    const content = fs.readFileSync(`templates/angular.json`, 'utf8');
+
+    let template = eval(content)[0];
+    let result = [];
+
+    template.files.forEach( f => {
+      let contentFile = fs.readFileSync(`templates/${template.folder}/${f}`, 'utf8');
+      Object.keys(template.params).forEach( p => {
+        contentFile = contentFile.replaceAll(`{${p}}`,template.params[p]);
+      });
+      result.push({file:f,content:contentFile});
+
+    });
+
+    res.end(JSON.stringify(result));
+
+    //res.end(content);
+  })
+  
+
   //console.log("content:",content); 
 /*
   fs.writeFileSync(`${dbscript}dbs_array.js`, JSON.stringify(db_array, null, 4), function(err) {
@@ -96,3 +119,4 @@ fs.readdirSync(dbscript).forEach(file => {
     }
   }); */
 });
+

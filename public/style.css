@@ -1,3 +1,22 @@
 html{
     font-size: 9pt;
 }
+.table-condensed{
+    font-size: 9px;
+  }
+
+  .modal-dialog {
+    width: 100%;
+    max-width: none;
+    
+    margin: 0;
+  }
+
+  .modal-content {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+  }

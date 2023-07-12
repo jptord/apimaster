@@ -43,11 +43,45 @@ function cargarDBs(data){
             <div class="form-group form-inline bg-light ">
                 <label>Sharks</label>
                 <textarea class="form-control form-control-sm" rows="7"></textarea>
+                <button type="button" class="btn-gen-angular btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAngular">Generar CRUD - Angular</button>
+                <button type="button" class="btn-gen-spring btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalSpring">Generar API - Spring</button>
+                <button type="button" class="btn-gen-laravel btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalLaravel">Generar API - Laravel</button>
             </div>`);
+
+            
+
             grupoData.find("label").html(g.name);
             //grupoData.find("textarea").html(JSON.stringify(g.data.select));
             grupoData.find("textarea").html(JSON.stringify(g.data.select).replaceAll('{','').replaceAll('}','').replaceAll('"','').replaceAll(",","\n"));
             content.append(grupoData);
+           
+            $(grupoData.find(".btn-gen-angular")).click( (e) => {
+                console.log("here", g);
+                let tbodyFields = $(".tbodyFields");
+                tbodyFields.empty();
+                Object.keys(g.data.create).forEach( f => {
+                    let tr = $(`<tr><td><input class="form-control form-control-sm" disabled type="text" value="${f}"></td>
+                    <td><input class="form-control form-control-sm"  type="text" value="${f}"></td>
+                    <td><select class="form-select form-select-sm" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>                                    
+                    <td><select class="form-select form-select-sm" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-control form-control-sm"  type="value" value="0"></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox"  ></td>
+                    <td><input class="form-control form-control-sm"  type="value" value="255"></td>
+                    <td><input class="form-check-input form-checkbox-sm" type="checkbox" disabled ${esrelacionalchecked(g.data.create[f])} ></td>                                         
+                    <td><input class="form-control form-control-sm"  type="text" value="${relacionalval(g.data.create[f],"field")}"></td>
+                    <td><input class="form-control form-control-sm"  type="text" value="nombre"></td></tr> `);
+                    tbodyFields.append(tr);
+                });
+
+            });
 
             g.apis.forEach( (a => {
                 let apiTemp = $(`
@@ -58,7 +92,7 @@ function cargarDBs(data){
                 apiTemp.find("label").html(a.method);
                 let adds = ''
                 if (a.method == "GET"){
-                    adds = "?page=1&size=10&sortBy="+Object.keys(g.data.select)[0]+"&descending=false"
+                    adds = "?page=0&size=10&sortBy="+Object.keys(g.data.select)[0]+"&descending=false"
                 }
                 if (a.route== "")
                     apiTemp.find("input").val(`http://172.20.50.60:9988/${element.db}/${g.name}${adds}`);
@@ -71,8 +105,68 @@ function cargarDBs(data){
         //grupos.append(tempData);
         //grupos.append(tempData);
         $("#Contenido").append(template);
-    });
+    });    
+}
+
+function campo(valor){
+    if (valor.includes("[")){
+        //console.log("include",valor);
+        return "relational";
+    }
+
+    let temp_valor = valor.split("|");
+
+    if (temp_valor[0] == "string") return "text";
+    if (temp_valor[0] == "number") return "number";
     
+
+    return temp_valor[0];
+}
+function esdefault(valor,compara){    
+    if (valor.includes("[")){
+        return "selected";
+    }
+    let temp_valor = valor.split("|");
+    if (temp_valor[0] == "string") return "text" == compara?"selected":"";
+    if (temp_valor[0] == "number") return "number" == compara?"selected":"";
+
+    return temp_valor[0] == compara?"selected":"";
+}
+function relacional(valor){    
+    if (valor.includes("[")){
+        if (valor.includes("[[")){
+            let val_clean = valor.trim().replaceAll("[","").replaceAll("]","").split("|");
+            let dato = { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };
+            console.log("relational_dato",dato);
+            return dato;
+        }else{
+            let val_clean = valor.trim().replaceAll("[","").replaceAll("]","").split("|");
+            let dato = { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };
+            console.log("relational_dato",dato);
+            return dato;
+        }
+
+    }
+    return undefined;
+}
+function relacionalval(valor,prop){
+    let value = relacional(valor);
+    console.log("relacionalval.valor",valor);
+    console.log("relacionalval.value",value);
+    if ( value!==undefined )
+        return value[prop];
+    else 
+        return "";
+}
+function esrelacional(valor){    
+    if (valor.includes("["))
+        return true;
+    return false;
+}
+function esrelacionalchecked(valor){    
+    if (valor.includes("["))
+        return "checked";    
+    return "";
 }
 
 function agregarGrupo(event,index){
