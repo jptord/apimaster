@@ -10,7 +10,8 @@
         "listado/listado.component.scss",
         "listado/listado.component.ts",
         "xnombrex.module.ts",
-        "xnombrex-routing.module.ts"
+        "xnombrex-routing.module.ts",
+        "app-routing.module.ts"
         ],
         
     "params": {

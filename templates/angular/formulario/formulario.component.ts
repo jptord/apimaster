@@ -1,16 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-  OnInit,
-} from "@angular/core";
+import { Component,  EventEmitter,  Input,  Output,  ViewChild,  OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
 import { {xnombrecapx}Service } from "src/app/core/services/{xnombrex}.service";
-import { TipodocumentoService } from "src/app/core/services/tipodocumento.service";
-
+{xrelations_includex}
 @Component({
   selector: "app-formulario",
   templateUrl: "./formulario.component.html",
@@ -24,7 +16,7 @@ export class FormularioComponent implements OnInit {
 
   @Input() dataEdit: any;
 
-  tipo_documentos: any = [];
+  {xrelations_varx}
   estados: any = [
     { value: "habilitado", name: "Habilitado" },
     { value: "deshabilitado", name: "Deshabilitado" },

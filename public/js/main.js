@@ -10,7 +10,7 @@ CodeMirror.commands.autocomplete = function(cm) {
 let data_db;
 
 $.ajax({ 
-    url:"http://172.20.50.60:9988/db_all", dataType: 'json', data: {}, method: 'GET' })
+    url:"/db_all", dataType: 'json', data: {}, method: 'GET' })
         .done(function (data) {
             data_db = data;
             console.log("get_db > ", data);
@@ -27,8 +27,10 @@ $( document ).ready(function() {
     $("[data-param='xnombrex']").change((e)=>{
 
         let t = $("[data-param='xnombrex']").val();
-        if (t.length ==0) return;
+        if (t.length ==0) return;        
+        t = t.replaceAll("_","").replaceAll(" ","");
         t = t.toLowerCase();
+        $("[data-param='xnombrex']").val(t);
         let tC = t[0].toUpperCase()+ t.substring(1, t.length);
         let tCs = tC[tC.length-1] == "s"?tC.substring(0,t.length-1):tC;
         $("[data-param='xnombrecapx']").val( tC );
@@ -40,7 +42,7 @@ $( document ).ready(function() {
     });
     $("#btnGenerarAngular").click((e)=>{        
         $.ajax({ 
-            url:"http://172.20.50.60:9988/getfrontend?framework=angular", dataType: 'json', data: {}, method: 'GET' })
+            url:"/getfrontend?framework=angular", dataType: 'json', data: {}, method: 'GET' })
                 .done(function (data) {                   
                     
                     console.log("---data:",data);         
@@ -136,13 +138,11 @@ function prepareHeaders(data){
                         <option *ngFor="let t of [{relation}]" value="{{t.[{id}]}}"  >{{t.[{nombre}]}} </option>
                         </select>
                     </div>`;
-    let xrefieldx = ""
+    let xrefieldx = ""    
     data.cabecera.forEach(campo => {
-
         if (campo.esrelacion){
             let cabRep = cabrel;
-
-            cabRep  = cabRep.replaceAll("{required}",campo.required?"required":"");
+            cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
             cabRep  = cabRep.replaceAll("[{relation}]",campo.relacion_tabla);
@@ -150,15 +150,66 @@ function prepareHeaders(data){
             cabRep  = cabRep.replaceAll("[{nombre}]",campo.relacion_nombre);
             xrefieldx += "\n" + cabRep;
         }else{
-
             let cabRep = cab;
-            cabRep  = cabRep.replaceAll("{required}",campo.required?"required":"");
+            cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
             xrefieldx += "\n" + cabRep;
         }
     });
     data.params['xrefieldx'] = xrefieldx;
+
+    let xformbuilderx = [];
+    data.cabecera.forEach(campo => {
+        let validators = [];
+        if (campo.tienemin) validators.push(`Validators.minLength(${campo.min})`);
+        if (campo.tienemax) validators.push(`Validators.maxLength(${campo.max})`);
+        if (campo.requerido) validators.push(`Validators.required`);
+        xformbuilderx.push(`${campo.campo}:["",[${validators.join(',')}] ]`);
+    });
+    data.params['xformbuilderx'] = `{${xformbuilderx.join(",")}}`;
+
+    let xformeditx = [];
+    data.cabecera.forEach(campo => {
+        xformeditx.push(`${campo.campo}:this.dataEdit.${campo.campo}`);
+    });
+    data.params['xformeditx'] = `{${xformeditx.join(",")}}`;
+
+    let xrelations_constructorx = [];
+    data.cabecera.forEach(campo => {
+        if (campo.esrelacion){  
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length);
+            xrelations_constructorx.push(`private ${strCap}Service: ${strCap}Service`);
+        }
+    });
+    data.params['xrelations_constructorx'] = `${xrelations_constructorx.join(",")}`;
+
+    let xrelations_includex = [];
+    data.cabecera.forEach(campo => {
+        if (campo.esrelacion){
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length);
+            xrelations_includex.push(`import { ${strCap}Service } from 'src/app/core/services/${strCap}.service';`);
+        }
+    });
+    data.params['xrelations_includex'] = `${xrelations_includex.join(",\n")}`;
+
+    let xrelations_varx = [];
+    data.cabecera.forEach(campo => {
+        if (campo.esrelacion){
+            xrelations_varx.push(`${campo.relacion_tabla}:any = [];`);
+        }
+    });
+    data.params['xrelations_varx'] = `${xrelations_varx.join(",\n")}`;
+
+    let xrelations_initx = [];
+    data.cabecera.forEach(campo => {
+        if (campo.esrelacion){
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length);
+            xrelations_initx.push(`this.${strCap}Service.getAll().subscribe((res:any) => { this.${campo.relacion_tabla} = res.content; });`);
+        }
+    });
+    data.params['xrelations_initx'] = `${xrelations_initx.join(",\n")}`;
+    
 
 }
 function addFiles(data){
@@ -277,6 +328,12 @@ function cargarDBs(data){
            
             $(grupoData.find(".btn-gen-angular")).click( (e) => {
                 console.log("here", g);
+
+                let v_pills_tab = $("#v-pills-tab");
+                let v_pills_tabContent = $("#v-pills-tabContent");
+                v_pills_tab.empty();
+                v_pills_tabContent.empty();
+
                 let tbodyFields = $(".tbodyFields");
                 tbodyFields.empty();
                 Object.keys(g.data.create).forEach( f => {
@@ -293,13 +350,13 @@ function cargarDBs(data){
                     let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
                     <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
                     <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox"  ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox"  ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscable" type="checkbox"  ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscablecheck" type="checkbox"  ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visiblecheck" type="checkbox"  ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="sortable" type="checkbox"  ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="filtrable" type="checkbox"  ></td>                                    
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscable" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscablecheck" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visiblecheck" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="sortable" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="filtrable" type="checkbox" checked ></td>                                    
                     <td><select class="form-select form-select-sm" data-cabecera="filtrabletipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
                     <td><input class="${esrelacional2(forRel)?'d-none ':''}form-check-input form-checkbox-sm" data-cabecera="tienemin" type="checkbox"  ></td>
                     <td><input class="${esrelacional2(forRel)?'d-none ':''}form-control form-control-sm"  data-cabecera="min" type="value" value="0"></td>
@@ -342,9 +399,9 @@ function cargarDBs(data){
                     adds = "?page=0&size=10&sortBy="+Object.keys(g.data.select)[0]+"&descending=false"
                 }
                 if (a.route== "")
-                    apiTemp.find("input").val(`http://172.20.50.60:9988/${element.db}/${g.name}${adds}`);
+                    apiTemp.find("input").val(`/${element.db}/${g.name}${adds}`);
                 else
-                    apiTemp.find("input").val(`http://172.20.50.60:9988/${element.db}/${g.name}/${a.route}${adds}`);
+                    apiTemp.find("input").val(`/${element.db}/${g.name}/${a.route}${adds}`);
                 content.append(apiTemp);
             }));           
             gruposDiv.append(content);
@@ -497,7 +554,7 @@ function guardarGrupo(event){
 
 function saveDBs(data){
     $.ajax({ 
-        url:"http://172.20.50.60:9988/save_all", dataType: 'json', data: {content: JSON.stringify(data)}, method: 'POST' })
+        url:"/save_all", dataType: 'json', data: {content: JSON.stringify(data)}, method: 'POST' })
             .done(function (data) {
                 console.log("get_db > ", data);
             } );
