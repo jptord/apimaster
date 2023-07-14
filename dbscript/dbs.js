@@ -547,5 +547,236 @@
                 ]
             }
         ]
+    },
+    {
+        "db": "tesoreria",
+        "groups": [
+            {
+                "name": "tipoentidad",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string"
+                    },
+                    "insert": {
+                        "nombre": "string"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            },
+            {
+                "name": "entidades",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "tipoentidad_id":"number",
+                        "tipoentidad": "[tipoentidad|id|tipoentidad_id]",
+                        "nombre": "string",
+                        "identificacion": "string",
+                        "correo": "string",
+                        "telefono": "number",
+                        "direccion": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "tipoentidad_id":"number",
+                        "tipoentidad": "[tipoentidad|id|tipoentidad_id]",
+                        "nombre": "string",
+                        "identificacion": "string",
+                        "correo": "string",
+                        "telefono": "number",
+                        "direccion": "string"
+                    },
+                    "insert": {
+                        "tipoentidad_id":"number",
+                        "tipoentidad": "[tipoentidad|id|tipoentidad_id]",
+                        "nombre": "string",
+                        "identificacion": "string",
+                        "correo": "string",
+                        "telefono": "number",
+                        "direccion": "string"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            },
+            {
+                "name": "pagos_estados",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            },
+            {
+                "name": "pagos",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "fecha_estimada": "date",
+                        "fecha_pago": "date",
+                        "monto": "number",
+                        "saldo": "number",
+                        "entidad_pago_id": "number",
+                        "entidad": "[pagos_estados|id|entidad_pago_id]",
+                        "estado_id": "number",
+                        "pagos_estados": "[pagos_estados|id|estado_id]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "fecha_estimada": "date",
+                        "fecha_pago": "date",
+                        "monto": "number",
+                        "saldo": "number",
+                        "entidad_pago_id": "number",
+                        "entidad": "[entidades|id|entidad_pago_id]",
+                        "estado_id": "number",
+                        "pagos_estados": "[pagos_estados|id|estado_id]"
+                    },
+                    "insert": {
+                        "fecha_estimada": "date",
+                        "fecha_pago": "date",
+                        "monto": "number",
+                        "saldo": "number",
+                        "entidad_pago_id": "number",
+                        "entidad": "[entidades|id|entidad_pago_id]",
+                        "estado_id": "number",
+                        "pagos_estados": "[pagos_estados|id|estado_id]"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            }
+        ]
     }
 ]

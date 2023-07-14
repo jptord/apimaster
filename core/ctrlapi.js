@@ -18,6 +18,7 @@ class CtrlApi{
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `${column} INTEGER PRIMARY KEY AUTOINCREMENT`;
         if (name == "number" ) return `${column} FLOAT`;
+        if (name == "date" ) return `${column} DATE`;
         if (name == "string" ) return `${column} VARCHAR(255)`;
     }
     toFields(data){
@@ -122,7 +123,9 @@ class CtrlApi{
         }
     }
     searchInside(e,regx){
-        if (typeof e === 'object' )
+        console.log("searchInside.e:",e);
+        if (e==null) return false;
+        if (typeof e === 'object'  )
             return Object.keys(e).filter( f => { return this.searchInside(e[f],regx); } ).length>0 ;
         
         if (Array.isArray( e ))
@@ -192,6 +195,7 @@ class CtrlApi{
                         };
                         let f = me.toFields(group.data[api.in]);
                         let v = me.toValues(group.data[api.in],req.body);
+                        console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
                         me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();
                         respuesta.content = req.body;
                         console.log("req.body:",req);

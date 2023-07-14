@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { {xnombrecapx}Service } from "src/app/core/services/{xnombrex}.service";
+import { CuentasService } from "src/app/core/services/cuentas.service";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
-{xrelations_includex}
+import { GruposService } from 'src/app/core/services/Grupos.service';
 
 type NewType = NotificacionService;
 
@@ -16,19 +16,19 @@ export class ListadoComponent implements OnInit {
 
   formato: any;
   dataEdit = null;
-  titulo: any = "{xtitulox}";
+  titulo: any = "Listado de Cuentas";
 
-  {xrelations_varx}
+  grupos:any = [];
 
   constructor(
-    public {xnombrecapx}Service: {xnombrecapx}Service,
+    public CuentasService: CuentasService,
     private modalService: BsModalService,
     private NotificacionService: NotificacionService
   ) {}
 
   ngOnInit(): void {
     this.formato = {
-      cabeceras: {xcabecerasx}
+      cabeceras: {"id":{"visible":true,"buscable":true,"sortable":true,"filtrable":true,"texto":"id","filtrotipo":"number"},"nombre":{"visible":true,"buscable":true,"sortable":true,"filtrable":true,"texto":"nombre","filtrotipo":"text"},"estado":{"visible":true,"buscable":true,"sortable":true,"filtrable":true,"texto":"estado","filtrotipo":"text"},"grupo_id":{"visible":true,"buscable":true,"sortable":true,"filtrable":true,"texto":"grupo_id","filtrotipo":"number","mascara":{"campo":"id","nombre":"id"}}}
     };
   }
 
@@ -45,7 +45,7 @@ export class ListadoComponent implements OnInit {
     });
   }
   habilitar(data: any, component) {
-    this.{xnombrecapx}Service.habilitar(data, data.id).subscribe(
+    this.CuentasService.habilitar(data, data.id).subscribe(
       (data) => {
         component.obtenerDatos();
         this.NotificacionService.successStandar(
@@ -58,7 +58,7 @@ export class ListadoComponent implements OnInit {
     );
   }
   deshabilitar(data: any, component) {
-    this.{xnombrecapx}Service.deshabilitar(data, data.id).subscribe(
+    this.CuentasService.deshabilitar(data, data.id).subscribe(
       (data) => {
         component.obtenerDatos();
         this.NotificacionService.successStandar(
@@ -74,7 +74,7 @@ export class ListadoComponent implements OnInit {
   eliminar(data: any, component) {
     this.NotificacionService.alertaEliminacion(data.nombre, (response: any) => {
       if (response) {
-        this.{xnombrecapx}Service.delete(data.id).subscribe(
+        this.CuentasService.delete(data.id).subscribe(
           (data) => {
             component.obtenerDatos();
             this.NotificacionService.successStandar(

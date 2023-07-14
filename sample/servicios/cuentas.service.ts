@@ -8,9 +8,9 @@ import { ApiServicio } from './apiservicio';
 @Injectable({
   providedIn: 'root'
 })
-export class {xnombrecapx}Service {
+export class CuentasService {
   apiUrlContabilidad = environment.apiUrlContabilidad ;
-  apiName = '{xapix}';
+  apiName = 'cuentas';
   constructor(private http: HttpClient) { }
 
   register(datos: any) {
@@ -30,12 +30,12 @@ export class {xnombrecapx}Service {
   }
 
   habilitar(datos:any,id: string | number): Observable<any> {
-    datos['{xtitulox}'] = '{xestadoenabledx}';
+    datos['Listado de Cuentas'] = 'habilitar';
     return this.http.put(this.apiUrlContabilidad + `/${this.apiName}/${datos.id}`, datos);
   }
 
   deshabilitar(datos:any,id: string | number): Observable<any> {
-    datos['{xtitulox}'] = '{xestadodisabledx}';
+    datos['Listado de Cuentas'] = 'deshabilitar';
     return this.http.put(this.apiUrlContabilidad + `/${this.apiName}/${datos.id}`, datos);
   }
 }

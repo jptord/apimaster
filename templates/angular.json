@@ -2,18 +2,22 @@
 
     "folder" : "angular",
     "files": [
-        "servicios/xnombrex.service.ts",
-        "formulario/formulario.component.html",
-        "formulario/formulario.component.scss",
-        "formulario/formulario.component.ts",
-        "listado/listado.component.html",
-        "listado/listado.component.scss",
-        "listado/listado.component.ts",
-        "xnombrex.module.ts",
-        "xnombrex-routing.module.ts",
-        "app-routing.module.ts"
+        "xnombrex/formulario/formulario.component.html",
+        "xnombrex/formulario/formulario.component.scss",
+        "xnombrex/formulario/formulario.component.ts",
+        "xnombrex/listado/listado.component.html",
+        "xnombrex/listado/listado.component.scss",
+        "xnombrex/listado/listado.component.ts",
+        "xnombrex/xnombrex.module.ts",
+        "xnombrex/xnombrex-routing.module.ts",
+        "xnombrex/servicios/xnombrex.service.ts",
+        "app-routing.module.ts",
+        "menu.ts"
         ],
-        
+    "injection":[
+      {file:"app-routing.module.ts","where":"/home/jtordoya/dev/contabilidad3/kernobi_contabilidad_ui/src/app/app-routing.module.ts",before:"const routes: Routes = ["},
+      {file:"menu.ts","where":"/home/jtordoya/dev/contabilidad3/kernobi_contabilidad_ui/src/app/layouts/sidebar/menu.ts",before:"export const MENU: MenuItem[] = ["}
+    ],
     "params": {
         "xnombrex" : "clientes",
         "xnombrecapx" : "Clientes",

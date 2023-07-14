@@ -1,8 +1,8 @@
 import { Component,  EventEmitter,  Input,  Output,  ViewChild,  OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
-import { {xnombrecapx}Service } from "src/app/core/services/{xnombrex}.service";
-{xrelations_includex}
+import { CuentasService } from "src/app/core/services/cuentas.service";
+import { GruposService } from 'src/app/core/services/Grupos.service';
 @Component({
   selector: "app-formulario",
   templateUrl: "./formulario.component.html",
@@ -16,7 +16,7 @@ export class FormularioComponent implements OnInit {
 
   @Input() dataEdit: any;
 
-  {xrelations_varx}
+  grupos:any = [];
   estados: any = [
     { value: "habilitado", name: "Habilitado" },
     { value: "deshabilitado", name: "Deshabilitado" },
@@ -25,8 +25,8 @@ export class FormularioComponent implements OnInit {
   constructor(
     private FormBuilder: FormBuilder,
     private notificacionService: NotificacionService,
-    private {xnombrecapx}Service: {xnombrecapx}Service,
-    {xrelations_constructorx}
+    private CuentasService: CuentasService,
+    private GruposService: GruposService
   ) {}
 
   get form() {
@@ -38,10 +38,10 @@ export class FormularioComponent implements OnInit {
   }
 
   ngOnInit(): void {    
-    {xrelations_initx}
-    this.formGroup = this.FormBuilder.group({xformbuilderx});
+    this.GruposService.getAll().subscribe((res:any) => { this.grupos = res.content; });
+    this.formGroup = this.FormBuilder.group({id:["",[Validators.required] ],nombre:["",[Validators.required] ],estado:["",[Validators.required] ],grupo_id:["",[Validators.required] ]});
     if (this.dataEdit != null) {
-      this.formGroup.setValue({xformeditx});
+      this.formGroup.setValue({id:this.dataEdit.id,nombre:this.dataEdit.nombre,estado:this.dataEdit.estado,grupo_id:this.dataEdit.grupo_id});
     }
   }
 
@@ -51,7 +51,7 @@ export class FormularioComponent implements OnInit {
       this.submitted = false;
       let sendData = this.formGroup.value;
       if (this.dataEdit == null) {
-        this.{xnombrecapx}Service.register(sendData).subscribe(
+        this.CuentasService.register(sendData).subscribe(
           (res: any) => {
             this.notificacionService.successStandar();
             this.alGuardar.emit(res);
@@ -61,7 +61,7 @@ export class FormularioComponent implements OnInit {
           }
         );
       } else {
-        this.{xnombrecapx}Service.update(sendData, this.dataEdit.id).subscribe(
+        this.CuentasService.update(sendData, this.dataEdit.id).subscribe(
           (res: any) => {
             this.notificacionService.successStandar();
             this.alActualizar.emit(res);

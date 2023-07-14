@@ -8,106 +8,25 @@ CodeMirror.commands.autocomplete = function(cm) {
 }
 
 let data_db;
+let data_generated;
 
-$.ajax({ 
-    url:"/db_all", dataType: 'json', data: {}, method: 'GET' })
-        .done(function (data) {
-            data_db = data;
-            console.log("get_db > ", data);
-            cargarDBs(data);
-        }
-);
+
 function fem(texto){
     if (["o","l","on","or","un","e"].includes(texto[texto.length-1]))
         return "o";
     else 
     return "a";
 }
-$( document ).ready(function() {
-    $("[data-param='xnombrex']").change((e)=>{
 
-        let t = $("[data-param='xnombrex']").val();
-        if (t.length ==0) return;        
-        t = t.replaceAll("_","").replaceAll(" ","");
-        t = t.toLowerCase();
-        $("[data-param='xnombrex']").val(t);
-        let tC = t[0].toUpperCase()+ t.substring(1, t.length);
-        let tCs = tC[tC.length-1] == "s"?tC.substring(0,t.length-1):tC;
-        $("[data-param='xnombrecapx']").val( tC );
-        $("[data-param='xapix']").val( t );
-        $("[data-param='xtitulox']").val( `Listado de ${tC}` );
-        $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );
-        $("[data-param='xtitleEditarx']").val( `Editar ${tCs} {{dataEdit.nombre}}` );
-        
-    });
-    $("#btnGenerarAngular").click((e)=>{        
-        $.ajax({ 
-            url:"/getfrontend?framework=angular", dataType: 'json', data: {}, method: 'GET' })
-                .done(function (data) {                   
-                    
-                    console.log("---data:",data);         
-                    console.log("framework > ", data);
-                    let params = [];
-                    Object.keys(data.params).forEach( p => {
-                        let par = $(`[data-param="${p}"]`);
-                        if (par.length !=0)
-                            params[p] = par.val();
-                        else
-                            params[p] = data.params[p];
-                    } );
 
-                    let cabeceras = [];
-
-                    let tbodyFields = $(".tbodyFields");
-                    console.log("tbodyFields:",tbodyFields);
-                    console.log("tbodyFields.tr:",tbodyFields.find('tr'));
-                    tbodyFields.find('tr').each((i,e) => {
-                        cabeceras.push({
-                            campo : $(e).find(`[data-cabecera="campo"]`).val(),
-                            texto : $(e).find(`[data-cabecera="texto"]`).val(),
-                            tipo : $(e).find(`[data-cabecera="tipo"]`).val(),
-                            requerido : $(e).find(`[data-cabecera="requerido"]`).prop('checked'),
-                            visible : $(e).find(`[data-cabecera="visible"]`).prop('checked'),
-                            buscable : $(e).find(`[data-cabecera="buscable"]`).prop('checked'),
-                            buscablecheck : $(e).find(`[data-cabecera="buscablecheck"]`).prop('checked'),
-                            visiblecheck : $(e).find(`[data-cabecera="visiblecheck"]`).prop('checked'),
-                            sortable : $(e).find(`[data-cabecera="sortable"]`).prop('checked'),
-                            filtrable : $(e).find(`[data-cabecera="filtrable"]`).prop('checked'),
-                            filtrabletipo : $(e).find(`[data-cabecera="filtrabletipo"]`).val(),
-                            tienemin : $(e).find(`[data-cabecera="tienemin"]`).prop('checked'),
-                            min : $(e).find(`[data-cabecera="min"]`).val(),
-                            tienemax : $(e).find(`[data-cabecera="tienemax"]`).prop('checked'),
-                            max : $(e).find(`[data-cabecera="max"]`).val(),
-                            esrelacion : $(e).find(`[data-cabecera="esrelacion"]`).prop('checked'),
-                            relacion_campo : $(e).find(`[data-cabecera="relacion_campo"]`).val(),
-                            relacion_nombre : $(e).find(`[data-cabecera="relacion_nombre"]`).val(),
-                            relacion_tabla :  $(e).find(`[data-cabecera="relacion_tabla"]`).val(),
-                        });
-                    })
-                    //let xnombrecapx = $(`[data-param="xnombrecapx"]`).val();
-                    //console.log("xnombrecapx:",xnombrecapx);
-                    data.cabecera = cabeceras;
-                    data.params = params;
-                    console.log("cabeceras:",cabeceras);
-                    console.log("params:",params);
-                    console.log("data:",data);
-
-                    prepareHeaders(data);
-
-                    addFiles(data);
-
-                }
-        );
-    });
-});
 function prepareHeaders(data){
     let xcabecerasx = {};
     data.cabecera.forEach(campo => {
         xcabecerasx[campo.campo] = {
             visible: campo.visible,
             buscable: campo.buscable,
-            buscableCheck: campo.buscableCheck,
-            visibleCheck: campo.visibleCheck,
+            buscableCheck: campo.buscablecheck,
+            visibleCheck: campo.visiblecheck,
             sortable: campo.sortable,
             filtrable: campo.filtrable,
             texto: campo.texto,
@@ -115,42 +34,48 @@ function prepareHeaders(data){
         };
         if (campo.esrelacion){
             xcabecerasx[campo.campo]['mascara'] = {
-                campo: campo.relacion_campo,
-                nombre: campo.relacion_nombre
+                campo: campo.relacion_tabla,
+                valor: campo.relacion_nombre
             } ;
         }
         
     });
+    console.log("xcabecerasx.generated",xcabecerasx);
     data.params['xcabecerasx'] = JSON.stringify(xcabecerasx);
 
-    let cab =  `<div class="mb-6">
+    let cab =  `<div class="mb-6 {xvisiblex}">
                     <label for="nombre">{texto} </label>
-                    <input type="text" class="form-control uppercase" id="{campo}" (click)="alCambiar(form)" {required} formControlName="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
+                    <input type="{tipo}" class="form-control uppercase" id="{campo}" (click)="alCambiar(form)" {required} formControlName="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
                     <div *ngIf="submitted && form['{campo}'].errors" class="invalid-feedback" align="left">
                     <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
                     <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
                     <div *ngIf="form['{campo}'].errors['maxlength']">Debe tener menos de {{form['{campo}'].errors['maxlength']['requiredLength']}} caracteres</div>
                     </div>
                 </div>`;
-    let cabrel =   `<div class="mb-6">
+    let cabrel =   `<div class="mb-6 {xvisiblex}">
                         <label for="formrow-firstname-input ">{texto}</label>
                         <select class="form-control form-select" id="{campo}" formControlName="{campo}" name="{campo}">
                         <option *ngFor="let t of [{relation}]" value="{{t.[{id}]}}"  >{{t.[{nombre}]}} </option>
                         </select>
                     </div>`;
-    let xrefieldx = ""    
+    let xrefieldx = ""   
+    let xrelfile = "";
+
     data.cabecera.forEach(campo => {
         if (campo.esrelacion){
             let cabRep = cabrel;
+            cabRep  = cabRep.replaceAll("{xvisiblex}",campo.visible?"":"d-none");
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
+            cabRep  = cabRep.replaceAll("{tipo}",campo.tipo);
             cabRep  = cabRep.replaceAll("[{relation}]",campo.relacion_tabla);
             cabRep  = cabRep.replaceAll("[{id}]",campo.relacion_campo);
             cabRep  = cabRep.replaceAll("[{nombre}]",campo.relacion_nombre);
             xrefieldx += "\n" + cabRep;
         }else{
             let cabRep = cab;
+            cabRep  = cabRep.replaceAll("{xvisiblex}",campo.visible?"":"d-none");
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
@@ -162,9 +87,9 @@ function prepareHeaders(data){
     let xformbuilderx = [];
     data.cabecera.forEach(campo => {
         let validators = [];
-        if (campo.tienemin) validators.push(`Validators.minLength(${campo.min})`);
-        if (campo.tienemax) validators.push(`Validators.maxLength(${campo.max})`);
         if (campo.requerido) validators.push(`Validators.required`);
+        if (campo.tienemin) validators.push(`Validators.minLength(${campo.min})`);
+        if (campo.tienemax) validators.push(`Validators.maxLength(${campo.max})`);        
         xformbuilderx.push(`${campo.campo}:["",[${validators.join(',')}] ]`);
     });
     data.params['xformbuilderx'] = `{${xformbuilderx.join(",")}}`;
@@ -187,8 +112,9 @@ function prepareHeaders(data){
     let xrelations_includex = [];
     data.cabecera.forEach(campo => {
         if (campo.esrelacion){
-            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length);
-            xrelations_includex.push(`import { ${strCap}Service } from 'src/app/core/services/${strCap}.service';`);
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length).replaceAll("_","");
+            let strCapLittle = strCap.toLowerCase();
+            xrelations_includex.push(`import { ${strCap}Service } from '../servicios/${strCapLittle}.service';`);
         }
     });
     data.params['xrelations_includex'] = `${xrelations_includex.join(",\n")}`;
@@ -202,10 +128,20 @@ function prepareHeaders(data){
     data.params['xrelations_varx'] = `${xrelations_varx.join(",\n")}`;
 
     let xrelations_initx = [];
+
+    console.log("data.files",data.files);
+    let fileService = data.files.find(f => f.file.includes("xnombrex.service.ts") );
     data.cabecera.forEach(campo => {
         if (campo.esrelacion){
-            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length);
-            xrelations_initx.push(`this.${strCap}Service.getAll().subscribe((res:any) => { this.${campo.relacion_tabla} = res.content; });`);
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length).replaceAll("_","");
+            let strCapLittle = strCap.toLowerCase();
+            let fileServiceClone = {... fileService};
+            console.log("fileServiceClone",fileServiceClone);
+            fileServiceClone.content = fileServiceClone.content.replaceAll("{xnombrecapx}",strCap);
+            fileServiceClone.content = fileServiceClone.content.replaceAll("{xapix}",campo.relacion_tabla);
+            fileServiceClone.file = fileServiceClone.file.replaceAll("xnombrex.service",strCapLittle+".service"); 
+            data.files.push(fileServiceClone);
+            xrelations_initx.push(`this.${strCap}Service.getAll(100, 1, '${campo.relacion_nombre}', false, '').subscribe((res:any) => { this.${campo.relacion_tabla} = res.content; });`);
         }
     });
     data.params['xrelations_initx'] = `${xrelations_initx.join(",\n")}`;
@@ -254,6 +190,7 @@ function addFiles(data){
             theme: "neonsyntax",
             lineWrapping: true,
             lineNumbers: true,
+            lineWrapping: false,
             styleActiveLine: true,
             matchBrackets: true,
 
@@ -350,19 +287,19 @@ function cargarDBs(data){
                     let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
                     <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
                     <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox" checked ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox"  ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscable" type="checkbox" checked ></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscablecheck" type="checkbox" checked ></td>
-                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visiblecheck" type="checkbox" checked ></td>
+                    <td><input class="form-check-input form-checkbox-sm" data-cabecera="visiblecheck" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="sortable" type="checkbox" checked ></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="filtrable" type="checkbox" checked ></td>                                    
                     <td><select class="form-select form-select-sm" data-cabecera="filtrabletipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''}form-check-input form-checkbox-sm" data-cabecera="tienemin" type="checkbox"  ></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''}form-control form-control-sm"  data-cabecera="min" type="value" value="0"></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''}form-check-input form-checkbox-sm" data-cabecera="tienemax" type="checkbox"  ></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''}form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''}form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>                                         
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemin" type="checkbox"  ></td>
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="min" type="value" value="0"></td>
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemax" type="checkbox"  ></td>
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>                                         
                     <td><input class="d-none form-control form-control-sm" data-cabecera="relacion_tabla" type="text" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
                     <td><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_nombre"></select></td></tr> `);
                     //let r = relacional(g.data.create[f]);                  
@@ -411,7 +348,11 @@ function cargarDBs(data){
         $("#Contenido").append(template);
     });    
 }
-
+function esPK(valor,si,no=''){
+    if (valor.includes("pk")) return "";
+    return no;
+        
+}
 function campo(valor){
     if (valor.includes("[")){
         //console.log("include",valor);
@@ -422,6 +363,7 @@ function campo(valor){
 
     if (temp_valor[0] == "string") return "text";
     if (temp_valor[0] == "number") return "number";
+    if (temp_valor[0] == "date") return "date";
     
 
     return temp_valor[0];
@@ -560,3 +502,125 @@ function saveDBs(data){
             } );
     
 }
+
+
+
+
+
+$( document ).ready(function() {
+    $("[data-param='xnombrex']").change((e)=>{
+
+        let t = $("[data-param='xnombrex']").val();
+        if (t.length ==0) return;        
+        t = t.replaceAll("_","").replaceAll(" ","");
+        t = t.toLowerCase();
+        $("[data-param='xnombrex']").val(t);
+        let tC = t[0].toUpperCase()+ t.substring(1, t.length);
+        let tCs = tC[tC.length-1] == "s"?tC.substring(0,t.length-1):tC;
+        $("[data-param='xnombrecapx']").val( tC );
+        $("[data-param='xapix']").val( t );
+        $("[data-param='xtitulox']").val( `Listado de ${tC}` );
+        $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );
+        $("[data-param='xtitleEditarx']").val( `Editar ${tCs} {{dataEdit.nombre}}` );
+        
+    });
+    $("#btnGenerarAngular").click((e)=>{        
+        $.ajax({ 
+            url:"/getfrontend?framework=angular", dataType: 'json', data: {}, method: 'GET' })
+                .done(function (data) {                   
+                    
+                    console.log("---data:",data);         
+                    console.log("framework > ", data);
+                    let params = {};
+                    Object.keys(data.params).forEach( p => {
+                        let par = $(`[data-param="${p}"]`);
+                        if (par.length !=0)
+                            params[p] = par.val();
+                        else
+                            params[p] = data.params[p];
+                    } );
+
+                    let cabeceras = [];
+
+                    let tbodyFields = $(".tbodyFields");
+                    console.log("tbodyFields:",tbodyFields);
+                    console.log("tbodyFields.tr:",tbodyFields.find('tr'));
+                    tbodyFields.find('tr').each((i,e) => {
+                        cabeceras.push({
+                            campo : $(e).find(`[data-cabecera="campo"]`).val(),
+                            texto : $(e).find(`[data-cabecera="texto"]`).val(),
+                            tipo : $(e).find(`[data-cabecera="tipo"]`).val(),
+                            requerido : $(e).find(`[data-cabecera="requerido"]`).prop('checked'),
+                            visible : $(e).find(`[data-cabecera="visible"]`).prop('checked'),
+                            buscable : $(e).find(`[data-cabecera="buscable"]`).prop('checked'),
+                            buscablecheck : $(e).find(`[data-cabecera="buscablecheck"]`).prop('checked'),
+                            visiblecheck : $(e).find(`[data-cabecera="visiblecheck"]`).prop('checked'),
+                            sortable : $(e).find(`[data-cabecera="sortable"]`).prop('checked'),
+                            filtrable : $(e).find(`[data-cabecera="filtrable"]`).prop('checked'),
+                            filtrabletipo : $(e).find(`[data-cabecera="filtrabletipo"]`).val(),
+                            tienemin : $(e).find(`[data-cabecera="tienemin"]`).prop('checked'),
+                            min : $(e).find(`[data-cabecera="min"]`).val(),
+                            tienemax : $(e).find(`[data-cabecera="tienemax"]`).prop('checked'),
+                            max : $(e).find(`[data-cabecera="max"]`).val(),
+                            esrelacion : $(e).find(`[data-cabecera="esrelacion"]`).prop('checked'),
+                            relacion_campo : $(e).find(`[data-cabecera="relacion_campo"]`).val(),
+                            relacion_nombre : $(e).find(`[data-cabecera="relacion_nombre"]`).val(),
+                            relacion_tabla :  $(e).find(`[data-cabecera="relacion_tabla"]`).val(),
+                        });
+                    })
+                    //let xnombrecapx = $(`[data-param="xnombrecapx"]`).val();
+                    //console.log("xnombrecapx:",xnombrecapx);
+                    data.cabecera = cabeceras;
+                    data.params = params;
+                    console.log("cabeceras:",cabeceras);
+                    console.log("params:",params);
+                    console.log("data:",data);
+
+                    prepareHeaders(data);
+
+                    addFiles(data);
+                    data_generated = data;
+                    console.log("data_generated",data_generated);
+                }
+        );
+    });
+    $("#btnZip").click((e)=>{    
+
+        $.ajax({ url:"/zipfront",xhr: function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 2) {
+                    if (xhr.status == 200) {
+                        xhr.responseType = "blob";
+                    } else {
+                        xhr.responseType = "text";
+                    }
+                }
+            };
+            return xhr;
+        }, data: {data:JSON.stringify(data_generated)}, method: 'POST' })
+            .done(function (data) {
+                //console.log("btnZip > ", data);
+                const url = window.URL.createObjectURL(data);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                // the filename you want
+                console.log("data_generated:",data_generated);
+                a.download = `angular-${data_generated.params.xnombrex}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+    });
+
+    $.ajax({ 
+        url:"/db_all", dataType: 'json', data: {}, method: 'GET' })
+            .done(function (data) {
+                data_db = data;
+                console.log("get_db > ", data);
+                cargarDBs(data);
+            }
+    );
+
+});

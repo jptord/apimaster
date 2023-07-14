@@ -8,6 +8,8 @@ var cors = require("cors");
 const app = express();
 const path = require("path");
 
+const JSZip = require ("jszip");
+
 const database = new Database();
 const ctrlApi = new CtrlApi();
 database.iniciar();
@@ -143,6 +145,56 @@ fs.readdirSync(dbscript).forEach((file) => {
     //res.end(content);
   });
 
+  app.post("/zipfront", (req, res) => {
+    let content =  JSON.parse(req.body.data) ;
+    //console.log("--content--");
+    //console.log(content);
+
+    const zip = new JSZip();
+    content.files.forEach((f) => {
+      console.log("content.file", f.file);
+      zip.file(f.file, f.content);  
+    });
+    const fileName = 'public/descargas/'+`${content.folder}-${content.params.xnombrex}.zip`;
+    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+    .pipe(fs.createWriteStream(fileName))
+    .on('finish', function () {
+        console.log(fileName+" written.");
+
+      const options = {
+        root: path.join(__dirname)
+      };
+      res.sendFile(fileName, options, function (err) {
+        if (err) {
+            next(err);
+        } else {
+            console.log('Sent:', fileName);
+        }
+      });
+    });
+
+
+    /*
+    const content = fs.readFileSync(`templates/angular.json`, "utf8");
+    zip.file("angular.txt", content);
+    zip.file("Textfile.txt", "Hello NodeJS\n");
+    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+    .pipe(fs.createWriteStream('sample.zip'))
+    .on('finish', function () {
+        console.log("sample.zip written.");
+    });
+    const options = {
+      root: path.join(__dirname)
+    };
+
+    res.sendFile("sample.zip", options, function (err) {
+      if (err) {
+          next(err);
+      } else {
+          console.log('Sent:', fileName);
+      }
+    });*/
+  });
   //console.log("content:",content);
   /*
   fs.writeFileSync(`${dbscript}dbs_array.js`, JSON.stringify(db_array, null, 4), function(err) {
