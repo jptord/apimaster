@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { {xnombrecapx}Service } from "src/app/core/services/{xnombrex}.service";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
+{xrelations_includex}
 
 type NewType = NotificacionService;
 
@@ -16,6 +17,9 @@ export class ListadoComponent implements OnInit {
   formato: any;
   dataEdit = null;
   titulo: any = "{xtitulox}";
+
+  {xrelations_varx}
+
   constructor(
     public {xnombrecapx}Service: {xnombrecapx}Service,
     private modalService: BsModalService,
@@ -41,7 +45,7 @@ export class ListadoComponent implements OnInit {
     });
   }
   habilitar(data: any, component) {
-    this.xnombrecapxService.habilitar(data, data.id).subscribe(
+    this.{xnombrecapx}Service.habilitar(data, data.id).subscribe(
       (data) => {
         component.obtenerDatos();
         this.NotificacionService.successStandar(
@@ -54,7 +58,7 @@ export class ListadoComponent implements OnInit {
     );
   }
   deshabilitar(data: any, component) {
-    this.xnombrecapxService.deshabilitar(data, data.id).subscribe(
+    this.{xnombrecapx}Service.deshabilitar(data, data.id).subscribe(
       (data) => {
         component.obtenerDatos();
         this.NotificacionService.successStandar(
@@ -70,7 +74,7 @@ export class ListadoComponent implements OnInit {
   eliminar(data: any, component) {
     this.NotificacionService.alertaEliminacion(data.nombre, (response: any) => {
       if (response) {
-        this.xnombrecapxService.delete(data.id).subscribe(
+        this.{xnombrecapx}Service.delete(data.id).subscribe(
           (data) => {
             component.obtenerDatos();
             this.NotificacionService.successStandar(

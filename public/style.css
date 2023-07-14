@@ -20,3 +20,18 @@ html{
   .modal-body {
     overflow-y: auto;
   }
+
+
+input[data-param="xnombrex"] {
+    text-transform: lowercase;
+}
+
+.CodeMirror {
+  font-size: 8px;
+  width: 100%, ;
+  height: 100%;
+}
+
+.code-style{
+  width:800px;
+}

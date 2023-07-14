@@ -9,7 +9,6 @@
         "listado/listado.component.html",
         "listado/listado.component.scss",
         "listado/listado.component.ts",
-        "servicios/xnombrex.service.ts",
         "xnombrex.module.ts",
         "xnombrex-routing.module.ts"
         ],
@@ -25,7 +24,12 @@
         "xestadodisabledx" : "deshabilitado",
         "xtitleNuevox" : "Nuevo cliente",
         "xtitleEditarx" : `Editar cliente {{dataEdit.nombre_razon_social}}`,
-        
+         
+        "xrelations_constructorx" : `private TipodocumentoService: TipodocumentoService,`,
+        "xrelations_initx" : `this.TipodocumentoService.getAll().subscribe((res:any) => { this.tipo_documentos = res.content; });`,
+        "xrelations_varx" : `tipo_documentos:any = [];`,
+        "xrelations_includex" : `import { TipodocumentoService } from 'src/app/core/services/tipodocumento.service';`,
+
         "xformbuilderx" : `{
               id: [{ value: "", disabled: true }],
               nombre_razon_social: [ "", [Validators.required,Validators.minLength(2), Validators.maxLength(255)], ],

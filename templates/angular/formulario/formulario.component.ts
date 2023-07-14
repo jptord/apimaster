@@ -34,7 +34,7 @@ export class FormularioComponent implements OnInit {
     private FormBuilder: FormBuilder,
     private notificacionService: NotificacionService,
     private {xnombrecapx}Service: {xnombrecapx}Service,
-    private TipodocumentoService: TipodocumentoService
+    {xrelations_constructorx}
   ) {}
 
   get form() {
@@ -46,6 +46,7 @@ export class FormularioComponent implements OnInit {
   }
 
   ngOnInit(): void {    
+    {xrelations_initx}
     this.formGroup = this.FormBuilder.group({xformbuilderx});
     if (this.dataEdit != null) {
       this.formGroup.setValue({xformeditx});
@@ -53,7 +54,7 @@ export class FormularioComponent implements OnInit {
   }
 
   guardar() {
-    this.submitted = true;
+    this.submitted = true;    
     if (this.formGroup.valid) {
       this.submitted = false;
       let sendData = this.formGroup.value;
