@@ -104,7 +104,7 @@ function prepareHeaders(data){
     let xrelations_constructorx = [];
     data.cabecera.forEach(campo => {
         if (campo.esrelacion){  
-            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length);
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length).replaceAll("_","");
             xrelations_constructorx.push(`private ${strCap}Service: ${strCap}Service`);
         }
     });
@@ -118,7 +118,7 @@ function prepareHeaders(data){
             xrelations_includex.push(`import { ${strCap}Service } from '../servicios/${strCapLittle}.service';`);
         }
     });
-    data.params['xrelations_includex'] = `${xrelations_includex.join(",\n")}`;
+    data.params['xrelations_includex'] = `${xrelations_includex.join("\n")}`;
 
     let xrelations_varx = [];
     data.cabecera.forEach(campo => {
@@ -126,7 +126,7 @@ function prepareHeaders(data){
             xrelations_varx.push(`${campo.relacion_tabla}:any = [];`);
         }
     });
-    data.params['xrelations_varx'] = `${xrelations_varx.join(",\n")}`;
+    data.params['xrelations_varx'] = `${xrelations_varx.join("\n")}`;
 
     let xrelations_initx = [];
 
@@ -145,7 +145,7 @@ function prepareHeaders(data){
             xrelations_initx.push(`this.${strCap}Service.getAll(100, 1, '${campo.relacion_nombre}', false, '').subscribe((res:any) => { this.${campo.relacion_tabla} = res.content; });`);
         }
     });
-    data.params['xrelations_initx'] = `${xrelations_initx.join(",\n")}`;
+    data.params['xrelations_initx'] = `${xrelations_initx.join("\n")}`;
     
 
 }
