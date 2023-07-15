@@ -9,6 +9,7 @@ CodeMirror.commands.autocomplete = function(cm) {
 
 let data_db;
 let data_generated;
+let mostra_botones = false;
 
 
 function fem(texto){
@@ -265,7 +266,9 @@ function cargarDBs(data){
            
             $(grupoData.find(".btn-gen-angular")).click( (e) => {
                 console.log("here", g);
-
+                mostra_botones=false;
+                $("#btnZip").addClass("d-none");
+                $("#btnInject").addClass("d-none");
                 let v_pills_tab = $("#v-pills-tab");
                 let v_pills_tabContent = $("#v-pills-tabContent");
                 v_pills_tab.empty();
@@ -528,7 +531,11 @@ $( document ).ready(function() {
         $.ajax({ 
             url:"/getfrontend?framework=angular", dataType: 'json', data: {}, method: 'GET' })
                 .done(function (data) {                   
-                    
+                    mostra_botones=true;
+
+                    $("#btnZip").removeClass("d-none");
+                    $("#btnInject").removeClass("d-none");
+
                     console.log("---data:",data);         
                     console.log("framework > ", data);
                     let params = {};
@@ -587,6 +594,36 @@ $( document ).ready(function() {
     $("#btnZip").click((e)=>{    
 
         $.ajax({ url:"/zipfront",xhr: function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 2) {
+                    if (xhr.status == 200) {
+                        xhr.responseType = "blob";
+                    } else {
+                        xhr.responseType = "text";
+                    }
+                }
+            };
+            return xhr;
+        }, data: {data:JSON.stringify(data_generated)}, method: 'POST' })
+            .done(function (data) {
+                //console.log("btnZip > ", data);
+                const url = window.URL.createObjectURL(data);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                // the filename you want
+                console.log("data_generated:",data_generated);
+                a.download = `angular-${data_generated.params.xnombrex}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+    });
+
+    $("#btnInject").click((e)=>{    
+
+        $.ajax({ url:"/injectfront",xhr: function() {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 2) {

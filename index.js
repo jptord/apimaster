@@ -173,27 +173,69 @@ fs.readdirSync(dbscript).forEach((file) => {
       });
     });
 
+  });
 
-    /*
-    const content = fs.readFileSync(`templates/angular.json`, "utf8");
-    zip.file("angular.txt", content);
-    zip.file("Textfile.txt", "Hello NodeJS\n");
-    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-    .pipe(fs.createWriteStream('sample.zip'))
-    .on('finish', function () {
-        console.log("sample.zip written.");
-    });
-    const options = {
-      root: path.join(__dirname)
-    };
+  app.post("/injectfront", (req, res) => {
+    let content =  JSON.parse(req.body.data) ;
+    let path = content.injection.path;
+    let subpath = content.injection.subpath;
+    content.files.forEach((f) => {
+    let inj = esInyectable(f.file,content);
+      if (inj==null){
+        console.log("content.file to write", path + subpath +"/"+ f.file);
+        ensureDirectoryExistence(path + subpath +"/"+ f.file);
+        fs.writeFileSync(
+          path + subpath +"/"+ f.file,
+          f.content,
+          function (err) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(`file injected on `);
+            }
+          }
+        );
+      }else{
 
-    res.sendFile("sample.zip", options, function (err) {
-      if (err) {
-          next(err);
-      } else {
-          console.log('Sent:', fileName);
+        let rewrite_content  = fs.readFileSync(path + "/" + inj.where , "utf8");
+
+        if (rewrite_content.indexOf(f.content)<0) return ; 
+        //console.log(rewrite_content);
+        let len = inj.before.length;
+        let pos = rewrite_content.indexOf(inj.before);
+        let strA =rewrite_content.substr(0,pos+len);
+        let strB =rewrite_content.substr(pos+len,rewrite_content.length - (pos+len));
+        //console.log("strA",strA);
+        //console.log("strB",strB);
+
+        rewrite_content = strA + "\n" + f.content + "\n" + strB;
+        //console.log("rewrite_content",rewrite_content);
+
+
+        fs.writeFileSync(path + "/" + inj.where, rewrite_content);
+
       }
+      //zip.file(f.file, f.content);  
+    });
+    /*
+    const fileName = 'public/descargas/'+`${content.folder}-${content.params.xnombrex}.zip`;
+    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+    .pipe(fs.createWriteStream(fileName))
+    .on('finish', function () {
+        console.log(fileName+" written.");
+
+      const options = {
+        root: path.join(__dirname)
+      };
+      res.sendFile(fileName, options, function (err) {
+        if (err) {
+            next(err);
+        } else {
+            console.log('Sent:', fileName);
+        }
+      });
     });*/
+
   });
   //console.log("content:",content);
   /*
@@ -205,3 +247,15 @@ fs.readdirSync(dbscript).forEach((file) => {
     }
   }); */
 });
+
+function ensureDirectoryExistence(filePath) {
+  var dirname = path.dirname(filePath);
+  if (fs.existsSync(dirname)) {
+    return true;
+  }
+  ensureDirectoryExistence(dirname);
+  fs.mkdirSync(dirname);
+}
+function esInyectable(fileName, data){
+  return data.injection.files.find(f => f.file == fileName);
+}
