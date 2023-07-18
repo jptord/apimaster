@@ -13,6 +13,17 @@ class Database{
         return rows;
     }
 
+
+    getFields(table){
+        let fields = this.db.prepare(`PRAGMA table_info(${table});`).all();
+        return fields;
+    }
+
+    compareTable(table){        
+        let fields = this.db.prepare(`PRAGMA table_info(${table});`).all();
+        return fields;
+    }
+
     existTable(tableName){
         try{
             this.db.prepare(`SELECT * FROM ${tableName}`).all();

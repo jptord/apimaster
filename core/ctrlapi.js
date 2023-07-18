@@ -17,7 +17,9 @@ class CtrlApi{
         let name = values[0];
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `${column} INTEGER PRIMARY KEY AUTOINCREMENT`;
-        if (name == "number" ) return `${column} FLOAT`;
+        if (name == "number" ) return `${column} INTEGER`;
+        if (name == "float" ) return `${column} FLOAT`;
+        if (name == "double" ) return `${column} FLOAT`;
         if (name == "date" ) return `${column} DATE`;
         if (name == "string" ) return `${column} VARCHAR(255)`;
     }
@@ -99,23 +101,48 @@ class CtrlApi{
         if(this.dbData!==undefined){
             console.log("db_name",this.dbData.db);
             this.database = new Database(this.dbData.db);
-            console.log("this.database.getTables: ",this.database.getTables());
+            //console.log("this.database.getTables: ",this.database.getTables());
             this.dbData.groups.forEach(group => {
-                if (this.database.existTable(group.name)) return ;
-                console.log("CtrlApi.group: creando");
                 
-                let dataCreate =  Object.keys(group.data.create);
-                console.log("list table.columns", dataCreate);
-                let fieldsArr = [];
-                dataCreate.forEach(c => {
-                    if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
-                        fieldsArr.push(this.toColumnName(c,group.data.create[c]));
-                });
-                let fieldStr = fieldsArr.join(",");
-                console.log("fieldStr:",fieldStr);
-                console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
-                this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
-                this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                if (!this.database.existTable(group.name)){
+                    console.log("CtrlApi.group: creando");
+                    
+                    let dataCreate =  Object.keys(group.data.create);
+                    console.log("list table.columns", dataCreate);
+                    let fieldsArr = [];
+                    dataCreate.forEach(c => {
+                        if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
+                            fieldsArr.push(this.toColumnName(c,group.data.create[c]));
+                    });
+                    let fieldStr = fieldsArr.join(",");
+                    console.log("fieldStr:",fieldStr);
+                    console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                    this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                }else{
+                    let fields = this.database.getFields(group.name);
+                    let dataCreate =  Object.keys(group.data.create);
+                    let isDifferent = false;
+                    fields.forEach( f => {
+                        if (!dataCreate.includes(f.name)) { console.log("es diferente ", f.name); isDifferent = true;}
+                    } );
+                    dataCreate.forEach( c => {
+                        if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
+                        if ( fields.find( f => f.name == c)==null ) { console.log("es diferente ", c); isDifferent = true;}
+                    } );           
+                    if (isDifferent)         {
+                        this.database.writeSQL(` DROP TABLE ${group.name}; `);                        
+                        let fieldsArr = [];
+                        dataCreate.forEach(c => {
+                            if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
+                                fieldsArr.push(this.toColumnName(c,group.data.create[c]));
+                        });
+                        let fieldStr = fieldsArr.join(",");
+                        console.log("fieldStr:",fieldStr);
+                        console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                        this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                    }
+
+                }
             });
         }
         else{

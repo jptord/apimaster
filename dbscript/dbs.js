@@ -602,7 +602,7 @@
                 "data": {
                     "select": {
                         "id": "number|pk",
-                        "tipoentidad_id":"number",
+                        "tipoentidad_id": "number",
                         "tipoentidad": "[tipoentidad|id|tipoentidad_id]",
                         "nombre": "string",
                         "identificacion": "string",
@@ -612,7 +612,7 @@
                     },
                     "create": {
                         "id": "number|pk",
-                        "tipoentidad_id":"number",
+                        "tipoentidad_id": "number",
                         "tipoentidad": "[tipoentidad|id|tipoentidad_id]",
                         "nombre": "string",
                         "identificacion": "string",
@@ -621,7 +621,7 @@
                         "direccion": "string"
                     },
                     "insert": {
-                        "tipoentidad_id":"number",
+                        "tipoentidad_id": "number",
                         "tipoentidad": "[tipoentidad|id|tipoentidad_id]",
                         "nombre": "string",
                         "identificacion": "string",
@@ -662,7 +662,7 @@
                 ]
             },
             {
-                "name": "pagos_estados",
+                "name": "pagosestados",
                 "data": {
                     "select": {
                         "id": "number|pk",
@@ -720,9 +720,9 @@
                         "monto": "number",
                         "saldo": "number",
                         "entidad_pago_id": "number",
-                        "entidad": "[pagos_estados|id|entidad_pago_id]",
-                        "estado_id": "number",
-                        "pagos_estados": "[pagos_estados|id|estado_id]"
+                        "entidades": "[entidades|id|entidad_pago_id]",
+                        "pagoestado_id": "number",
+                        "pagosestados": "[pagosestados|id|pagoestado_id]"
                     },
                     "create": {
                         "id": "number|pk",
@@ -731,9 +731,9 @@
                         "monto": "number",
                         "saldo": "number",
                         "entidad_pago_id": "number",
-                        "entidad": "[entidades|id|entidad_pago_id]",
-                        "estado_id": "number",
-                        "pagos_estados": "[pagos_estados|id|estado_id]"
+                        "entidades": "[entidades|id|entidad_pago_id]",
+                        "pagoestado_id": "number",
+                        "pagosestados": "[pagosestados|id|pagoestado_id]"
                     },
                     "insert": {
                         "fecha_estimada": "date",
@@ -741,9 +741,113 @@
                         "monto": "number",
                         "saldo": "number",
                         "entidad_pago_id": "number",
-                        "entidad": "[entidades|id|entidad_pago_id]",
-                        "estado_id": "number",
-                        "pagos_estados": "[pagos_estados|id|estado_id]"
+                        "entidades": "[entidades|id|entidad_pago_id]",
+                        "pagoestado_id": "number",
+                        "pagosestados": "[pagosestados|id|pagoestado_id]"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            },
+            {
+                "name": "tipodato",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string"
+                    },
+                    "insert": {
+                        "nombre": "string"
+                    }
+                },
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ]
+            },
+            {
+                "name": "variablesconfiguracion",
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "tipodato_id": "number",
+                        "tipodato": "[tipodato|id|tipodato_id]",
+                        "valores": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "tipodato_id": "number",
+                        "tipodato": "[tipodato|id|tipodato_id]",
+                        "valores": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "tipodato_id": "number",
+                        "tipodato": "[tipodato|id|tipodato_id]",
+                        "valores": "string"
                     }
                 },
                 "apis": [

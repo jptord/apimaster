@@ -51,13 +51,22 @@ function prepareHeaders(data){
                     <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
                     <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
                     <div *ngIf="form['{campo}'].errors['maxlength']">Debe tener menos de {{form['{campo}'].errors['maxlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['min']">Debe tener mayor o igual que {{form['{campo}'].errors['min']['min']}} </div>
+                    <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
                     </div>
                 </div>`;
     let cabrel =   `<div class="mb-6 {xvisiblex}">
                         <label for="formrow-firstname-input ">{texto}</label>
-                        <select class="form-control form-select" id="{campo}" formControlName="{campo}" name="{campo}">
+                        <select class="form-control form-select" id="{campo}" {required} formControlName="{campo}" name="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
                         <option *ngFor="let t of [{relation}]" value="{{t.[{id}]}}"  >{{t.[{nombre}]}} </option>
                         </select>
+                        <div *ngIf="submitted && form['{campo}'].errors" class="invalid-feedback" align="left" >
+                        <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
+                        <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
+                        <div *ngIf="form['{campo}'].errors['maxlength']">Debe tener menos de {{form['{campo}'].errors['maxlength']['requiredLength']}} caracteres</div>
+                        <div *ngIf="form['{campo}'].errors['min']">Debe tener mayor o igual que {{form['{campo}'].errors['min']['min']}} </div>
+                        <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
+                        </div>
                     </div>`;
     let xrefieldx = ""   
     let xrelfile = "";
@@ -80,6 +89,7 @@ function prepareHeaders(data){
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
+            cabRep  = cabRep.replaceAll("{tipo}",campo.tipo);
             xrefieldx += "\n" + cabRep;
         }
     });
@@ -88,9 +98,11 @@ function prepareHeaders(data){
     let xformbuilderx = [];
     data.cabecera.forEach(campo => {
         let validators = [];
-        if (campo.requerido) validators.push(`Validators.required`);
-        if (campo.tienemin) validators.push(`Validators.minLength(${campo.min})`);
-        if (campo.tienemax) validators.push(`Validators.maxLength(${campo.max})`);        
+        if (campo.requerido) validators.push(`Validators.required`);        
+        if (campo.tienemin && campo.tipo == "text") validators.push(`Validators.minLength(${campo.min})`);
+        if (campo.tienemax && campo.tipo == "text") validators.push(`Validators.maxLength(${campo.max})`);        
+        if (campo.tienemin && campo.tipo == "number") validators.push(`Validators.min(${campo.min})`);
+        if (campo.tienemax && campo.tipo == "number") validators.push(`Validators.max(${campo.max})`);        
         xformbuilderx.push(`${campo.campo}:["",[${validators.join(',')}] ]`);
     });
     data.params['xformbuilderx'] = `{${xformbuilderx.join(",")}}`;
@@ -251,7 +263,8 @@ function cargarDBs(data){
             let grupoData = $(`
             <div class="form-group form-inline bg-light ">
                 <label>Sharks</label>
-                <textarea class="form-control form-control-sm" rows="7"></textarea>
+                <div class="float-end"><span class="btn-upd btn btn-sm btn-outline-secondary">Upd</span><span class="btn-del btn btn-sm btn-outline-danger">Del</span></div>
+                <textarea class="dataSelect form-control form-control-sm" rows="7"></textarea>
                 <button type="button" class="btn-gen-angular btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAngular">Generar CRUD - Angular</button>
                 <button type="button" class="btn-gen-spring btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalSpring">Generar API - Spring</button>
                 <button type="button" class="btn-gen-laravel btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalLaravel">Generar API - Laravel</button>
@@ -264,6 +277,32 @@ function cargarDBs(data){
             grupoData.find("textarea").html(JSON.stringify(g.data.select).replaceAll('{','').replaceAll('}','').replaceAll('"','').replaceAll(",","\n"));
             content.append(grupoData);
            
+            $(grupoData.find(".btn-upd")).click( (e) => {
+                let inputData = grupoData.find(".dataSelect").val();
+                let lines = inputData.trim().split("\n");
+                console.log("lines",lines);
+                console.log("inputData",inputData);
+                let apiData = {};
+                let apiDataIns = {};
+                lines.forEach(l => {
+                    let lArray = l.trim().split(":");
+                    let n = lArray[0].trim();
+                    let v = lArray[1].trim();
+                    apiData[n] = v;
+                });
+                apiDataIns = {... apiData};
+                delete apiDataIns.id; 
+                g.data = { select : {... apiData}, create : {... apiData}, insert : {... apiDataIns}};
+                console.log('update',data_db);
+                saveDBs(data_db);
+                cargarDBs(data_db);
+                
+                
+            });
+            $(grupoData.find(".btn-del")).click( (e) => {
+                element.groups.splice(element.groups.indexOf(g),1);
+                cargarDBs(data_db);
+            });
             $(grupoData.find(".btn-gen-angular")).click( (e) => {
                 console.log("here", g);
                 mostra_botones=false;
@@ -522,6 +561,7 @@ $( document ).ready(function() {
         let tCs = tC[tC.length-1] == "s"?tC.substring(0,t.length-1):tC;
         $("[data-param='xnombrecapx']").val( tC );
         $("[data-param='xapix']").val( t );
+        $("[data-param='xmenux']").val( t );
         $("[data-param='xtitulox']").val( `Listado de ${tC}` );
         $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );
         $("[data-param='xtitleEditarx']").val( `Editar ${tCs} {{dataEdit.nombre}}` );
