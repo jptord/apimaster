@@ -1,0 +1,52 @@
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="libs/jquery-3.6.4.min.js"></script>
+    <script src="libs/bootstrap.5.2.3.min.js"></script>
+    <script src="libs/easeljs.min.js"></script>
+    <script src="libs/tweenjs.min.js"></script>
+    <link rel="stylesheet" href="libs/bootstrap.5.2.3.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.8/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.8/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.8/beautify-html.min.js"></script>
+
+    <link rel="stylesheet" href="http://esironal.github.io/cmtouch/lib/codemirror.css">
+	<link rel="stylesheet" href="http://esironal.github.io/cmtouch/addon/hint/show-hint.css">
+	<script src="http://esironal.github.io/cmtouch/lib/codemirror.js"></script>
+	<script src="http://esironal.github.io/cmtouch/addon/hint/show-hint.js"></script>
+	<script src="http://esironal.github.io/cmtouch/addon/hint/xml-hint.js"></script>
+	<script src="http://esironal.github.io/cmtouch/addon/hint/html-hint.js"></script>
+	<script src="http://esironal.github.io/cmtouch/mode/xml/xml.js"></script>
+	<script src="http://esironal.github.io/cmtouch/mode/javascript/javascript.js"></script>
+	<script src="http://esironal.github.io/cmtouch/mode/css/css.js"></script>
+	<script src="http://esironal.github.io/cmtouch/mode/htmlmixed/htmlmixed.js"></script>
+	<script src="http://esironal.github.io/cmtouch/addon/selection/active-line.js"></script>
+	<script src="http://esironal.github.io/cmtouch/addon/edit/matchbrackets.js"></script>
+    <script type="text/javascript" src="libs/plantuml/jquery_plantuml.js"></script>
+
+	<link rel="stylesheet" href="http://esironal.github.io/cmtouch/theme/neonsyntax.css">
+
+    <title>APIMASTER CODE</title>
+</head>
+
+<body class=" bg-dark " onload="init();">
+    <div class="content row ">
+        <div class="card col-sm-6">
+            <div id="codeText" class="codeText"></div>
+        </div>
+        <div class="card col-sm-6">            
+            <div class="diagramDiv" >
+                <img id="diagramImg" width="auto" height="auto" uml="">
+            </div>
+        </div>
+        <div class="card col-sm-6">
+            <div id="codeUmlText"></div>
+        </div>
+    </div>
+</body>
+<script src="js/main-code.js"></script>
+
+</html>

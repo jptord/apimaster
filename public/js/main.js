@@ -55,6 +55,39 @@ function prepareHeaders(data){
                     <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
                     </div>
                 </div>`;
+    let cabArea =  `<div class="mb-6 {xvisiblex}">
+                    <label for="nombre">{texto} </label><br>
+                    <textarea class="form-control uppercase" rows=5 id="{campo}" (click)="alCambiar(form)" {required} formControlName="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }"></textarea>
+                    <div *ngIf="submitted && form['{campo}'].errors" class="invalid-feedback" align="left">
+                    <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
+                    <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['maxlength']">Debe tener menos de {{form['{campo}'].errors['maxlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['min']">Debe tener mayor o igual que {{form['{campo}'].errors['min']['min']}} </div>
+                    <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
+                    </div>
+                </div>`;
+    let cabChk =  `<div class="mb-6 {xvisiblex}">
+                    <label for="nombre">{texto} </label><br>
+                    <input type="checkbox" class="form-check-input uppercase" id="{campo}" {required} (click)="alCambiar(form)" formControlName="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
+                    <div *ngIf="submitted && form['{campo}'].errors" class="invalid-feedback" align="left">
+                    <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
+                    <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['maxlength']">Debe tener menos de {{form['{campo}'].errors['maxlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['min']">Debe tener mayor o igual que {{form['{campo}'].errors['min']['min']}} </div>
+                    <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
+                    </div>
+                </div>`;
+    let cabChkSel =  `<div class="mb-6 {xvisiblex}">
+                    <label for="nombre">{texto} </label>
+                    <select class="form-control form-select" id="{campo}" formControlName="{campo}" {required} [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }"><option value=true default>Sí</option><option value=false>No</option></select>
+                    <div *ngIf="submitted && form['{campo}'].errors" class="invalid-feedback" align="left">
+                    <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
+                    <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['maxlength']">Debe tener menos de {{form['{campo}'].errors['maxlength']['requiredLength']}} caracteres</div>
+                    <div *ngIf="form['{campo}'].errors['min']">Debe tener mayor o igual que {{form['{campo}'].errors['min']['min']}} </div>
+                    <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
+                    </div>
+                </div>`;
     let cabrel =   `<div class="mb-6 {xvisiblex}">
                         <label for="formrow-firstname-input ">{texto}</label>
                         <select class="form-control form-select" id="{campo}" {required} formControlName="{campo}" name="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
@@ -76,7 +109,7 @@ function prepareHeaders(data){
             let cabRep = cabrel;
             cabRep  = cabRep.replaceAll("{xvisiblex}",campo.visible?"":"d-none");
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
-            cabRep  = cabRep.replaceAll("{texto}",campo.texto);
+            cabRep  = cabRep.replaceAll("{texto}",(campo.requerido?"(*)":"") + campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
             cabRep  = cabRep.replaceAll("{tipo}",campo.tipo);
             cabRep  = cabRep.replaceAll("[{relation}]",campo.relacion_tabla);
@@ -85,9 +118,12 @@ function prepareHeaders(data){
             xrefieldx += "\n" + cabRep;
         }else{
             let cabRep = cab;
+            if (campo.tipo == "checkbox") cabRep = cabChk;
+            if (campo.tipo == "checkboxsel") cabRep = cabChkSel;
+            if (campo.tipo == "area") cabRep = cabArea;
             cabRep  = cabRep.replaceAll("{xvisiblex}",campo.visible?"":"d-none");
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
-            cabRep  = cabRep.replaceAll("{texto}",campo.texto);
+            cabRep  = cabRep.replaceAll("{texto}",(campo.requerido?"(*)":"") + campo.texto);
             cabRep  = cabRep.replaceAll("{campo}",campo.campo);
             cabRep  = cabRep.replaceAll("{tipo}",campo.tipo);
             xrefieldx += "\n" + cabRep;
@@ -101,9 +137,14 @@ function prepareHeaders(data){
         if (campo.requerido) validators.push(`Validators.required`);        
         if (campo.tienemin && campo.tipo == "text") validators.push(`Validators.minLength(${campo.min})`);
         if (campo.tienemax && campo.tipo == "text") validators.push(`Validators.maxLength(${campo.max})`);        
-        if (campo.tienemin && campo.tipo == "number") validators.push(`Validators.min(${campo.min})`);
-        if (campo.tienemax && campo.tipo == "number") validators.push(`Validators.max(${campo.max})`);        
-        xformbuilderx.push(`${campo.campo}:["",[${validators.join(',')}] ]`);
+        if (campo.tienemin && campo.tipo == "area") validators.push(`Validators.minLength(${campo.min})`);
+        if (campo.tienemax && campo.tipo == "area") validators.push(`Validators.maxLength(${campo.max})`);        
+        if (campo.tienemin && (campo.tipo == "number" || campo.tipo == "integer")) validators.push(`Validators.min(${campo.min})`);
+        if (campo.tienemax && (campo.tipo == "number" || campo.tipo == "integer")) validators.push(`Validators.max(${campo.max})`);        
+        if (campo.tipo == "checkbox" || campo.tipo == "checkboxsel")
+            xformbuilderx.push(`${campo.campo}:[false,[${validators.join(',')}] ]`);
+        else
+            xformbuilderx.push(`${campo.campo}:["",[${validators.join(',')}] ]`);
     });
     data.params['xformbuilderx'] = `{${xformbuilderx.join(",")}}`;
 
@@ -301,6 +342,7 @@ function cargarDBs(data){
             });
             $(grupoData.find(".btn-del")).click( (e) => {
                 element.groups.splice(element.groups.indexOf(g),1);
+                saveDBs(data_db);
                 cargarDBs(data_db);
             });
             $(grupoData.find(".btn-gen-angular")).click( (e) => {
@@ -328,7 +370,7 @@ function cargarDBs(data){
 //<td><input class="form-control form-control-sm"  data-cabecera="relacion.campo" type="text" value="${relacionalval(g.data.create[f],"field")}"></td>
                     let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
                     <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
-                    <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                    <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox"  ></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscable" type="checkbox" checked ></td>
@@ -406,6 +448,7 @@ function campo(valor){
     if (temp_valor[0] == "string") return "text";
     if (temp_valor[0] == "number") return "number";
     if (temp_valor[0] == "date") return "date";
+    if (temp_valor[0] == "boolean") return "boolean";
     
 
     return temp_valor[0];
@@ -417,6 +460,7 @@ function esdefault(valor,compara){
     let temp_valor = valor.split("|");
     if (temp_valor[0] == "string") return "text" == compara?"selected":"";
     if (temp_valor[0] == "number") return "number" == compara?"selected":"";
+    if (temp_valor[0] == "boolean") return "checkbox" == compara?"selected":"";
 
     return temp_valor[0] == compara?"selected":"";
 }
@@ -424,6 +468,7 @@ function relacional(valor){
     if (valor.includes("[")){
         if (valor.includes("[[")){
             let val_clean = valor.trim().replaceAll("[","").replaceAll("]","").split("|");
+            console.log("relational_dato",dato);
             let dato = { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };
             console.log("relational_dato",dato);
             return dato;

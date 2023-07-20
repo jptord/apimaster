@@ -198,7 +198,7 @@ fs.readdirSync(dbscript).forEach((file) => {
       }else{
 
         let rewrite_content  = fs.readFileSync(path + "/" + inj.where , "utf8");
-console.log("rewrite_content.indexOf(f.content):",rewrite_content.indexOf(f.content));
+        console.log("rewrite_content.indexOf(f.content):",rewrite_content.indexOf(f.content));
         if (rewrite_content.indexOf(f.content)>0) return ; 
         //console.log(rewrite_content);
         let len = inj.before.length;

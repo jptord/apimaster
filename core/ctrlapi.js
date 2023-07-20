@@ -21,6 +21,7 @@ class CtrlApi{
         if (name == "float" ) return `${column} FLOAT`;
         if (name == "double" ) return `${column} FLOAT`;
         if (name == "date" ) return `${column} DATE`;
+        if (name == "boolean" ) return `${column} BOOLEAN DEFAULT false NOT NULL`;
         if (name == "string" ) return `${column} VARCHAR(255)`;
     }
     toFields(data){

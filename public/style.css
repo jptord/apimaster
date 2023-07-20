@@ -1,5 +1,7 @@
-html{
-    font-size: 9pt;
+body,html{
+    font-size: 9px;
+    margin:0px;
+    padding:5px;
 }
 .table-condensed{
     font-size: 9px;
@@ -28,10 +30,24 @@ input[data-param="xnombrex"] {
 
 .CodeMirror {
   font-size: 10px;
-  width: 100%, ;
+  width: 100%;
   height: 100%;
 }
 
 .code-style{
-  width:800px;
+  width:610px;
+}
+
+.codeText{
+  height: 610px;
+}
+
+/* UI */
+#mainCanvas{
+  border:1px solid white;
+}
+.diagramDiv{
+  overflow: auto;
+  width: 100%;
+  height: 610px;
 }
