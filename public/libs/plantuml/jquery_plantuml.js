@@ -2,7 +2,6 @@ $(document).ready(function(){
    plantuml_runonce();
 });
 
-<!--  taken from https://github.com/johan/js-deflate -->
 
 function encode64(data) {
  r = "";
@@ -93,7 +92,7 @@ var done = 0;
     } else {
       setTimeout(function() {
         done_deflating({ data: deflate(s) });
-        console.log("def");
+        
       }, 400);
     }
     done = 1;

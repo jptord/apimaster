@@ -7,6 +7,8 @@ const vm = require("vm");
 var cors = require("cors");
 const app = express();
 const path = require("path");
+const { exec } = require('child_process');
+
 
 const JSZip = require ("jszip");
 
@@ -83,7 +85,7 @@ fs.readdirSync(dbscript).forEach((file) => {
         }
       }
     );
-
+    createPlant(toPlants(db_array));
     res.end(JSON.stringify({ mesage: "ok" }));
   });
 
@@ -147,9 +149,7 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   app.post("/zipfront", (req, res) => {
     let content =  JSON.parse(req.body.data) ;
-    //console.log("--content--");
-    //console.log(content);
-
+    
     const zip = new JSZip();
     content.files.forEach((f) => {
       console.log("content.file", f.file);
@@ -259,3 +259,109 @@ function ensureDirectoryExistence(filePath) {
 function esInyectable(fileName, data){
   return data.injection.files.find(f => f.file == fileName);
 }
+
+function esRelacion(campos,d){
+  if (campos[d].includes("[[")){
+      let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
+      return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };;
+  }
+  if (campos[d].includes("[")){
+      let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
+      return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };;
+  }
+      
+  return null;
+}
+
+function  toPlant2str(db){
+  let testX = "";
+  let clase = [];
+  let relations = [];
+  db.groups.forEach(group => {
+      testX += `\tclass ${group.name}{\n`;
+      data_create = group.data.select;
+      let campos = [];
+      
+      data_create = group.data.select;
+      Object.keys(data_create).forEach( d =>{
+          let rel = esRelacion(data_create,d);
+          if (rel == null )
+              campos.push(`\t\t${data_create[d]} ${d}`);
+          else
+              relations.push({table:group.name, reltable:rel.name});
+      });
+      testX += campos.join("\n");
+      testX += `\n\t}\n`; 
+  });
+
+  relations.forEach(r => {
+      testX += `${r.table} *--- ${r.reltable}\n`;
+  });
+
+  return testX;
+};
+
+function  toPlants(dbs){
+  let testX = "";
+  let clase = [];
+  dbs.forEach(db => {
+      testX += `package ${db.db}{\n`;
+      testX += toPlant2str(db);
+      testX += `\n}\n`; 
+  });
+  return '@startuml\n'+testX+'\n@enduml';
+};
+
+function createPlant(content){
+
+  console.log(`--creando diagrama `);
+  fs.writeFileSync("..//diagrams/dbs.txt",content );
+  //exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar "/home/jtordoya/dev/node/diagrams/dbs.txt"'`, 
+  exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/dbs.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
+  (error, stdout, stderr) => {
+    //exec(`ls -la`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`error: ${error.message}`);
+      return;
+    }
+  
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+  
+    console.log(`stdout:\n${stdout}`);
+  });
+}
+
+let ontask = false;
+
+app.post("/toplant", function (req,res){
+  console.log(`--creando diagrama `);
+  if (ontask) 
+    res.end(`{"message":"idle"}`);
+  else{
+    ontask=true;
+    fs.writeFileSync("..//diagrams/temp.txt",req.body.content );
+    //exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar "/home/jtordoya/dev/node/diagrams/dbs.txt"'`, 
+    exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/temp.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
+    (error, stdout, stderr) => {
+      ontask=false;
+      if (error) {
+        console.error(`error: ${error.message}`);
+        res.end(`{"message":"${error.message}"}`);
+        return;
+      }
+    
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        res.end(`{"message":"${stderr}"}`);
+        return;
+      }
+    
+      res.end(`{"message":"ok"}`);
+
+      console.log(`stdout:\n${stdout}`);
+    });
+  }
+});

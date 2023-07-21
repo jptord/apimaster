@@ -25,7 +25,7 @@
 	<script src="http://esironal.github.io/cmtouch/mode/htmlmixed/htmlmixed.js"></script>
 	<script src="http://esironal.github.io/cmtouch/addon/selection/active-line.js"></script>
 	<script src="http://esironal.github.io/cmtouch/addon/edit/matchbrackets.js"></script>
-    <script type="text/javascript" src="libs/plantuml/jquery_plantuml.js"></script>
+    <!-- <script type="text/javascript" src="libs/plantuml/jquery_plantuml.js"></script> -->
 
 	<link rel="stylesheet" href="http://esironal.github.io/cmtouch/theme/neonsyntax.css">
 
@@ -33,19 +33,81 @@
 </head>
 
 <body class=" bg-dark " onload="init();">
-    <div class="content row ">
-        <div class="card col-sm-6">
-            <div id="codeText" class="codeText"></div>
-        </div>
-        <div class="card col-sm-6">            
-            <div class="diagramDiv" >
-                <img id="diagramImg" width="auto" height="auto" uml="">
+    <div class="content-fluid">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a href="#tabcode" class="nav-link active" data-bs-toggle="tab">Clases / Code</a>
+            </li>
+            <li class="nav-item">
+                <a href="#tabdiag" class="nav-link" data-bs-toggle="tab">Diagrama</a>
+            </li>
+            <li class="nav-item">
+                <a href="#tabgen" class="nav-link" data-bs-toggle="tab">Generador</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane show active" id="tabcode">
+                <div class="content row ">
+                    <div class="col-sm-12 ">
+                        <span id="btnGuardar" class="btn btn-outline-success">Guardar (F4)</span>
+                        <span id="btnDiagrama" class="btn btn-outline-primary">Generar diagrama (F6)</span>
+                    </div>
+                    <div class="card col-sm-4">
+                        <div id="codeText" class="codeText"></div>
+                    </div>
+                    <div class="card col-sm-8">            
+                        <div class="diagramDiv" >
+                            <!-- <img id="diagramImg" width="auto" height="auto" uml=""> -->
+                            <img class="diagramImg" width="auto" height="800px" src="/diagrams/temp.png"> 
+                        </div>
+                    </div>
+                    <div class="card col-sm-6 d-none">
+                        <div id="codeUmlText"></div>
+                    </div> 
+            
+                </div>
+            </div>
+            <div class="tab-pane " id="tabdiag">
+                <div class="content row ">
+                    <div class="col-sm-12 ">
+                    </div>
+                    <div class="card col-sm-12">            
+                        <div class="diagramDiv2" >                    
+                            <img class="diagramImg" width="auto" height="auto" src="/diagrams/temp.png"> 
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane " id="tabgen"> 
+                <div class="content row ">
+                    <div class="col-sm-12 ">
+                        <div class="card col-sm-1 bg-black m-3 rounded shadow shadow-lg">
+                            <div class="card-body m-2">
+                                <label class="text-white">creditos</label><br>
+                                <span class="btn btn-sm btn-outline-danger">Angular</span>
+                            </div>
+                        </div>
+                        <div class="card col-sm-1 bg-black m-3 rounded shadow shadow-lg">
+                            <div class="card-body m-2">
+                                <label class="text-white">creditos</label><br>
+                                <span class="btn btn-sm btn-outline-danger">Angular</span>
+                            </div>
+                        </div>
+                        <div class="card col-sm-1 bg-black m-3 rounded shadow shadow-lg">
+                            <div class="card-body m-2">
+                                <label class="text-white">creditos</label><br>
+                                <span class="btn btn-sm btn-outline-danger">Angular</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card col-sm-6">
-            <div id="codeUmlText"></div>
-        </div>
     </div>
+    
+    
 </body>
 <script src="js/main-code.js"></script>
 
