@@ -25,8 +25,9 @@ const port = 9988;
 var public = path.join(__dirname, "public");
 
 app.use(cors());
+//app.use(express.bodyParser({limit: '50mb'}))
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true,parameterLimit: 100000, limit: '50mb' }));
 //app.use(express.multipart());
 //app.use(express.bodyParser());
 app.use("/", express.static(public));

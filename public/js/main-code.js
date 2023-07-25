@@ -3,8 +3,106 @@ let editorX;
 let editorUml;
 let btnGuardar =$("#btnGuardar");
 let btnDiagrama =$("#btnDiagrama");
+var listado = $("#listado");
+
+function iniList(){
+    var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener("click", function() {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+        });
+    }
+}
+
+function toList(dbs){
+    listado.empty();
+    dbs.forEach( db => { 
+        let li = $(`<li><span class="caret">${db.db}</span></li>`);    
+        if (db.groups.length>0){
+            let ul = $(`<ul class="nested"></ul>`);
+            db.groups.forEach( g => { 
+                let li_group = $(`<li class="liGroup" ><span class="caretNo ">${g.name}</span></li>`);                                
+                ul.append(li_group);
+                li_group.on('click',function (e){
+                    console.log("here", g);
+                    mostra_botones=false;
+
+                    $("#contentAngularGen").removeClass("d-none");
+                    $("#btnZip").addClass("d-none");
+                    $("#btnInject").addClass("d-none");
+                    let v_pills_tab = $("#v-pills-tab");
+                    let v_pills_tabContent = $("#v-pills-tabContent");
+                    v_pills_tab.empty();
+                    v_pills_tabContent.empty();
+    
+                    let tbodyFields = $(".tbodyFields");
+                    tbodyFields.empty();
+                    Object.keys(g.data.create).forEach( f => {
+                        let r = relacional(g.data.create[f]);                  
+                        if (r!==undefined) return;
+                        let forRel = null;
+                        if (!esPKbool(g.data.create[f])){
+                            Object.keys(g.data.create).forEach( fr => {
+                                let rr = relacional(g.data.create[fr]);
+                                if (rr===undefined) return;
+                                if (rr.ownfield == f)
+                                    forRel = rr;
+                            });
+                        }
+                        let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
+                        <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
+                        <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                        <td><select class="form-select form-select-sm" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox"  ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscable" type="checkbox" checked ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscablecheck" type="checkbox" checked ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="visiblecheck" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="sortable" type="checkbox" checked ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="filtrable" type="checkbox" checked ></td>                                    
+                        <td><select class="form-select form-select-sm" data-cabecera="filtrabletipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemin" type="checkbox"  ></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="min" type="value" value="0"></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemax" type="checkbox"  ></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>                                         
+                        <td><input class="d-none form-control form-control-sm" data-cabecera="relacion_tabla" type="text" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
+                        <td><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_nombre"></select></td></tr> `);
+                        //let r = relacional(g.data.create[f]);                  
+                        //console.log("r",r);
+                        if (forRel!==undefined && forRel!=null){
+                            let gr = db.groups.find(gx => gx.name == forRel.name)                        
+                            let trSelT = $($(tr).find(`[data-cabecera="relacion_tabla"]`));
+                            trSelT.val(forRel.name);
+                            let trSelC = $($(tr).find(`[data-cabecera="relacion_nombre"]`));              
+                            let trSelN = $($(tr).find(`[data-cabecera="relacion_campo"]`));
+                            Object.keys(gr.data.create).forEach(f => {
+                                let opt1 = $(`<option value="${f}">${f}</option>`);
+                                let opt2 = $(`<option value="${f}">${f}</option>`);                            
+                                trSelC.append(opt1);
+                                trSelN.append(opt2);
+                            });
+                        }
+    
+                        tbodyFields.append(tr);
+                    });
+                    $("[data-param='xnombrex']").val(g.name).change(); 
+    
+                });
+            });
+            li.append(ul);
+        }
+        listado.append(li);
+    });
+    iniList();
+}
 
 function init(){
+    iniList();
+    init_front();
     document.addEventListener("keydown", (event) => {
         //event.preventDefault();
         switch (event.which) {
@@ -58,7 +156,7 @@ function init(){
     cargarJson ();
 }
 
-function saveDBs(data,callback=null){
+function saveDBs(data){
     $.ajax({ 
         url:"/save_all", dataType: 'json', data: {content: JSON.stringify(data)}, method: 'POST' })
         .done(function (res) {
@@ -67,6 +165,7 @@ function saveDBs(data,callback=null){
             setTimeout ( () => {
                 editorUml.setValue(toPlants(data_db));
                 generarPlant(toPlants(data_db));
+                toList(data_db);
              } , 1000);
         } );    
 }
@@ -81,21 +180,24 @@ function generarPlant(valor){
             }
     );
 }
+
 function cargarJson (){
     $.ajax({ 
         url:"/db_all", dataType: 'json', data: {}, method: 'GET' })
             .done(function (data) {
                 data_db = data;
+                toList(data_db);
             //    console.log("data_db > ", data);                         
                 editorX.setValue(toHuman(data_db));
                 //toPlants(data_db[2]);
                 setTimeout(()=>{
                     editorUml.setValue(toPlants(data_db));
                     generarPlant(toPlants(data_db));
-                },1000);
+                },2000);
             }
     );
 }
+
 function esRelacion(campos,d){
     if (campos[d].includes("[[")){
         let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
@@ -111,7 +213,8 @@ function esRelacion(campos,d){
 }
 
 btnGuardar.click((e)=>{
-    saveDBs(toJson(editorX.getValue()));
+    data_db = toJson(editorX.getValue());
+    saveDBs(data_db);
 });
 
 btnDiagrama.click((e)=>{
@@ -171,9 +274,9 @@ function toJson(texto){
             if (cTabs == 3){
                 modo="field";
                 let values = Tabs[3].trim().split(":");
-                console.log("l",l);
-                console.log("Tabs",Tabs);
-                console.log("values",values,l);
+            //    console.log("l",l);
+             //   console.log("Tabs",Tabs);
+             //   console.log("values",values,l);
                 field = {name: values[0].trim(), value:values[1].trim(), rel:null};
                 acGroup.fields.push(field);
                 return;
@@ -184,7 +287,7 @@ function toJson(texto){
     arDb.forEach( d => {
         d.groups.forEach( g => {
             let grouptemp = formatearArray( g );
-            console.log(`grouptemp: `, grouptemp);
+            //console.log(`grouptemp: `, grouptemp);
             g['apis'] = grouptemp.apis;
             g['data'] = grouptemp.data;            
         });
@@ -211,10 +314,16 @@ function formatearArray(groupNor){
         name : groupNor.name,
         data : 
           { select : {... apiData}, create : {... apiData}, insert : {... apiDataIns}}
-        , 
+        ,
         apis : [{
             method : "GET",
             route : "",
+            in : null,
+            type : "auto",
+            out : "select",
+          },{
+            method : "GET",
+            route : ":id",
             in : null,
             type : "auto",
             out : "select",
@@ -241,8 +350,6 @@ function formatearArray(groupNor){
       }
     return group;
 }
-
-
 
 function toHuman(dbs){
     let testX = "";
@@ -290,7 +397,11 @@ function  toPlant(db){
     });
 
     relations.forEach(r => {
-        testX += r.table + " *-- "+ r.reltable + "\n";
+        let tTest = `${r.reltable} *-- ${r.table}`;
+        if ( testX.includes(tTest) )
+            testX = testX.replaceAll(tTest,`${r.reltable} *--* ${r.table}`);
+        else
+            testX += `${r.table} *-- ${r.reltable}\n`;
     });
 
     editorUml.setValue(testX);
@@ -318,7 +429,11 @@ function  toPlant2str(db){
     });
 
     relations.forEach(r => {
-        testX += `${r.table} *-- ${r.reltable}\n`;
+        let tTest = `${r.reltable} *-- ${r.table}`;
+        if ( testX.includes(tTest) )
+            testX = testX.replaceAll(tTest,`${r.reltable} *--* ${r.table}`);
+        else
+            testX += `${r.table} *-- ${r.reltable}\n`;
     });
 
     return testX;

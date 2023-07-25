@@ -35,15 +35,17 @@ export class ListadoComponent implements OnInit {
   crear(data: any, template) {
     this.dataEdit = null;
     this.modalRef = this.modalService.show(template, {
-      class: `modal-md modal-dialog-centered`,
+      class: `modal-{xmodalsizex} modal-fullscreen-{xmodalfullscreensizex}-down modal-dialog-centered`,
     });
   }
+
   editar(data: any, template) {
     this.dataEdit = data;
     this.modalRef = this.modalService.show(template, {
-      class: `modal-md modal-dialog-centered`,
+      class: `modal-{xmodalsizex} modal-fullscreen-{xmodalfullscreensizex}-down modal-dialog-centered`,
     });
   }
+
   habilitar(data: any, component) {
     this.{xnombrecapx}Service.habilitar(data, data.id).subscribe(
       (data) => {
@@ -57,6 +59,7 @@ export class ListadoComponent implements OnInit {
       }
     );
   }
+
   deshabilitar(data: any, component) {
     this.{xnombrecapx}Service.deshabilitar(data, data.id).subscribe(
       (data) => {

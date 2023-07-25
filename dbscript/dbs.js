@@ -30,6 +30,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -111,6 +118,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -159,6 +173,79 @@
                 }
             },
             {
+                "name": "monedas",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "sigla",
+                        "value": "string",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "sigla": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "sigla": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "sigla": "string"
+                    }
+                }
+            },
+            {
                 "name": "cuotastiempo",
                 "fields": [
                     {
@@ -186,6 +273,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -265,6 +359,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -334,6 +435,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -373,7 +481,7 @@
                 }
             },
             {
-                "name": "pagoforma",
+                "name": "pagomedio",
                 "fields": [
                     {
                         "name": "id",
@@ -395,6 +503,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -466,133 +581,8 @@
                         "out": "select"
                     },
                     {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "number|pk",
-                        "nombre": "string",
-                        "descripcion": "string"
-                    },
-                    "create": {
-                        "id": "number|pk",
-                        "nombre": "string",
-                        "descripcion": "string"
-                    },
-                    "insert": {
-                        "nombre": "string",
-                        "descripcion": "string"
-                    }
-                }
-            },
-            {
-                "name": "cobroforma",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "number|pk",
-                        "rel": null
-                    },
-                    {
-                        "name": "nombre",
-                        "value": "string",
-                        "rel": null
-                    },
-                    {
-                        "name": "descripcion",
-                        "value": "string",
-                        "rel": null
-                    }
-                ],
-                "apis": [
-                    {
                         "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
                         "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "number|pk",
-                        "nombre": "string",
-                        "descripcion": "string"
-                    },
-                    "create": {
-                        "id": "number|pk",
-                        "nombre": "string",
-                        "descripcion": "string"
-                    },
-                    "insert": {
-                        "nombre": "string",
-                        "descripcion": "string"
-                    }
-                }
-            },
-            {
-                "name": "cobrotipo",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "number|pk",
-                        "rel": null
-                    },
-                    {
-                        "name": "nombre",
-                        "value": "string",
-                        "rel": null
-                    },
-                    {
-                        "name": "descripcion",
-                        "value": "string",
-                        "rel": null
-                    }
-                ],
-                "apis": [
-                    {
-                        "method": "GET",
-                        "route": "",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -669,6 +659,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -733,6 +730,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -804,6 +808,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -865,6 +876,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -971,6 +989,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -1048,6 +1073,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -1152,13 +1184,13 @@
                         "rel": null
                     },
                     {
-                        "name": "pagoforma_id",
+                        "name": "pagomedio_id",
                         "value": "number",
                         "rel": null
                     },
                     {
-                        "name": "pagoforma",
-                        "value": "[pagoforma|id|pagoforma_id]",
+                        "name": "pagomedio",
+                        "value": "[pagomedio|id|pagomedio_id]",
                         "rel": null
                     },
                     {
@@ -1226,6 +1258,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -1261,8 +1300,8 @@
                         "interestipo": "[interestipo|id|interestipo_id]",
                         "tieneiva": "boolean",
                         "redondear": "boolean",
-                        "pagoforma_id": "number",
-                        "pagoforma": "[pagoforma|id|pagoforma_id]",
+                        "pagomedio_id": "number",
+                        "pagomedio": "[pagomedio|id|pagomedio_id]",
                         "pagotipo_id": "number",
                         "pagotipo": "[pagotipo|id|pagotipo_id]",
                         "montoaprobado": "float",
@@ -1288,8 +1327,8 @@
                         "interestipo": "[interestipo|id|interestipo_id]",
                         "tieneiva": "boolean",
                         "redondear": "boolean",
-                        "pagoforma_id": "number",
-                        "pagoforma": "[pagoforma|id|pagoforma_id]",
+                        "pagomedio_id": "number",
+                        "pagomedio": "[pagomedio|id|pagomedio_id]",
                         "pagotipo_id": "number",
                         "pagotipo": "[pagotipo|id|pagotipo_id]",
                         "montoaprobado": "float",
@@ -1314,8 +1353,8 @@
                         "interestipo": "[interestipo|id|interestipo_id]",
                         "tieneiva": "boolean",
                         "redondear": "boolean",
-                        "pagoforma_id": "number",
-                        "pagoforma": "[pagoforma|id|pagoforma_id]",
+                        "pagomedio_id": "number",
+                        "pagomedio": "[pagomedio|id|pagomedio_id]",
                         "pagotipo_id": "number",
                         "pagotipo": "[pagotipo|id|pagotipo_id]",
                         "montoaprobado": "float",
@@ -1368,6 +1407,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -1438,6 +1484,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -1516,6 +1569,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -1588,6 +1648,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -1717,6 +1784,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -1807,6 +1881,11 @@
                         "rel": null
                     },
                     {
+                        "name": "monto",
+                        "value": "float",
+                        "rel": null
+                    },
+                    {
                         "name": "deudor_id",
                         "value": "number",
                         "rel": null
@@ -1817,13 +1896,13 @@
                         "rel": null
                     },
                     {
-                        "name": "pagoforma_id",
+                        "name": "pagomedio_id",
                         "value": "number",
                         "rel": null
                     },
                     {
-                        "name": "pagoforma",
-                        "value": "[pagoforma|id|pagoforma_id]",
+                        "name": "pagomedio",
+                        "value": "[pagomedio|id|pagomedio_id]",
                         "rel": null
                     },
                     {
@@ -1836,6 +1915,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -1867,29 +1953,32 @@
                         "id": "number|pk",
                         "acreedor_id": "number",
                         "acreedor": "[acreedor|id|acreedor_id]",
+                        "monto": "float",
                         "deudor_id": "number",
                         "deudor": "[deudor|id|deudor_id]",
-                        "pagoforma_id": "number",
-                        "pagoforma": "[pagoforma|id|pagoforma_id]",
+                        "pagomedio_id": "number",
+                        "pagomedio": "[pagomedio|id|pagomedio_id]",
                         "pagofecha": "date"
                     },
                     "create": {
                         "id": "number|pk",
                         "acreedor_id": "number",
                         "acreedor": "[acreedor|id|acreedor_id]",
+                        "monto": "float",
                         "deudor_id": "number",
                         "deudor": "[deudor|id|deudor_id]",
-                        "pagoforma_id": "number",
-                        "pagoforma": "[pagoforma|id|pagoforma_id]",
+                        "pagomedio_id": "number",
+                        "pagomedio": "[pagomedio|id|pagomedio_id]",
                         "pagofecha": "date"
                     },
                     "insert": {
                         "acreedor_id": "number",
                         "acreedor": "[acreedor|id|acreedor_id]",
+                        "monto": "float",
                         "deudor_id": "number",
                         "deudor": "[deudor|id|deudor_id]",
-                        "pagoforma_id": "number",
-                        "pagoforma": "[pagoforma|id|pagoforma_id]",
+                        "pagomedio_id": "number",
+                        "pagomedio": "[pagomedio|id|pagomedio_id]",
                         "pagofecha": "date"
                     }
                 }
@@ -1913,6 +2002,11 @@
                         "rel": null
                     },
                     {
+                        "name": "monto",
+                        "value": "float",
+                        "rel": null
+                    },
+                    {
                         "name": "deudor_id",
                         "value": "number",
                         "rel": null
@@ -1923,18 +2017,28 @@
                         "rel": null
                     },
                     {
-                        "name": "cobroforma_id",
+                        "name": "cobromedio_id",
                         "value": "number",
                         "rel": null
                     },
                     {
-                        "name": "cobroforma",
-                        "value": "[pagoforma|id|cobroforma_id]",
+                        "name": "cobromedio",
+                        "value": "[cobromedio|id|cobromedio_id]",
                         "rel": null
                     },
                     {
                         "name": "cobrofecha",
                         "value": "date",
+                        "rel": null
+                    },
+                    {
+                        "name": "cobrostipo_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "cobrostipo",
+                        "value": "[cobrotipo|id|cobrostipo_id]",
                         "rel": null
                     }
                 ],
@@ -1942,6 +2046,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -1973,30 +2084,193 @@
                         "id": "number|pk",
                         "acreedor_id": "number",
                         "acreedor": "[acreedor|id|acreedor_id]",
+                        "monto": "float",
                         "deudor_id": "number",
                         "deudor": "[deudor|id|deudor_id]",
-                        "cobroforma_id": "number",
-                        "cobroforma": "[pagoforma|id|cobroforma_id]",
-                        "cobrofecha": "date"
+                        "cobromedio_id": "number",
+                        "cobromedio": "[cobromedio|id|cobromedio_id]",
+                        "cobrofecha": "date",
+                        "cobrostipo_id": "number",
+                        "cobrostipo": "[cobrotipo|id|cobrostipo_id]"
                     },
                     "create": {
                         "id": "number|pk",
                         "acreedor_id": "number",
                         "acreedor": "[acreedor|id|acreedor_id]",
+                        "monto": "float",
                         "deudor_id": "number",
                         "deudor": "[deudor|id|deudor_id]",
-                        "cobroforma_id": "number",
-                        "cobroforma": "[pagoforma|id|cobroforma_id]",
-                        "cobrofecha": "date"
+                        "cobromedio_id": "number",
+                        "cobromedio": "[cobromedio|id|cobromedio_id]",
+                        "cobrofecha": "date",
+                        "cobrostipo_id": "number",
+                        "cobrostipo": "[cobrotipo|id|cobrostipo_id]"
                     },
                     "insert": {
                         "acreedor_id": "number",
                         "acreedor": "[acreedor|id|acreedor_id]",
+                        "monto": "float",
                         "deudor_id": "number",
                         "deudor": "[deudor|id|deudor_id]",
-                        "cobroforma_id": "number",
-                        "cobroforma": "[pagoforma|id|cobroforma_id]",
-                        "cobrofecha": "date"
+                        "cobromedio_id": "number",
+                        "cobromedio": "[cobromedio|id|cobromedio_id]",
+                        "cobrofecha": "date",
+                        "cobrostipo_id": "number",
+                        "cobrostipo": "[cobrotipo|id|cobrostipo_id]"
+                    }
+                }
+            },
+            {
+                "name": "cobromedio",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "estado",
+                        "value": "string",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "estado": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "estado": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "estado": "string"
+                    }
+                }
+            },
+            {
+                "name": "cobrotipo",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string"
                     }
                 }
             },
@@ -2023,6 +2297,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2114,6 +2395,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -2192,6 +2480,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -2258,6 +2553,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2332,6 +2634,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -2398,6 +2707,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -2459,6 +2775,13 @@
                         "out": "select"
                     },
                     {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
                         "method": "POST",
                         "route": "",
                         "in": "insert",
@@ -2495,6 +2818,87 @@
                 }
             },
             {
+                "name": "usuarios",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "cargo",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "uid",
+                        "value": "number",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "cargo": "string",
+                        "uid": "number"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "cargo": "string",
+                        "uid": "number"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "cargo": "string",
+                        "uid": "number"
+                    }
+                }
+            },
+            {
                 "name": "fondos",
                 "fields": [
                     {
@@ -2504,6 +2908,16 @@
                     },
                     {
                         "name": "nombre",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "direccion",
+                        "value": "string",
+                        "rel": null
+                    },
+                    {
+                        "name": "ubicacion",
                         "value": "string",
                         "rel": null
                     },
@@ -2523,8 +2937,8 @@
                         "rel": null
                     },
                     {
-                        "name": "solicitud",
-                        "value": "[solicitudes|id|solicitud_id]",
+                        "name": "responsables",
+                        "value": "[[fondosresponsables|fondo_id|id]]",
                         "rel": null
                     }
                 ],
@@ -2532,6 +2946,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2562,30 +2983,36 @@
                     "select": {
                         "id": "number|pk",
                         "nombre": "string",
+                        "direccion": "string",
+                        "ubicacion": "string",
                         "fondostipo_id": "number",
                         "fondostipo": "[fondostipo|id|fondostipo_id]",
                         "solicitud_id": "number",
-                        "solicitud": "[solicitudes|id|solicitud_id]"
+                        "responsables": "[[fondosresponsables|fondo_id|id]]"
                     },
                     "create": {
                         "id": "number|pk",
                         "nombre": "string",
+                        "direccion": "string",
+                        "ubicacion": "string",
                         "fondostipo_id": "number",
                         "fondostipo": "[fondostipo|id|fondostipo_id]",
                         "solicitud_id": "number",
-                        "solicitud": "[solicitudes|id|solicitud_id]"
+                        "responsables": "[[fondosresponsables|fondo_id|id]]"
                     },
                     "insert": {
                         "nombre": "string",
+                        "direccion": "string",
+                        "ubicacion": "string",
                         "fondostipo_id": "number",
                         "fondostipo": "[fondostipo|id|fondostipo_id]",
                         "solicitud_id": "number",
-                        "solicitud": "[solicitudes|id|solicitud_id]"
+                        "responsables": "[[fondosresponsables|fondo_id|id]]"
                     }
                 }
             },
             {
-                "name": "fondoscuentas",
+                "name": "fondosresponsables",
                 "fields": [
                     {
                         "name": "id",
@@ -2593,13 +3020,28 @@
                         "rel": null
                     },
                     {
-                        "name": "cuentas_id",
+                        "name": "responsable_id",
                         "value": "number",
                         "rel": null
                     },
                     {
-                        "name": "cuentas",
-                        "value": "[cuentas|id|cuentas_id]",
+                        "name": "responsables",
+                        "value": "[usuarios|id|responsable_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo",
+                        "value": "[fondos|id|fondo_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "estado",
+                        "value": "string",
                         "rel": null
                     }
                 ],
@@ -2607,6 +3049,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2636,17 +3085,455 @@
                 "data": {
                     "select": {
                         "id": "number|pk",
-                        "cuentas_id": "number",
-                        "cuentas": "[cuentas|id|cuentas_id]"
+                        "responsable_id": "number",
+                        "responsables": "[usuarios|id|responsable_id]",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "estado": "string"
                     },
                     "create": {
                         "id": "number|pk",
-                        "cuentas_id": "number",
-                        "cuentas": "[cuentas|id|cuentas_id]"
+                        "responsable_id": "number",
+                        "responsables": "[usuarios|id|responsable_id]",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "estado": "string"
                     },
                     "insert": {
-                        "cuentas_id": "number",
-                        "cuentas": "[cuentas|id|cuentas_id]"
+                        "responsable_id": "number",
+                        "responsables": "[usuarios|id|responsable_id]",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "estado": "string"
+                    }
+                }
+            },
+            {
+                "name": "fondoshorarios",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo",
+                        "value": "[fondos|id|fondo_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "horario_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "horario",
+                        "value": "[horarios|id|horario_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "estado",
+                        "value": "string",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "estado": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "estado": "string"
+                    },
+                    "insert": {
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "estado": "string"
+                    }
+                }
+            },
+            {
+                "name": "fondoscobromedio",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo",
+                        "value": "[fondos|id|fondo_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "cobromedio_id",
+                        "value": "number",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "cobromedio_id": "number"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "cobromedio_id": "number"
+                    },
+                    "insert": {
+                        "fondo": "[fondos|id|fondo_id]",
+                        "cobromedio_id": "number"
+                    }
+                }
+            },
+            {
+                "name": "horarios",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string"
+                    },
+                    "insert": {
+                        "nombre": "string"
+                    }
+                }
+            },
+            {
+                "name": "horariodia",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "horario_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "horario",
+                        "value": "[horarios|id|horario_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "dia",
+                        "value": "integer",
+                        "rel": null
+                    },
+                    {
+                        "name": "apertura",
+                        "value": "time",
+                        "rel": null
+                    },
+                    {
+                        "name": "cierre",
+                        "value": "time",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "dia": "integer",
+                        "apertura": "time",
+                        "cierre": "time"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "dia": "integer",
+                        "apertura": "time",
+                        "cierre": "time"
+                    },
+                    "insert": {
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "dia": "integer",
+                        "apertura": "time",
+                        "cierre": "time"
+                    }
+                }
+            },
+            {
+                "name": "fondosusuarios",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "fondo",
+                        "value": "[fondos|id|fondo_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "usuario_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "usuario",
+                        "value": "[usuarios|id|usuario_id]",
+                        "rel": null
+                    },
+                    {
+                        "name": "estado",
+                        "value": "string",
+                        "rel": null
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "usuario_id": "number",
+                        "usuario": "[usuarios|id|usuario_id]",
+                        "estado": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "usuario_id": "number",
+                        "usuario": "[usuarios|id|usuario_id]",
+                        "estado": "string"
+                    },
+                    "insert": {
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "usuario_id": "number",
+                        "usuario": "[usuarios|id|usuario_id]",
+                        "estado": "string"
                     }
                 }
             },
@@ -2667,12 +3554,34 @@
                         "name": "descripcion",
                         "value": "string",
                         "rel": null
+                    },
+                    {
+                        "name": "montofijo",
+                        "value": "boolean",
+                        "rel": null
+                    },
+                    {
+                        "name": "moneda_id",
+                        "value": "number",
+                        "rel": null
+                    },
+                    {
+                        "name": "moneda",
+                        "value": "[monedas|id|moneda_id]",
+                        "rel": null
                     }
                 ],
                 "apis": [
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2703,16 +3612,25 @@
                     "select": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "descripcion": "string"
+                        "descripcion": "string",
+                        "montofijo": "boolean",
+                        "moneda_id": "number",
+                        "moneda": "[monedas|id|moneda_id]"
                     },
                     "create": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "descripcion": "string"
+                        "descripcion": "string",
+                        "montofijo": "boolean",
+                        "moneda_id": "number",
+                        "moneda": "[monedas|id|moneda_id]"
                     },
                     "insert": {
                         "nombre": "string",
-                        "descripcion": "string"
+                        "descripcion": "string",
+                        "montofijo": "boolean",
+                        "moneda_id": "number",
+                        "moneda": "[monedas|id|moneda_id]"
                     }
                 }
             },
@@ -2774,6 +3692,13 @@
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2855,12 +3780,24 @@
                         "name": "descripción",
                         "value": "string",
                         "rel": null
+                    },
+                    {
+                        "name": "estado",
+                        "value": "string",
+                        "rel": null
                     }
                 ],
                 "apis": [
                     {
                         "method": "GET",
                         "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
                         "in": null,
                         "type": "auto",
                         "out": "select"
@@ -2891,16 +3828,19 @@
                     "select": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "descripción": "string"
+                        "descripción": "string",
+                        "estado": "string"
                     },
                     "create": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "descripción": "string"
+                        "descripción": "string",
+                        "estado": "string"
                     },
                     "insert": {
                         "nombre": "string",
-                        "descripción": "string"
+                        "descripción": "string",
+                        "estado": "string"
                     }
                 }
             }

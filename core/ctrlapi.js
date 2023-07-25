@@ -168,7 +168,7 @@ class CtrlApi{
         })
         this.dbData.groups.forEach(group => {
             group.apis.forEach(api => {
-                if (api.method == "GET"){
+                if (api.method == "GET" && api.type == "auto"){
                     console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                     router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
@@ -177,20 +177,26 @@ class CtrlApi{
                         };
                         let f = me.toFields(group.data[api.out]);                        
 
+                        let findcondition = '';
+                        console.log("findcondition:", req.params[api.route.replace(":","")]);
+                        if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
+                            findcondition = ` WHERE ${api.route.replace(":","")} = ${req.params[api.route.replace(":","")]}`;
+
                         if (req.query.page != undefined && req.query.size != undefined &&
                             req.query.sortBy != undefined && req.query.descending != undefined ){
+
                             let page = parseInt(req.query.page);
                             let size = parseInt(req.query.size);
                             let sort = req.query.sortBy;
                             let descending = req.query.descending=='false'?"ASC":"DESC" ;
                             let offset = (page ) * size;
-                            let tot = me.database.db.prepare(`select count (*) as total from ${group.name}`).all();
+                            let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
                             let rowsNumber = tot[0]['total'];
                             respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
                             respuesta.pagination.rowsNumber = rowsNumber;
-                            console.log("sel", `select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
+                            console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                             //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
-                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending}  `).all();
+                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
                             me.appendSubquerys(respuesta.content,group.data[api.out]);
 
                             if (req.query.keyword != undefined){
@@ -200,12 +206,11 @@ class CtrlApi{
                                     respuesta.pagination.rowsNumber = respuesta.content.length;
                                 }
                             }
-
                             respuesta.content = respuesta.content.slice(offset,offset+size);
-
                             
                         }else{
-                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} `).all();
+                            console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
+                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
                             me.appendSubquerys(respuesta.content,group.data[api.out]);
                         }                        
     
@@ -214,7 +219,7 @@ class CtrlApi{
                         //res.end(f);
                     });
                 }
-                if (api.method == "POST"){
+                if (api.method == "POST" && api.type == "auto"){
                     console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
                     router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
@@ -231,7 +236,7 @@ class CtrlApi{
                         //res.end(f);
                     });
                 }
-                if (api.method == "PUT"){
+                if (api.method == "PUT" && api.type=="auto" ){
                     console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                     router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');
@@ -246,7 +251,7 @@ class CtrlApi{
                         res.end(JSON.stringify(respuesta));
                     });
                 }
-                if (api.method == "DELETE"){
+                if (api.method == "DELETE" && api.type=="auto" ){
                     console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                     router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                         res.setHeader('Content-Type', 'application/json');

@@ -1,7 +1,6 @@
 var stage = new createjs.Stage("mainCanvas");
 var update = false;
 
-
 function init(){
     createjs.Touch.enable(stage);
     stage.enableMouseOver(10);
