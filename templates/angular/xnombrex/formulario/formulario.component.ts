@@ -1,10 +1,12 @@
 import { Component,  EventEmitter,  Input,  Output,  ViewChild,  OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+
+import { ActivatedRoute, Router } from "@angular/router";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
 import { {xnombrecapx}Service } from "../servicios/{xnombrex}.service";
 {xrelations_includex}
 @Component({
-  selector: "app-formulario",
+  selector: "app-formulario-{xnombrex}",
   templateUrl: "./formulario.component.html",
   styleUrls: ["./formulario.component.scss"],
 })
@@ -14,7 +16,10 @@ export class FormularioComponent implements OnInit {
   @Output() alGuardar = new EventEmitter<any>();
   @Output() alActualizar = new EventEmitter<any>();
 
+  @Input() esModal:boolean = false;
   @Input() dataEdit: any;
+  @Input() rel_prefix: any;
+  @Input() rel_field: any = '';
 
   {xrelations_varx}
   estados: any = [
@@ -23,6 +28,8 @@ export class FormularioComponent implements OnInit {
   ];
 
   constructor(
+    private readonly router: Router,
+    private route: ActivatedRoute,
     private FormBuilder: FormBuilder,
     private notificacionService: NotificacionService,
     private {xnombrecapx}Service: {xnombrecapx}Service,
@@ -42,9 +49,22 @@ export class FormularioComponent implements OnInit {
     this.formGroup = this.FormBuilder.group({xformbuilderx});
     if (this.dataEdit != null) {
       this.formGroup.setValue({xformeditx});
+      this.rel_prefix = "/{xnombrex}/"+this.dataEdit.id;
+    }
+    let id = this.route.snapshot.params['id'];
+    if (this.rel_prefix && this.rel_field) this.formGroup.get(this.rel_field).disable();
+    if (id != null && !this.esModal && id!="nuevo" ) {
+      this.{xnombrecapx}Service.find(id).subscribe((result:any) => {
+        if (result.content.length == 0) return;
+        this.dataEdit= result.content[0];
+          this.formGroup.setValue({xformeditx});
+          this.rel_prefix = "/{xnombrex}/"+id;
+      });
     }
   }
-
+  volver(){
+    this.router.navigate(['..'], {relativeTo: this.route});
+  }
   guardar() {
     this.submitted = true;    
     if (this.formGroup.valid) {
@@ -55,6 +75,7 @@ export class FormularioComponent implements OnInit {
           (res: any) => {
             this.notificacionService.successStandar();
             this.alGuardar.emit(res);
+            if (!this.esModal) this.router.navigate(['..'], {relativeTo: this.route});
           },
           (err: any) => {
             this.notificacionService.alertError(err);
@@ -65,6 +86,7 @@ export class FormularioComponent implements OnInit {
           (res: any) => {
             this.notificacionService.successStandar();
             this.alActualizar.emit(res);
+            if (!this.esModal) this.router.navigate(['..'], {relativeTo: this.route});
           },
           (err: any) => {
             this.notificacionService.alertError(err);

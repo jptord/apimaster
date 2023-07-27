@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { {xnombrecapx}Service } from "../servicios/{xnombrex}.service";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
@@ -7,11 +7,14 @@ import { NotificacionService } from "src/app/core/services/notificacion.service"
 type NewType = NotificacionService;
 
 @Component({
-  selector: "app-listado",
+  selector: "app-listado-{xnombrex}",
   templateUrl: "./listado.component.html",
   styleUrls: ["./listado.component.scss"],
 })
 export class ListadoComponent implements OnInit {
+  @Input() rel_prefix:any;
+  @Input() rel_field:any;
+
   modalRef?: BsModalRef;
 
   formato: any;
@@ -27,9 +30,12 @@ export class ListadoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.rel_prefix) this.{xnombrecapx}Service.setPrefix(this.rel_prefix);
     this.formato = {
       cabeceras: {xcabecerasx}
     };
+
+    if (this.rel_prefix && this.rel_field) { this.formato.cabeceras[this.rel_field].visible = false;this.formato.cabeceras[this.rel_field].visibleCheck = false }
   }
 
   crear(data: any, template) {

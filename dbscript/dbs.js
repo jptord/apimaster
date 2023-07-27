@@ -7,18 +7,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -80,33 +77,34 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "tipodato_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "tipodato",
                         "value": "[tipodato|id|tipodato_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "tipodato",
+                            "name": "tipodato",
+                            "field": "id",
+                            "ownfield": "tipodato_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "valores",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -177,18 +175,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "sigla",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -250,23 +245,19 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "dias",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     }
                 ],
                 "apis": [
@@ -331,23 +322,19 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "dias",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     }
                 ],
                 "apis": [
@@ -412,18 +399,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -485,18 +469,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -558,18 +539,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -631,23 +609,26 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "contacto_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "contacto",
                         "value": "[contacto|id|contacto_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "contacto",
+                            "name": "contacto",
+                            "field": "id",
+                            "ownfield": "contacto_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -712,18 +693,22 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "contacto_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "contacto",
                         "value": "[contacto|id|contacto_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "contacto",
+                            "name": "contacto",
+                            "field": "id",
+                            "ownfield": "contacto_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -785,18 +770,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "sigla",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -858,18 +840,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -931,53 +910,57 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "nitci",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "documentocontactotipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "documentocontactotipo",
                         "value": "[documentocontactotipo|id|documentocontactotipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "documentocontactotipo",
+                            "name": "documentocontactotipo",
+                            "field": "id",
+                            "ownfield": "documentocontactotipo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "telefono",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "correo",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "direccion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "contactogrupo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "contactogrupo",
                         "value": "[contactogrupo|id|contactogrupo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "contactogrupo",
+                            "name": "contactogrupo",
+                            "field": "id",
+                            "ownfield": "contactogrupo_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -1060,13 +1043,11 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -1125,128 +1106,152 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "capital",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "cuotas",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "cuotastiempo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "cuotastiempo",
                         "value": "[cuotastiempo|id|cuotastiempo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "cuotastiempo",
+                            "name": "cuotastiempo",
+                            "field": "id",
+                            "ownfield": "cuotastiempo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "interes",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "interestiempo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "interestiempo",
                         "value": "[interestiempo|id|interestiempo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "interestiempo",
+                            "name": "interestiempo",
+                            "field": "id",
+                            "ownfield": "interestiempo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "interestipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "interestipo",
                         "value": "[interestipo|id|interestipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "interestipo",
+                            "name": "interestipo",
+                            "field": "id",
+                            "ownfield": "interestipo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "tieneiva",
-                        "value": "boolean",
-                        "rel": null
+                        "value": "boolean"
                     },
                     {
                         "name": "redondear",
-                        "value": "boolean",
-                        "rel": null
+                        "value": "boolean"
                     },
                     {
                         "name": "pagomedio_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagomedio",
                         "value": "[pagomedio|id|pagomedio_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "pagomedio",
+                            "name": "pagomedio",
+                            "field": "id",
+                            "ownfield": "pagomedio_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "pagotipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagotipo",
                         "value": "[pagotipo|id|pagotipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "pagotipo",
+                            "name": "pagotipo",
+                            "field": "id",
+                            "ownfield": "pagotipo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "montoaprobado",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "montodesembolsado",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "plazo",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     },
                     {
                         "name": "dias",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "acreedor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "acreedor",
                         "value": "[acreedor|id|acreedor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "acreedor",
+                            "name": "acreedor",
+                            "field": "id",
+                            "ownfield": "acreedor_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "deudor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "deudor",
                         "value": "[deudor|id|deudor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "deudor",
+                            "name": "deudor",
+                            "field": "id",
+                            "ownfield": "deudor_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "creditofecha",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     }
                 ],
                 "apis": [
@@ -1374,33 +1379,41 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "fecha",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     },
                     {
                         "name": "credito_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "credito",
                         "value": "[credito|id|credito_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "credito",
+                            "name": "credito",
+                            "field": "id",
+                            "ownfield": "credito_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "creditoestado_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "creditoestado",
                         "value": "[creditoestado|id|creditoestado_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "creditoestado",
+                            "name": "creditoestado",
+                            "field": "id",
+                            "ownfield": "creditoestado_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -1471,13 +1484,11 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -1536,28 +1547,37 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "pagos_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagos",
                         "value": "[pagos|id|pagos_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "pagos",
+                            "name": "pagos",
+                            "field": "id",
+                            "ownfield": "pagos_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "pagoestado_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagoestado",
                         "value": "[pagoestado|id|pagoestado_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "pagoestado",
+                            "name": "pagoestado",
+                            "field": "id",
+                            "ownfield": "pagoestado_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -1625,23 +1645,26 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "creditopagos_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagoestado_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagoestado",
                         "value": "[pagoestado|id|pagoestado_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "pagoestado",
+                            "name": "pagoestado",
+                            "field": "id",
+                            "ownfield": "pagoestado_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -1706,73 +1729,66 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "credito_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "credito",
                         "value": "[credito|id|credito_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "credito",
+                            "name": "credito",
+                            "field": "id",
+                            "ownfield": "credito_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "nrocuota",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pago",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "interes",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "capital",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "saldo",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "mora",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "descuento",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "recargo",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "pagofecha",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     },
                     {
                         "name": "plazo",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     },
                     {
                         "name": "pago_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     }
                 ],
                 "apis": [
@@ -1867,48 +1883,60 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "acreedor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "acreedor",
                         "value": "[acreedor|id|acreedor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "acreedor",
+                            "name": "acreedor",
+                            "field": "id",
+                            "ownfield": "acreedor_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "monto",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "deudor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "deudor",
                         "value": "[deudor|id|deudor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "deudor",
+                            "name": "deudor",
+                            "field": "id",
+                            "ownfield": "deudor_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "pagomedio_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "pagomedio",
                         "value": "[pagomedio|id|pagomedio_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "pagomedio",
+                            "name": "pagomedio",
+                            "field": "id",
+                            "ownfield": "pagomedio_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "pagofecha",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     }
                 ],
                 "apis": [
@@ -1988,58 +2016,75 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "acreedor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "acreedor",
                         "value": "[acreedor|id|acreedor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "acreedor",
+                            "name": "acreedor",
+                            "field": "id",
+                            "ownfield": "acreedor_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "monto",
-                        "value": "float",
-                        "rel": null
+                        "value": "float"
                     },
                     {
                         "name": "deudor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "deudor",
                         "value": "[deudor|id|deudor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "deudor",
+                            "name": "deudor",
+                            "field": "id",
+                            "ownfield": "deudor_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "cobromedio_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "cobromedio",
                         "value": "[cobromedio|id|cobromedio_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "cobromedio",
+                            "name": "cobromedio",
+                            "field": "id",
+                            "ownfield": "cobromedio_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "cobrofecha",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     },
                     {
                         "name": "cobrostipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "cobrostipo",
                         "value": "[cobrotipo|id|cobrostipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "cobrostipo",
+                            "name": "cobrotipo",
+                            "field": "id",
+                            "ownfield": "cobrostipo_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -2125,23 +2170,19 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2206,18 +2247,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2279,18 +2317,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2352,38 +2387,38 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "identificacion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "documentotipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "documentotipo",
                         "value": "[documentotipo|id|documentotipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "documentotipo",
+                            "name": "documentotipo",
+                            "field": "id",
+                            "ownfield": "documentotipo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "observacions",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "url",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2457,18 +2492,15 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2530,23 +2562,26 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "cuentatipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "cuentatipo",
                         "value": "[cuentatipo|id|cuentatipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "cuentatipo",
+                            "name": "cuentatipo",
+                            "field": "id",
+                            "ownfield": "cuentatipo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "codigo",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2611,18 +2646,22 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "acreedor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "acreedor",
                         "value": "[acreedor|id|acreedor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "acreedor",
+                            "name": "acreedor",
+                            "field": "id",
+                            "ownfield": "acreedor_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -2684,18 +2723,22 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "deudor_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "deudor",
                         "value": "[deudor|id|deudor_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "deudor",
+                            "name": "deudor",
+                            "field": "id",
+                            "ownfield": "deudor_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -2757,13 +2800,11 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -2822,23 +2863,19 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "cargo",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "uid",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     }
                 ],
                 "apis": [
@@ -2903,43 +2940,49 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "direccion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "ubicacion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "fondostipo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "fondostipo",
                         "value": "[fondostipo|id|fondostipo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "fondostipo",
+                            "name": "fondostipo",
+                            "field": "id",
+                            "ownfield": "fondostipo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "solicitud_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "responsables",
                         "value": "[[fondosresponsables|fondo_id|id]]",
-                        "rel": null
+                        "rel": {
+                            "index": "responsables",
+                            "name": "fondosresponsables",
+                            "field": "fondo_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "apis": [
@@ -2977,6 +3020,46 @@
                         "in": null,
                         "type": "auto",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":fondo_id/fondosresponsables",
+                        "in": null,
+                        "rel": "[[fondosresponsables|fondo_id|id]]",
+                        "type": "rel",
+                        "out": "select_fondosresponsables"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":fondo_id/fondosresponsables/:id",
+                        "in": null,
+                        "rel": "[[fondosresponsables|fondo_id|id]]",
+                        "type": "rel",
+                        "out": "select_fondosresponsables"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":fondo_id/fondosresponsables",
+                        "in": "insert_fondosresponsables",
+                        "rel": "[[fondosresponsables|fondo_id|id]]",
+                        "type": "rel",
+                        "out": "select_fondosresponsables"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":fondo_id/fondosresponsables/:id",
+                        "in": "insert_fondosresponsables",
+                        "rel": "[[fondosresponsables|fondo_id|id]]",
+                        "type": "rel",
+                        "out": "select_fondosresponsables"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":fondo_id/fondosresponsables/:id",
+                        "in": null,
+                        "rel": "[[fondosresponsables|fondo_id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
@@ -3008,6 +3091,29 @@
                         "fondostipo": "[fondostipo|id|fondostipo_id]",
                         "solicitud_id": "number",
                         "responsables": "[[fondosresponsables|fondo_id|id]]"
+                    },
+                    "select_fondosresponsables": {
+                        "id": "number|pk",
+                        "responsable_id": "number",
+                        "responsables": "[usuarios|id|responsable_id]",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "estado": "string"
+                    },
+                    "create_fondosresponsables": {
+                        "id": "number|pk",
+                        "responsable_id": "number",
+                        "responsables": "[usuarios|id|responsable_id]",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "estado": "string"
+                    },
+                    "insert_fondosresponsables": {
+                        "responsable_id": "number",
+                        "responsables": "[usuarios|id|responsable_id]",
+                        "fondo_id": "number",
+                        "fondo": "[fondos|id|fondo_id]",
+                        "estado": "string"
                     }
                 }
             },
@@ -3016,33 +3122,41 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "responsable_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "responsables",
                         "value": "[usuarios|id|responsable_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "responsables",
+                            "name": "usuarios",
+                            "field": "id",
+                            "ownfield": "responsable_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "fondo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "fondo",
                         "value": "[fondos|id|fondo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "fondo",
+                            "name": "fondos",
+                            "field": "id",
+                            "ownfield": "fondo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -3113,33 +3227,41 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "fondo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "fondo",
                         "value": "[fondos|id|fondo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "fondo",
+                            "name": "fondos",
+                            "field": "id",
+                            "ownfield": "fondo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "horario_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "horario",
                         "value": "[horarios|id|horario_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "horario",
+                            "name": "horarios",
+                            "field": "id",
+                            "ownfield": "horario_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -3210,18 +3332,22 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "fondo",
                         "value": "[fondos|id|fondo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "fondo",
+                            "name": "fondos",
+                            "field": "id",
+                            "ownfield": "fondo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "cobromedio_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     }
                 ],
                 "apis": [
@@ -3283,13 +3409,154 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
+                    },
+                    {
+                        "name": "horario",
+                        "value": "[[horariodia|horario_id|id]]",
+                        "rel": {
+                            "index": "horario",
+                            "name": "horariodia",
+                            "field": "horario_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":horario_id/horariodia",
+                        "in": null,
+                        "rel": "[[horariodia|horario_id|id]]",
+                        "type": "rel",
+                        "out": "select_horariodia"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":horario_id/horariodia/:id",
+                        "in": null,
+                        "rel": "[[horariodia|horario_id|id]]",
+                        "type": "rel",
+                        "out": "select_horariodia"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":horario_id/horariodia",
+                        "in": "insert_horariodia",
+                        "rel": "[[horariodia|horario_id|id]]",
+                        "type": "rel",
+                        "out": "select_horariodia"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":horario_id/horariodia/:id",
+                        "in": "insert_horariodia",
+                        "rel": "[[horariodia|horario_id|id]]",
+                        "type": "rel",
+                        "out": "select_horariodia"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":horario_id/horariodia/:id",
+                        "in": null,
+                        "rel": "[[horariodia|horario_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "horario": "[[horariodia|horario_id|id]]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "horario": "[[horariodia|horario_id|id]]"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "horario": "[[horariodia|horario_id|id]]"
+                    },
+                    "select_horariodia": {
+                        "id": "number|pk",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "dia_id": "integer",
+                        "dias": "[dias|id|dia_id]",
+                        "apertura": "time",
+                        "cierre": "time"
+                    },
+                    "create_horariodia": {
+                        "id": "number|pk",
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "dia_id": "integer",
+                        "dias": "[dias|id|dia_id]",
+                        "apertura": "time",
+                        "cierre": "time"
+                    },
+                    "insert_horariodia": {
+                        "horario_id": "number",
+                        "horario": "[horarios|id|horario_id]",
+                        "dia_id": "integer",
+                        "dias": "[dias|id|dia_id]",
+                        "apertura": "time",
+                        "cierre": "time"
+                    }
+                }
+            },
+            {
+                "name": "dias",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -3348,33 +3615,45 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "horario_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "horario",
                         "value": "[horarios|id|horario_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "horario",
+                            "name": "horarios",
+                            "field": "id",
+                            "ownfield": "horario_id",
+                            "array": false
+                        }
                     },
                     {
-                        "name": "dia",
-                        "value": "integer",
-                        "rel": null
+                        "name": "dia_id",
+                        "value": "integer"
+                    },
+                    {
+                        "name": "dias",
+                        "value": "[dias|id|dia_id]",
+                        "rel": {
+                            "index": "dias",
+                            "name": "dias",
+                            "field": "id",
+                            "ownfield": "dia_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "apertura",
-                        "value": "time",
-                        "rel": null
+                        "value": "time"
                     },
                     {
                         "name": "cierre",
-                        "value": "time",
-                        "rel": null
+                        "value": "time"
                     }
                 ],
                 "apis": [
@@ -3419,7 +3698,8 @@
                         "id": "number|pk",
                         "horario_id": "number",
                         "horario": "[horarios|id|horario_id]",
-                        "dia": "integer",
+                        "dia_id": "integer",
+                        "dias": "[dias|id|dia_id]",
                         "apertura": "time",
                         "cierre": "time"
                     },
@@ -3427,14 +3707,16 @@
                         "id": "number|pk",
                         "horario_id": "number",
                         "horario": "[horarios|id|horario_id]",
-                        "dia": "integer",
+                        "dia_id": "integer",
+                        "dias": "[dias|id|dia_id]",
                         "apertura": "time",
                         "cierre": "time"
                     },
                     "insert": {
                         "horario_id": "number",
                         "horario": "[horarios|id|horario_id]",
-                        "dia": "integer",
+                        "dia_id": "integer",
+                        "dias": "[dias|id|dia_id]",
                         "apertura": "time",
                         "cierre": "time"
                     }
@@ -3445,33 +3727,41 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "fondo_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "fondo",
                         "value": "[fondos|id|fondo_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "fondo",
+                            "name": "fondos",
+                            "field": "id",
+                            "ownfield": "fondo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "usuario_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "usuario",
                         "value": "[usuarios|id|usuario_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "usuario",
+                            "name": "usuarios",
+                            "field": "id",
+                            "ownfield": "usuario_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [
@@ -3542,33 +3832,34 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripcion",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "montofijo",
-                        "value": "boolean",
-                        "rel": null
+                        "value": "boolean"
                     },
                     {
                         "name": "moneda_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "moneda",
                         "value": "[monedas|id|moneda_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "moneda",
+                            "name": "monedas",
+                            "field": "id",
+                            "ownfield": "moneda_id",
+                            "array": false
+                        }
                     }
                 ],
                 "apis": [
@@ -3639,53 +3930,64 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "fecha",
-                        "value": "date",
-                        "rel": null
+                        "value": "date"
                     },
                     {
                         "name": "solicitante",
                         "value": "[contacto|id|solicitante_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "solicitante",
+                            "name": "contacto",
+                            "field": "id",
+                            "ownfield": "solicitante_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "aprobacion",
-                        "value": "boolean",
-                        "rel": null
+                        "value": "boolean"
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "solicitud_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "solicitudtipo",
                         "value": "[solicitudtipo|id|solicitud_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "solicitudtipo",
+                            "name": "solicitudtipo",
+                            "field": "id",
+                            "ownfield": "solicitud_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "centrodecostos_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     },
                     {
                         "name": "centrodecostos",
                         "value": "[centrodecostos|id|centrodecostos_id]",
-                        "rel": null
+                        "rel": {
+                            "index": "centrodecostos",
+                            "name": "centrodecostos",
+                            "field": "id",
+                            "ownfield": "centrodecostos_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "solicitante_id",
-                        "value": "number",
-                        "rel": null
+                        "value": "number"
                     }
                 ],
                 "apis": [
@@ -3768,23 +4070,19 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "number|pk",
-                        "rel": null
+                        "value": "number|pk"
                     },
                     {
                         "name": "nombre",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "descripción",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     },
                     {
                         "name": "estado",
-                        "value": "string",
-                        "rel": null
+                        "value": "string"
                     }
                 ],
                 "apis": [

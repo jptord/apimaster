@@ -17,10 +17,11 @@ class CtrlApi{
         let name = values[0];
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `${column} INTEGER PRIMARY KEY AUTOINCREMENT`;
-        if (name == "number" ) return `${column} INTEGER`;
+        if (name == "number" || "integer" ) return `${column} INTEGER`;
         if (name == "float" ) return `${column} FLOAT`;
         if (name == "double" ) return `${column} FLOAT`;
         if (name == "date" ) return `${column} DATE`;
+        if (name == "time" ) return `${column} TIME`;
         if (name == "boolean" ) return `${column} BOOLEAN DEFAULT false NOT NULL`;
         if (name == "string" ) return `${column} VARCHAR(255)`;
     }
@@ -69,6 +70,19 @@ class CtrlApi{
             }
         });
         return strArr;
+    }
+    toRelation(name,str){
+            //evitar las subconsultas
+        if (str.includes("[[")) {
+            let subArr = str.replace("[[","").replace("]]","").trim().split("|");
+            return {name:name,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:true};
+            
+        }
+        if (str.includes("[")) {
+            let subArr = str.replace("[","").replace("]","").trim().split("|");
+            return {name:name,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:false};
+        }
+        return null;
     }
 
     appendSubquerys(content,data_fields){
@@ -167,104 +181,7 @@ class CtrlApi{
             res.end(JSON.stringify( me.dbData ));
         })
         this.dbData.groups.forEach(group => {
-            group.apis.forEach(api => {
-                if (api.method == "GET" && api.type == "auto"){
-                    console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
-                    router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
-                        res.setHeader('Content-Type', 'application/json');
-                        let respuesta = {content: [],
-                            pagination: { pages : 0, rowsNumber: 0 }
-                        };
-                        let f = me.toFields(group.data[api.out]);                        
-
-                        let findcondition = '';
-                        console.log("findcondition:", req.params[api.route.replace(":","")]);
-                        if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
-                            findcondition = ` WHERE ${api.route.replace(":","")} = ${req.params[api.route.replace(":","")]}`;
-
-                        if (req.query.page != undefined && req.query.size != undefined &&
-                            req.query.sortBy != undefined && req.query.descending != undefined ){
-
-                            let page = parseInt(req.query.page);
-                            let size = parseInt(req.query.size);
-                            let sort = req.query.sortBy;
-                            let descending = req.query.descending=='false'?"ASC":"DESC" ;
-                            let offset = (page ) * size;
-                            let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
-                            let rowsNumber = tot[0]['total'];
-                            respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
-                            respuesta.pagination.rowsNumber = rowsNumber;
-                            console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
-                            //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
-                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                            me.appendSubquerys(respuesta.content,group.data[api.out]);
-
-                            if (req.query.keyword != undefined){
-                                if (req.query.keyword != ""){
-                                    let regx = new RegExp("^.*"+req.query.keyword.toLowerCase()+".*$");
-                                    respuesta.content = respuesta.content.filter( (e) => Object.keys(e).filter( f => { return me.searchInside(e[f],regx); } ).length>0 );
-                                    respuesta.pagination.rowsNumber = respuesta.content.length;
-                                }
-                            }
-                            respuesta.content = respuesta.content.slice(offset,offset+size);
-                            
-                        }else{
-                            console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
-                            respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
-                            me.appendSubquerys(respuesta.content,group.data[api.out]);
-                        }                        
-    
-
-                        res.end(JSON.stringify(respuesta));
-                        //res.end(f);
-                    });
-                }
-                if (api.method == "POST" && api.type == "auto"){
-                    console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
-                    router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
-                        res.setHeader('Content-Type', 'application/json');
-                        let respuesta = {content: [],
-                            pagination: { pages : 0, rowsNumber: 0 }
-                        };
-                        let f = me.toFields(group.data[api.in]);
-                        let v = me.toValues(group.data[api.in],req.body);
-                        console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
-                        me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();
-                        respuesta.content = req.body;
-                        console.log("req.body:",req);
-                        res.end(JSON.stringify(respuesta));
-                        //res.end(f);
-                    });
-                }
-                if (api.method == "PUT" && api.type=="auto" ){
-                    console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
-                    router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
-                        res.setHeader('Content-Type', 'application/json');
-                        let respuesta = {content: [],
-                            pagination: { pages : 0, rowsNumber: 0 }
-                        };
-                        let f = me.toFields(group.data[api.in]);
-                        let v = me.toValuesUpd(group.data[api.in],req.body);
-                        let id = req.params.id;
-                        me.database.db.prepare(`UPDATE ${group.name} SET ${v} WHERE id = '${id}'`).run();
-                        respuesta.content = req.body;
-                        res.end(JSON.stringify(respuesta));
-                    });
-                }
-                if (api.method == "DELETE" && api.type=="auto" ){
-                    console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
-                    router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
-                        res.setHeader('Content-Type', 'application/json');
-                        let respuesta = {content: [],
-                            pagination: { pages : 0, rowsNumber: 0 }
-                        };
-                        let id = req.params.id;
-                        me.database.db.prepare(`DELETE FROM ${group.name} WHERE id = '${id}'`).run();
-                        respuesta.content = req.body;
-                        res.end(JSON.stringify(respuesta));
-                    });
-                }
-            });
+            me.autoApiGen(group);
         });
         /*router.all('/',cors(corsOptions),async function (req, res){
             //res.setHeader('Content-Type', 'application/json');
@@ -272,7 +189,208 @@ class CtrlApi{
         })*/
         return router;
     }
+    autoApiGen(group){
+        var me = this;
+        group.apis.forEach(api => {
+            let rel;
+            if (api.type == "rel") rel = me.toRelation('',api.rel);
+            if (api.method == "GET" && api.type == "auto"){
+                console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    let f = me.toFields(group.data[api.out]);                        
 
+                    let findcondition = '';
+                    console.log("findcondition:", req.params[api.route.replace(":","")]);
+                    if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
+                        findcondition = ` WHERE ${api.route.replace(":","")} = ${req.params[api.route.replace(":","")]}`;
+
+                    if (req.query.page != undefined && req.query.size != undefined &&
+                        req.query.sortBy != undefined && req.query.descending != undefined ){
+
+                        let page = parseInt(req.query.page);
+                        let size = parseInt(req.query.size);
+                        let sort = req.query.sortBy;
+                        let descending = req.query.descending=='false'?"ASC":"DESC" ;
+                        let offset = (page ) * size;
+                        let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
+                        let rowsNumber = tot[0]['total'];
+                        respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
+                        respuesta.pagination.rowsNumber = rowsNumber;
+                        console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
+                        //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
+                        respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
+                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+
+                        if (req.query.keyword != undefined){
+                            if (req.query.keyword != ""){
+                                let regx = new RegExp("^.*"+req.query.keyword.toLowerCase()+".*$");
+                                respuesta.content = respuesta.content.filter( (e) => Object.keys(e).filter( f => { return me.searchInside(e[f],regx); } ).length>0 );
+                                respuesta.pagination.rowsNumber = respuesta.content.length;
+                            }
+                        }
+                        respuesta.content = respuesta.content.slice(offset,offset+size);
+                        
+                    }else{
+                        console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
+                        respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
+                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                    }                        
+
+
+                    res.end(JSON.stringify(respuesta));
+                });
+            }
+            if (api.method == "GET" && api.type == "rel"){
+                console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+
+                    
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    let f = me.toFields(group.data[api.out]);                        
+
+                    let findcondition = '';
+                    //console.log("findcondition:", req.params[api.route.replace(":","")]);
+                    if (req.params[ rel.field ] !== undefined && req.params[ rel.field ] != "" ){
+                        findcondition = ` WHERE ${rel.field} = ${req.params[ rel.field ]}`;
+                    }
+
+                    if (req.query.page != undefined && req.query.size != undefined &&
+                        req.query.sortBy != undefined && req.query.descending != undefined ){
+
+                        let page = parseInt(req.query.page);
+                        let size = parseInt(req.query.size);
+                        let sort = req.query.sortBy;
+                        let descending = req.query.descending=='false'?"ASC":"DESC" ;
+                        let offset = (page ) * size;
+                        let tot = me.database.db.prepare(`select count (*) as total from ${rel.table} ${findcondition}`).all();
+                        let rowsNumber = tot[0]['total'];
+                        respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
+                        respuesta.pagination.rowsNumber = rowsNumber;
+                        console.log("sel", `select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
+                        //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+                        respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
+                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+
+                        if (req.query.keyword != undefined){
+                            if (req.query.keyword != ""){
+                                let regx = new RegExp("^.*"+req.query.keyword.toLowerCase()+".*$");
+                                respuesta.content = respuesta.content.filter( (e) => Object.keys(e).filter( f => { return me.searchInside(e[f],regx); } ).length>0 );
+                                respuesta.pagination.rowsNumber = respuesta.content.length;
+                            }
+                        }
+                        respuesta.content = respuesta.content.slice(offset,offset+size);
+                        
+                    }else{
+                        console.log("GET query", `select ${f} from ${rel.table} ${findcondition}` );
+                        respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
+                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                    }                        
+
+
+                    res.end(JSON.stringify(respuesta));
+                });
+            }
+            if (api.method == "POST" && api.type == "auto"){
+                console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
+                router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    let f = me.toFields(group.data[api.in]);
+                    let v = me.toValues(group.data[api.in],req.body);
+                    console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
+                    me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();
+                    respuesta.content = req.body;
+                    res.end(JSON.stringify(respuesta));
+                    //res.end(f);
+                });
+            }
+            if (api.method == "POST" && api.type == "rel"){
+                console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
+                router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    group.data[api.in][rel.field] = "number";
+                    req.body[rel.field] = req.params[rel.field];
+                    let f = me.toFields(group.data[api.in]);
+                    let v = me.toValues(group.data[api.in],req.body);
+                    console.log(`INSERT INTO  ${rel.table} (${f}) values (${v})`);
+                    me.database.db.prepare(`INSERT INTO  ${rel.table} (${f}) values (${v})`).run();
+                    respuesta.content = req.body;
+                    res.end(JSON.stringify(respuesta));
+                    //res.end(f);
+                });
+            }
+            if (api.method == "PUT" && api.type=="auto" ){
+                console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    let f = me.toFields(group.data[api.in]);
+                    let v = me.toValuesUpd(group.data[api.in],req.body);
+                    let id = req.params.id;
+                    me.database.db.prepare(`UPDATE ${group.name} SET ${v} WHERE id = '${id}'`).run();
+                    respuesta.content = req.body;
+                    res.end(JSON.stringify(respuesta));
+                });
+            }
+            if (api.method == "PUT" && api.type=="rel" ){
+                console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    group.data[api.in][rel.field] = "number";
+                    req.body[rel.field] = req.params[rel.field];
+                    let f = me.toFields(group.data[api.in]);
+                    let v = me.toValuesUpd(group.data[api.in],req.body);
+                    let id = req.params.id;
+                    me.database.db.prepare(`UPDATE ${rel.table} SET ${v} WHERE id = '${id}'`).run();
+                    respuesta.content = req.body;
+                    res.end(JSON.stringify(respuesta));
+                });
+            }
+            if (api.method == "DELETE" && api.type=="auto" ){
+                console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    let id = req.params.id;
+                    me.database.db.prepare(`DELETE FROM ${group.name} WHERE id = '${id}'`).run();
+                    respuesta.content = req.body;
+                    res.end(JSON.stringify(respuesta));
+                });
+            }
+            if (api.method == "DELETE" && api.type=="rel" ){
+                console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    res.setHeader('Content-Type', 'application/json');
+                    let respuesta = {content: [],
+                        pagination: { pages : 0, rowsNumber: 0 }
+                    };
+                    let id = req.params.id;
+                    me.database.db.prepare(`DELETE FROM ${rel.table} WHERE id = '${id}'`).run();
+                    respuesta.content = {message:"deleted"};
+                    res.end(JSON.stringify(respuesta));
+                });
+            }
+        });
+    }
 }
 
 module.exports = {CtrlApi};

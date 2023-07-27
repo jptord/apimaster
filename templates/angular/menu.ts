@@ -1,6 +1,6 @@
 {
     id: 2,
     label: '{xmenux}',
-    link : '/{xnombrex}',
+    link : 'configuracion/{xnombrex}',
     icon: 'bx-home-circle',
 },

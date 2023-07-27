@@ -15,10 +15,10 @@
         "menu.ts"
         ],
     "injection":{
-      "path":"/home/jtordoya/dev/contabilidad3/kernobi_contabilidad_ui/src/app",
-      "subpath":"/contabilidad/configuracion",
+      "path":"/home/jtordoya/dev/tesoreria/kernobi_tesoreria_ui/src/app",
+      "subpath":"/tesoreria/configuracion",
       "files":[
-        {file:"app-routing.module.ts","where":"contabilidad/configuracion/configuracion-routing.module.ts",before:"const routes: Routes = ["},
+        {file:"app-routing.module.ts","where":"tesoreria/configuracion/configuracion-routing.module.ts",before:"const routes: Routes = ["},
         {file:"menu.ts","where":"layouts/sidebar/menu.ts",before:"export const MENU: MenuItem[] = ["}
       ]
     },
@@ -78,6 +78,9 @@
                       </select>
                     </div>`,
         "xroutingx" : `{ path: 'clientes', loadChildren: () => import('./clientes/clientes.module').then(m => m.ClientesModule  )},`,
+        "xrefieldtabx": ``,
+        "xaddimportmodulex" : ``,
+        "xaddmodulex" : '',
         "xcabecerasx" : {
                 id: {
                   visible: false,

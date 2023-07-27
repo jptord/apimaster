@@ -23,7 +23,7 @@ function prepareHeaders(data){
         };
         if (campo.esrelacion){
             xcabecerasx[campo.campo]['mascara'] = {
-                campo: campo.relacion_tabla,
+                campo: campo.relacion_index,
                 valor: campo.relacion_nombre
             } ;
         }
@@ -35,7 +35,7 @@ function prepareHeaders(data){
     let cab =  `
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
                     <label for="nombre">{texto} </label>
-                    <input type="{tipo}" class="form-control uppercase" id="{campo}" (click)="alCambiar(form)" {required} formControlName="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
+                    <input type="{tipo}" {step} class="form-control uppercase" id="{campo}" (click)="alCambiar(form)" {required} formControlName="{campo}" [ngClass]="{ 'is-invalid': submitted && form['{campo}'].errors }">
                     <div *ngIf="submitted && form['{campo}'].errors" class="invalid-feedback" align="left">
                     <div *ngIf="form['{campo}'].errors['required']">Es requerido</div>
                     <div *ngIf="form['{campo}'].errors['minlength']">Debe tener al menos {{form['{campo}'].errors['minlength']['requiredLength']}} caracteres</div>
@@ -94,8 +94,27 @@ function prepareHeaders(data){
                     <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
                     </div>
                 </div>`;
-    let xrefieldx = ""   
-    let xrelfile = "";
+    let cabreltable =   `
+                <div class="mb-6 col-sm-12" *ngIf="dataEdit">
+                    <hr>
+                    <ul class="nav nav-tabs nav-tabs-dark" role="tablist">                        
+                        {xtabmenux}
+                    </ul>
+                    <div class="tab-content">
+                        {xtabcontentx}
+                    </div>
+                </div> `;
+    let tmptabmenu = `
+                    <li class="nav-item" >
+                        <a class="nav-link atabx active" data-bs-toggle="tab" data-bs-target="#tab-{xtabnombrerelx}" role="button" aria-current="page" href="#">{texto}</a>
+                    </li>`;
+    let tmptabcontent = `
+                    <div class="tab-pane border active" id="tab-{xtabnombrerelx}" >
+                        <app-listado-{xlistadonombrex} *ngIf="rel_prefix" [rel_prefix]="rel_prefix" [rel_field]="'{xfieldrelx}'" > </app-listado-{xlistadonombrex}>
+                    </div>`;
+
+    let xrefieldx = "";
+
 
     data.cabecera.forEach(campo => {
         if (campo.esrelacion){
@@ -110,11 +129,15 @@ function prepareHeaders(data){
             cabRep  = cabRep.replaceAll("[{id}]",campo.relacion_campo);
             cabRep  = cabRep.replaceAll("[{nombre}]",campo.relacion_nombre);
             xrefieldx += "\n" + cabRep;
+            
+
         }else{
             let cabRep = cab;
             if (campo.tipo == "checkbox") cabRep = cabChk;
             if (campo.tipo == "checkboxsel") cabRep = cabChkSel;
             if (campo.tipo == "area") cabRep = cabArea;
+            if (campo.tipo == "time") cabRep = cabRep.replaceAll("{step}","step=600");
+            else cabRep  = cabRep.replaceAll("{step}","");
             cabRep  = cabRep.replaceAll("{xvisiblex}",campo.visible?"":"d-none");
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",(campo.requerido?"(*)":"") + campo.texto);
@@ -194,7 +217,43 @@ function prepareHeaders(data){
         }
     });
     data.params['xrelations_initx'] = `${xrelations_initx.join("\n")}`;
-    
+
+    let xtabmenux = [];
+    let xtabcontentx = [];
+    let xaddimportmodulex = [];
+    let xaddmodulex = [];
+    //import { {xnombrecapx}RoutingModule } from './{xnombrex}-routing.module';
+    let haveArrays = false;
+    data.cabecera.forEach(campo => {
+        if (campo.esarray=="true"){
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length).replaceAll("_","");
+            let strCapLittle = strCap.toLowerCase();
+
+            haveArrays = true;            
+
+            let liCap = tmptabmenu;
+            liCap = liCap.replaceAll("{xtabnombrerelx}",campo.relacion_tabla);
+            liCap  = liCap.replaceAll("{texto}", campo.texto);
+            xtabmenux.push(liCap);
+            
+            let contCap = tmptabcontent;
+            contCap = contCap.replaceAll("{xtabnombrerelx}",campo.relacion_tabla);
+            contCap = contCap.replaceAll("{xlistadonombrex}",campo.relacion_tabla);
+            contCap = contCap.replaceAll("{xfieldrelx}",campo.relacion_nombre);
+            xtabcontentx.push(contCap);
+
+            xaddimportmodulex.push( `import { ${strCap}Module } from '../${campo.relacion_tabla}/${campo.relacion_tabla}.module';`);
+            xaddmodulex.push(`${strCap}Module`);
+        }
+    });
+    if (haveArrays){        
+        cabreltable = cabreltable.replaceAll("{xtabmenux}",xtabmenux.join("\n"));
+        cabreltable = cabreltable.replaceAll("{xtabcontentx}",xtabcontentx.join("\n"));
+        data.params['xaddimportmodulex'] = xaddimportmodulex.join("\n");
+        data.params['xaddmodulex'] = xaddmodulex.join(",\n");     
+        
+        data.params['xrefieldtabx'] = cabreltable;
+    }
 
 }
 function addFiles(data){
@@ -351,12 +410,12 @@ function cargarDBs(data){
                 let tbodyFields = $(".tbodyFields");
                 tbodyFields.empty();
                 Object.keys(g.data.create).forEach( f => {
-                    let r = relacional(g.data.create[f]);                  
+                    let r = relacional(g.data.create[f],f);                  
                     if (r!==undefined) return;
                     let forRel = null;
                     if (!esPKbool(g.data.create[f])) {
                         Object.keys(g.data.create).forEach( fr => {                        
-                            let rr = relacional(g.data.create[fr]);
+                            let rr = relacional(g.data.create[fr],fr);
                             if (rr===undefined) return;
                             if (rr.ownfield == f )
                                 forRel = rr;
@@ -380,7 +439,7 @@ function cargarDBs(data){
                     <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
                     <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>
                     
-                    <td><input class="d-none form-control form-control-sm" data-cabecera="relacion_tabla" type="text" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
+                    <td><input class=" form-control form-control-sm" data-cabecera="relacion_tabla" type="text" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
                     <td><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_nombre"></select></td></tr> `);
                     //let r = relacional(g.data.create[f]);                  
                     //console.log("r",r);
@@ -445,8 +504,10 @@ function campo(valor){
     let temp_valor = valor.split("|");
 
     if (temp_valor[0] == "string") return "text";
+    if (temp_valor[0] == "number" || temp_valor[0] == "integer" ) return "number";
     if (temp_valor[0] == "number") return "number";
     if (temp_valor[0] == "date") return "date";
+    if (temp_valor[0] == "time") return "time";
     if (temp_valor[0] == "boolean") return "boolean";
     
 
@@ -458,21 +519,24 @@ function esdefault(valor,compara){
     }
     let temp_valor = valor.split("|");
     if (temp_valor[0] == "string") return "text" == compara?"selected":"";
-    if (temp_valor[0] == "number") return "number" == compara?"selected":"";
+    if (temp_valor[0] == "number" || temp_valor[0] == "integer") return "number" == compara?"selected":"";
+    if (temp_valor[0] == "date") return "date" == compara?"selected":"";
+    if (temp_valor[0] == "time") return "time" == compara?"selected":"";
     if (temp_valor[0] == "boolean") return "checkbox" == compara?"selected":"";
 
     return temp_valor[0] == compara?"selected":"";
 }
-function relacional(valor){    
+function relacional(valor,index = ''){    
     if (valor.includes("[")){
         if (valor.includes("[[")){
             let val_clean = valor.trim().replaceAll("[","").replaceAll("]","").split("|");
-            let dato = { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };
+            console.log("val_clean",val_clean);
+            let dato = { index:index, name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };
             console.log("relational_dato",dato);
             return dato;
         }else{
             let val_clean = valor.trim().replaceAll("[","").replaceAll("]","").split("|");
-            let dato = { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };
+            let dato = { index:index, name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };
             console.log("relational_dato",dato);
             return dato;
         }
@@ -651,6 +715,8 @@ function init_front() {
                             relacion_campo : $(e).find(`[data-cabecera="relacion_campo"]`).val(),
                             relacion_nombre : $(e).find(`[data-cabecera="relacion_nombre"]`).val(),
                             relacion_tabla :  $(e).find(`[data-cabecera="relacion_tabla"]`).val(),
+                            relacion_index :  $(e).find(`[data-cabecera="relacion_index"]`).val(),
+                            esarray :  $(e).find(`[data-cabecera="relacion_array"]`).val(),
                         });
                     })
                     //let xnombrecapx = $(`[data-param="xnombrecapx"]`).val();

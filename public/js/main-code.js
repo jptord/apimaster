@@ -41,12 +41,33 @@ function toList(dbs){
                     let tbodyFields = $(".tbodyFields");
                     tbodyFields.empty();
                     Object.keys(g.data.create).forEach( f => {
-                        let r = relacional(g.data.create[f]);                  
-                        if (r!==undefined) return;
+                        let r = relacional(g.data.create[f],f);       
+                        console.log("f:",f);
+                        console.log("r:",r);           
+                        if (r!==undefined) {
+                            if (r.array){
+
+                                let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
+                                <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
+                                <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                                <td><select class="form-select form-select-sm" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>                                
+                                <td><input class="","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled  checked ></td>
+                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_tabla" type="text" value="${r?r.name:''}"  disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_nombre" type="text" value="${r?r.field:''}"  disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_campo" type="text" value="${r?r.ownfield:''}"  disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_index" type="text" value="${r?r.index:''}" disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_array" type="text" value="true" disabled></td>
+                                <td></td>
+                                </tr> `);
+                                tbodyFields.append(tr);
+                                return;
+                            }else
+                                return;
+                        };
                         let forRel = null;
                         if (!esPKbool(g.data.create[f])){
                             Object.keys(g.data.create).forEach( fr => {
-                                let rr = relacional(g.data.create[fr]);
+                                let rr = relacional(g.data.create[fr],fr);
                                 if (rr===undefined) return;
                                 if (rr.ownfield == f)
                                     forRel = rr;
@@ -54,7 +75,7 @@ function toList(dbs){
                         }
                         let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
                         <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
-                        <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                        <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="time" ${esdefault(g.data.create[f],'time')}>time</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
                         <td><select class="form-select form-select-sm" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>
                         <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox"  ></td>
                         <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
@@ -69,8 +90,10 @@ function toList(dbs){
                         <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemax" type="checkbox"  ></td>
                         <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
                         <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>                                         
-                        <td><input class="d-none form-control form-control-sm" data-cabecera="relacion_tabla" type="text" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
+                        <td><input class="d-none form-control form-control-sm"  data-cabecera="relacion_tabla" type="text" disabled><input class="d-none form-control form-control-sm"  data-cabecera="relacion_index" type="text" value="${forRel?forRel.index:''}" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
+                        <td><input class="d-none form-control form-control-sm"  data-cabecera="relacion_array" type="text" value="false" disabled></td>
                         <td><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_nombre"></select></td></tr> `);
+                        
                         //let r = relacional(g.data.create[f]);                  
                         //console.log("r",r);
                         if (forRel!==undefined && forRel!=null){
@@ -208,7 +231,6 @@ function esRelacion(campos,d){
 //        console.log(campos[d]);
         return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };;
     }
-        
     return null;
 }
 
@@ -276,8 +298,8 @@ function toJson(texto){
                 let values = Tabs[3].trim().split(":");
             //    console.log("l",l);
              //   console.log("Tabs",Tabs);
-             //   console.log("values",values,l);
-                field = {name: values[0].trim(), value:values[1].trim(), rel:null};
+             //   console.log("values",values,l);                
+                field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
                 acGroup.fields.push(field);
                 return;
             }
@@ -287,7 +309,14 @@ function toJson(texto){
     arDb.forEach( d => {
         d.groups.forEach( g => {
             let grouptemp = formatearArray( g );
-            //console.log(`grouptemp: `, grouptemp);
+            g['apis'] = grouptemp.apis;
+            g['data'] = grouptemp.data;            
+        });
+    });
+    /* add relations */
+    arDb.forEach( d => {
+        d.groups.forEach( g => {
+            let grouptemp = formatearArrayRel( g, d.groups );
             g['apis'] = grouptemp.apis;
             g['data'] = grouptemp.data;            
         });
@@ -303,6 +332,7 @@ function formatearArray(groupNor){
     
     let apiData = {};
     let apiDataIns = {};
+    
     groupNor.fields.forEach(f => {
         apiData[f.name] = f.value;
     });
@@ -351,6 +381,68 @@ function formatearArray(groupNor){
     return group;
 }
 
+function formatearArrayRel(groupNor,groups){
+    
+    let apiData = {};
+    let apiDataIns = {};
+    let apiDataRel = [];
+    let apiDataInsRel = [];
+    
+    groupNor.fields.forEach(f => {
+        if (f.rel!==undefined)
+            if (f.rel.array){
+                let tempRelGroup = groups.find( g => g.name == f.rel.name );
+                if (tempRelGroup){
+                    Object.keys(tempRelGroup.data).forEach(dd => {
+                        groupNor.data[dd+'_'+f.rel.name] = tempRelGroup.data[dd];
+                    });
+
+                    let api_temp = [{
+                        method : "GET",
+                        route : `:${f.rel.field}/${f.rel.name}`,
+                        in : null,
+                        rel: f.value ,
+                        type : "rel",
+                        out : `select_${f.rel.name}`,
+                      },{
+                        method : "GET",
+                        route : `:${f.rel.field}/${f.rel.name}/:id`,
+                        in : null,
+                        rel: f.value ,
+                        type : "rel",
+                        out : `select_${f.rel.name}`,
+                      },{
+                        method : "POST",
+                        route : `:${f.rel.field}/${f.rel.name}`,
+                        in : `insert_${f.rel.name}`,
+                        rel: f.value ,
+                        type : "rel",
+                        out : `select_${f.rel.name}`,
+                      },{
+                        method : "PUT",
+                        route : `:${f.rel.field}/${f.rel.name}/:id`,
+                        in : `insert_${f.rel.name}`,
+                        rel: f.value ,
+                        type : "rel",
+                        out : `select_${f.rel.name}`,
+                      },{
+                        method : "DELETE",
+                        route : `:${f.rel.field}/${f.rel.name}/:id`,
+                        in : null,
+                        rel: f.value ,
+                        type : "rel",
+                        out : null,
+                      }];
+                      groupNor.apis = groupNor.apis.concat(api_temp);
+                      
+                }
+            }
+    });
+
+
+    return groupNor;
+}
+
 function toHuman(dbs){
     let testX = "";
     dbs.forEach(db => {
@@ -389,7 +481,7 @@ function  toPlant(db){
             let rel = esRelacion(data_create,d);
             if (rel == null )
                 campos.push(`\t${data_create[d]} ${d}`);
-            else
+            else if (rel.array==false)
                 relations.push({table:group.name, reltable:rel.name});
         });
         testX += campos.join("\n");
@@ -421,7 +513,7 @@ function  toPlant2str(db){
             let rel = esRelacion(data_create,d);
             if (rel == null )
                 campos.push(`\t\t${data_create[d]} ${d}`);
-            else
+            else if (rel.array==false)
                 relations.push({table:group.name, reltable:rel.name});
         });
         testX += campos.join("\n");
