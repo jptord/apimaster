@@ -849,6 +849,17 @@
                     {
                         "name": "descripcion",
                         "value": "string"
+                    },
+                    {
+                        "name": "miembros",
+                        "value": "[[contacto|id|id]]",
+                        "rel": {
+                            "index": "miembros",
+                            "name": "contacto",
+                            "field": "id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "apis": [
@@ -886,22 +897,94 @@
                         "in": null,
                         "type": "auto",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id/contacto",
+                        "in": null,
+                        "rel": "[[contacto|id|id]]",
+                        "type": "rel",
+                        "out": "select_contacto"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id/contacto/:id",
+                        "in": null,
+                        "rel": "[[contacto|id|id]]",
+                        "type": "rel",
+                        "out": "select_contacto"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":id/contacto",
+                        "in": "insert_contacto",
+                        "rel": "[[contacto|id|id]]",
+                        "type": "rel",
+                        "out": "select_contacto"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id/contacto/:id",
+                        "in": "insert_contacto",
+                        "rel": "[[contacto|id|id]]",
+                        "type": "rel",
+                        "out": "select_contacto"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id/contacto/:id",
+                        "in": null,
+                        "rel": "[[contacto|id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
                     "select": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "descripcion": "string"
+                        "descripcion": "string",
+                        "miembros": "[[contacto|id|id]]"
                     },
                     "create": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "descripcion": "string"
+                        "descripcion": "string",
+                        "miembros": "[[contacto|id|id]]"
                     },
                     "insert": {
                         "nombre": "string",
-                        "descripcion": "string"
+                        "descripcion": "string",
+                        "miembros": "[[contacto|id|id]]"
+                    },
+                    "select_contacto": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "telefono": "number",
+                        "correo": "string",
+                        "direccion": "string",
+                        "descripción": "string",
+                        "contactogrupo_id": "number",
+                        "contactogrupo": "[contactogrupo|id|contactogrupo_id]"
+                    },
+                    "create_contacto": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "telefono": "number",
+                        "correo": "string",
+                        "direccion": "string",
+                        "descripción": "string",
+                        "contactogrupo_id": "number",
+                        "contactogrupo": "[contactogrupo|id|contactogrupo_id]"
+                    },
+                    "insert_contacto": {
+                        "nombre": "string",
+                        "telefono": "number",
+                        "correo": "string",
+                        "direccion": "string",
+                        "descripción": "string",
+                        "contactogrupo_id": "number",
+                        "contactogrupo": "[contactogrupo|id|contactogrupo_id]"
                     }
                 }
             },
@@ -917,25 +1000,6 @@
                         "value": "string"
                     },
                     {
-                        "name": "nitci",
-                        "value": "string"
-                    },
-                    {
-                        "name": "documentocontactotipo_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "documentocontactotipo",
-                        "value": "[documentocontactotipo|id|documentocontactotipo_id]",
-                        "rel": {
-                            "index": "documentocontactotipo",
-                            "name": "documentocontactotipo",
-                            "field": "id",
-                            "ownfield": "documentocontactotipo_id",
-                            "array": false
-                        }
-                    },
-                    {
                         "name": "telefono",
                         "value": "number"
                     },
@@ -945,6 +1009,10 @@
                     },
                     {
                         "name": "direccion",
+                        "value": "string"
+                    },
+                    {
+                        "name": "descripción",
                         "value": "string"
                     },
                     {
@@ -1004,35 +1072,29 @@
                     "select": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "nitci": "string",
-                        "documentocontactotipo_id": "number",
-                        "documentocontactotipo": "[documentocontactotipo|id|documentocontactotipo_id]",
                         "telefono": "number",
                         "correo": "string",
                         "direccion": "string",
+                        "descripción": "string",
                         "contactogrupo_id": "number",
                         "contactogrupo": "[contactogrupo|id|contactogrupo_id]"
                     },
                     "create": {
                         "id": "number|pk",
                         "nombre": "string",
-                        "nitci": "string",
-                        "documentocontactotipo_id": "number",
-                        "documentocontactotipo": "[documentocontactotipo|id|documentocontactotipo_id]",
                         "telefono": "number",
                         "correo": "string",
                         "direccion": "string",
+                        "descripción": "string",
                         "contactogrupo_id": "number",
                         "contactogrupo": "[contactogrupo|id|contactogrupo_id]"
                     },
                     "insert": {
                         "nombre": "string",
-                        "nitci": "string",
-                        "documentocontactotipo_id": "number",
-                        "documentocontactotipo": "[documentocontactotipo|id|documentocontactotipo_id]",
                         "telefono": "number",
                         "correo": "string",
                         "direccion": "string",
+                        "descripción": "string",
                         "contactogrupo_id": "number",
                         "contactogrupo": "[contactogrupo|id|contactogrupo_id]"
                     }
@@ -4139,6 +4201,83 @@
                         "nombre": "string",
                         "descripción": "string",
                         "estado": "string"
+                    }
+                }
+            },
+            {
+                "name": "categorias",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "codigo",
+                        "value": "string"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string"
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "codigo": "string",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "codigo": "string",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "insert": {
+                        "codigo": "string",
+                        "nombre": "string",
+                        "descripcion": "string"
                     }
                 }
             }
