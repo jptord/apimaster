@@ -101,9 +101,11 @@ class CtrlApi{
             //console.log("res_temp ",res_temp);
             content.forEach(cc => {                
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
+                me.appendSubquerys(cc[r.name],f);
                 if (!r.array)
                     cc[r.name] = cc[r.name].length>0?cc[r.name][0]:null;
             });
+            
             //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
         });
         return content;
@@ -219,7 +221,7 @@ class CtrlApi{
                         let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
                         let rowsNumber = tot[0]['total'];
                         respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
-                        respuesta.pagination.rowsNumber = rowsNumber;
+                        respuesta.pagination.rowsNumber = rowsNumber;                        
                         console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
@@ -232,7 +234,7 @@ class CtrlApi{
                                 respuesta.pagination.rowsNumber = respuesta.content.length;
                             }
                         }
-                        respuesta.content = respuesta.content.slice(offset,offset+size);
+                        if (size > 0) respuesta.content = respuesta.content.slice(offset,offset+size);
                         
                     }else{
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
@@ -285,7 +287,7 @@ class CtrlApi{
                                 respuesta.pagination.rowsNumber = respuesta.content.length;
                             }
                         }
-                        respuesta.content = respuesta.content.slice(offset,offset+size);
+                        if (size > 0) respuesta.content = respuesta.content.slice(offset,offset+size);
                         
                     }else{
                         console.log("GET query", `select ${f} from ${rel.table} ${findcondition}` );

@@ -103,10 +103,26 @@ function toList(dbs){
                             let trSelC = $($(tr).find(`[data-cabecera="relacion_nombre"]`));              
                             let trSelN = $($(tr).find(`[data-cabecera="relacion_campo"]`));
                             Object.keys(gr.data.create).forEach(f => {
-                                let opt1 = $(`<option value="${f}">${f}</option>`);
-                                let opt2 = $(`<option value="${f}">${f}</option>`);                            
-                                trSelC.append(opt1);
-                                trSelN.append(opt2);
+                                /*console.log("object.key:", f);
+                                console.log("gr.data.create:", gr.data.create[f]);
+                                console.log("relation:", esRelacion(gr.data.create , f));*/
+                                let rel_rel = esRelacion(gr.data.create , f);
+                                if (rel_rel==null){
+                                    let opt1 = $(`<option value="${f}">${f}</option>`);
+                                    let opt2 = $(`<option value="${f}">${f}</option>`);
+                                    trSelC.append(opt1);
+                                    trSelN.append(opt2);
+                                }
+                                else{
+                                    let gr_rel = db.groups.find(gx => gx.name == rel_rel.name);
+                                    //console.log("--gr_rel--",gr_rel);
+                                    let opt2 = $(`<option value="${f}">${f}</option>`);
+                                    trSelN.append(opt2);
+                                    Object.keys(gr_rel.data.create).forEach(fx => {
+                                        let opt1 = $(`<option value="${f}.${fx}">${f}.${fx}</option>`);                                           
+                                        trSelC.append(opt1);
+                                    });
+                                }
                             });
                         }
     
@@ -121,6 +137,22 @@ function toList(dbs){
         listado.append(li);
     });
     iniList();
+}
+
+
+function setCookie(name,value,days) {
+    var expires = "";
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
 }
 
 function init(){
@@ -275,7 +307,7 @@ function toJson(texto){
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(), fields:[]};
+                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[]};
                 acDb.groups.push(acGroup);
                 return;
             }            
@@ -289,16 +321,16 @@ function toJson(texto){
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(), fields:[]};
+                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[]};
                 acDb.groups.push(acGroup);
                 return;
             }            
             if (cTabs == 3){
                 modo="field";
                 let values = Tabs[3].trim().split(":");
-            //    console.log("l",l);
-             //   console.log("Tabs",Tabs);
-             //   console.log("values",values,l);                
+                console.log("line",l);
+                console.log("Tabs",Tabs);
+                console.log("values",values,l);           
                 field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
                 acGroup.fields.push(field);
                 return;
@@ -327,7 +359,10 @@ function toJson(texto){
     console.log(`arDb: `, arDb);
     return arDb;
 }
-
+function apiFormat(name){
+    return name.trim().toLowerCase().replaceAll("_","");
+    //return name;
+}
 function formatearArray(groupNor){
     
     let apiData = {};

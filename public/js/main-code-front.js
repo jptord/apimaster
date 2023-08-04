@@ -1,5 +1,8 @@
 let mostra_botones = false;
 
+function eraseCookie(name) {   
+    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 
 function fem(texto){
     if (["o","l","on","or","un","e"].includes(texto[texto.length-1]))
@@ -106,10 +109,10 @@ function prepareHeaders(data){
                 </div> `;
     let tmptabmenu = `
                     <li class="nav-item" >
-                        <a class="nav-link atabx active" data-bs-toggle="tab" data-bs-target="#tab-{xtabnombrerelx}" role="button" aria-current="page" href="#">{texto}</a>
+                        <a class="nav-link atabx {xtabactivex}" data-bs-toggle="tab" data-bs-target="#tab-{xtabnombrerelx}" role="button" aria-current="page" href="#">{texto}</a>
                     </li>`;
     let tmptabcontent = `
-                    <div class="tab-pane border active" id="tab-{xtabnombrerelx}" >
+                    <div class="tab-pane border {xtabactivex}" id="tab-{xtabnombrerelx}" >
                         <app-listado-{xlistadonombrex} *ngIf="rel_prefix" [rel_prefix]="rel_prefix" [rel_field]="'{xfieldrelx}'" > </app-listado-{xlistadonombrex}>
                     </div>`;
 
@@ -213,7 +216,7 @@ function prepareHeaders(data){
             fileServiceClone.content = fileServiceClone.content.replaceAll("{xapix}",campo.relacion_tabla);
             fileServiceClone.file = fileServiceClone.file.replaceAll("xnombrex.service",strCapLittle+".service"); 
             data.files.push(fileServiceClone);
-            xrelations_initx.push(`this.${strCap}Service.getAll(100, 1, '${campo.relacion_nombre}', false, '').subscribe((res:any) => { this.${campo.relacion_tabla} = res.content; });`);
+            xrelations_initx.push(`this.${strCap}Service.getAll(100, 1, '${campo.relacion_nombre.includes(".")?campo.relacion_campo:campo.relacion_nombre}', false, '').subscribe((res:any) => { this.${campo.relacion_tabla} = res.content; });`);
         }
     });
     data.params['xrelations_initx'] = `${xrelations_initx.join("\n")}`;
@@ -232,17 +235,22 @@ function prepareHeaders(data){
             haveArrays = true;            
 
             let liCap = tmptabmenu;
-            liCap = liCap.replaceAll("{xtabnombrerelx}",campo.relacion_tabla);
+            liCap = liCap.replaceAll("{xtabnombrerelx}",apiFormat(campo.relacion_tabla));
             liCap  = liCap.replaceAll("{texto}", campo.texto);
+
+            if (xtabcontentx.length == 0) liCap  = liCap.replaceAll("{xtabactivex}", "active");
+            else liCap  = liCap.replaceAll("{xtabactivex}", "");
             xtabmenux.push(liCap);
             
             let contCap = tmptabcontent;
-            contCap = contCap.replaceAll("{xtabnombrerelx}",campo.relacion_tabla);
-            contCap = contCap.replaceAll("{xlistadonombrex}",campo.relacion_tabla);
+            contCap = contCap.replaceAll("{xtabnombrerelx}",apiFormat(campo.relacion_tabla));
+            contCap = contCap.replaceAll("{xlistadonombrex}",apiFormat(campo.relacion_tabla));
             contCap = contCap.replaceAll("{xfieldrelx}",campo.relacion_nombre);
+            if (xtabcontentx.length == 0) contCap  = contCap.replaceAll("{xtabactivex}", "active");
+            else contCap  = contCap.replaceAll("{xtabactivex}", "");
             xtabcontentx.push(contCap);
 
-            xaddimportmodulex.push( `import { ${strCap}Module } from '../${campo.relacion_tabla}/${campo.relacion_tabla}.module';`);
+            xaddimportmodulex.push( `import { ${strCap}Module } from '../${apiFormat(campo.relacion_tabla)}/${apiFormat(campo.relacion_tabla)}.module';`);
             xaddmodulex.push(`${strCap}Module`);
         }
     });
@@ -654,6 +662,7 @@ function init_front() {
     
     $("[data-param='xnombrex']").change((e)=>{
         let t = $("[data-param='xnombrex']").val();
+        let lower = t.toLowerCase().replaceAll(" ","");
         if (t.length ==0) return;        
         t = t.replaceAll("_","").replaceAll(" ","");
         t = t.toLowerCase();
@@ -661,7 +670,7 @@ function init_front() {
         let tC = t[0].toUpperCase()+ t.substring(1, t.length);
         let tCs = tC[tC.length-1] == "s"?tC.substring(0,t.length-1):tC;
         $("[data-param='xnombrecapx']").val( tC );
-        $("[data-param='xapix']").val( t );
+        $("[data-param='xapix']").val( lower );
         $("[data-param='xmenux']").val( t );
         $("[data-param='xtitulox']").val( `Listado de ${tC}` );
         $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );
