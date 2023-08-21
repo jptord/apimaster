@@ -2583,7 +2583,14 @@
                     },
                     {
                         "name": "pago",
-                        "value": "float"
+                        "value": "[pagos|id|pago_id]",
+                        "rel": {
+                            "index": "pago",
+                            "name": "pagos",
+                            "field": "id",
+                            "ownfield": "pago_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "interes",
@@ -2620,17 +2627,6 @@
                     {
                         "name": "pago_id",
                         "value": "number"
-                    },
-                    {
-                        "name": "pago",
-                        "value": "[pagos|id|pago_id]",
-                        "rel": {
-                            "index": "pago",
-                            "name": "pagos",
-                            "field": "id",
-                            "ownfield": "pago_id",
-                            "array": false
-                        }
                     }
                 ],
                 "apis": [
@@ -3892,10 +3888,10 @@
                         "value": "number"
                     },
                     {
-                        "name": "responsables",
+                        "name": "fondo_responsables",
                         "value": "[[fondo_responsables|fondo_id|id]]",
                         "rel": {
-                            "index": "responsables",
+                            "index": "fondo_responsables",
                             "name": "fondo_responsables",
                             "field": "fondo_id",
                             "ownfield": "id",
@@ -4091,7 +4087,7 @@
                         "fondo_tipo_id": "number",
                         "fondo_tipo": "[fondo_tipo|id|fondo_tipo_id]",
                         "solicitud_id": "number",
-                        "responsables": "[[fondo_responsables|fondo_id|id]]",
+                        "fondo_responsables": "[[fondo_responsables|fondo_id|id]]",
                         "fondo_centrodecostos": "[[fondo_centrodecostos|fondo_id|id]]",
                         "fondo_forma_cobro": "[[fondo_forma_cobro|fondo_id|id]]"
                     },
@@ -4103,7 +4099,7 @@
                         "fondo_tipo_id": "number",
                         "fondo_tipo": "[fondo_tipo|id|fondo_tipo_id]",
                         "solicitud_id": "number",
-                        "responsables": "[[fondo_responsables|fondo_id|id]]",
+                        "fondo_responsables": "[[fondo_responsables|fondo_id|id]]",
                         "fondo_centrodecostos": "[[fondo_centrodecostos|fondo_id|id]]",
                         "fondo_forma_cobro": "[[fondo_forma_cobro|fondo_id|id]]"
                     },
@@ -4114,7 +4110,7 @@
                         "fondo_tipo_id": "number",
                         "fondo_tipo": "[fondo_tipo|id|fondo_tipo_id]",
                         "solicitud_id": "number",
-                        "responsables": "[[fondo_responsables|fondo_id|id]]",
+                        "fondo_responsables": "[[fondo_responsables|fondo_id|id]]",
                         "fondo_centrodecostos": "[[fondo_centrodecostos|fondo_id|id]]",
                         "fondo_forma_cobro": "[[fondo_forma_cobro|fondo_id|id]]"
                     },
@@ -5456,6 +5452,17 @@
                             "ownfield": "id",
                             "array": true
                         }
+                    },
+                    {
+                        "name": "lineasdecredito",
+                        "value": "[[lineacredito_banco|banco_id|id]]",
+                        "rel": {
+                            "index": "lineasdecredito",
+                            "name": "lineacredito_banco",
+                            "field": "banco_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "apis": [
@@ -5573,6 +5580,46 @@
                         "rel": "[[cuenta_banco|banco_id|id]]",
                         "type": "rel",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":banco_id/lineacredito_banco",
+                        "in": null,
+                        "rel": "[[lineacredito_banco|banco_id|id]]",
+                        "type": "rel",
+                        "out": "select_lineacredito_banco"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":banco_id/lineacredito_banco/:id",
+                        "in": null,
+                        "rel": "[[lineacredito_banco|banco_id|id]]",
+                        "type": "rel",
+                        "out": "select_lineacredito_banco"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":banco_id/lineacredito_banco",
+                        "in": "insert_lineacredito_banco",
+                        "rel": "[[lineacredito_banco|banco_id|id]]",
+                        "type": "rel",
+                        "out": "select_lineacredito_banco"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":banco_id/lineacredito_banco/:id",
+                        "in": "insert_lineacredito_banco",
+                        "rel": "[[lineacredito_banco|banco_id|id]]",
+                        "type": "rel",
+                        "out": "select_lineacredito_banco"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":banco_id/lineacredito_banco/:id",
+                        "in": null,
+                        "rel": "[[lineacredito_banco|banco_id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
@@ -5583,7 +5630,8 @@
                         "direccion": "string",
                         "url": "string",
                         "contacto": "[[contacto_banco|banco_id|id]]",
-                        "cuentas": "[[cuenta_banco|banco_id|id]]"
+                        "cuentas": "[[cuenta_banco|banco_id|id]]",
+                        "lineasdecredito": "[[lineacredito_banco|banco_id|id]]"
                     },
                     "create": {
                         "id": "number|pk",
@@ -5592,7 +5640,8 @@
                         "direccion": "string",
                         "url": "string",
                         "contacto": "[[contacto_banco|banco_id|id]]",
-                        "cuentas": "[[cuenta_banco|banco_id|id]]"
+                        "cuentas": "[[cuenta_banco|banco_id|id]]",
+                        "lineasdecredito": "[[lineacredito_banco|banco_id|id]]"
                     },
                     "insert": {
                         "nombre": "string",
@@ -5600,7 +5649,8 @@
                         "direccion": "string",
                         "url": "string",
                         "contacto": "[[contacto_banco|banco_id|id]]",
-                        "cuentas": "[[cuenta_banco|banco_id|id]]"
+                        "cuentas": "[[cuenta_banco|banco_id|id]]",
+                        "lineasdecredito": "[[lineacredito_banco|banco_id|id]]"
                     },
                     "select_contacto_banco": {
                         "id": "number|pk",
@@ -5642,6 +5692,26 @@
                         "nrocuenta": "number",
                         "moneda_id": "number",
                         "moneda": "[moneda|id|moneda_id]",
+                        "banco_id": "number",
+                        "banco": "[banco|id|banco_id]"
+                    },
+                    "select_lineacredito_banco": {
+                        "id": "number|pk",
+                        "lineacredito_id": "number",
+                        "lineacredito": "[lineacredito|id|lineacredito_id]",
+                        "banco_id": "number",
+                        "banco": "[banco|id|banco_id]"
+                    },
+                    "create_lineacredito_banco": {
+                        "id": "number|pk",
+                        "lineacredito_id": "number",
+                        "lineacredito": "[lineacredito|id|lineacredito_id]",
+                        "banco_id": "number",
+                        "banco": "[banco|id|banco_id]"
+                    },
+                    "insert_lineacredito_banco": {
+                        "lineacredito_id": "number",
+                        "lineacredito": "[lineacredito|id|lineacredito_id]",
                         "banco_id": "number",
                         "banco": "[banco|id|banco_id]"
                     }
@@ -5847,6 +5917,211 @@
                         "nrocuenta": "number",
                         "moneda_id": "number",
                         "moneda": "[moneda|id|moneda_id]",
+                        "banco_id": "number",
+                        "banco": "[banco|id|banco_id]"
+                    }
+                }
+            },
+            {
+                "name": "lineacredito",
+                "alias": "lineacredito",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "numero",
+                        "value": "string"
+                    },
+                    {
+                        "name": "moneda_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "moneda",
+                        "value": "[moneda|id|moneda_id]",
+                        "rel": {
+                            "index": "moneda",
+                            "name": "moneda",
+                            "field": "id",
+                            "ownfield": "moneda_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "importe",
+                        "value": "float"
+                    },
+                    {
+                        "name": "fechainicio",
+                        "value": "date"
+                    },
+                    {
+                        "name": "fechafin",
+                        "value": "date"
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "numero": "string",
+                        "moneda_id": "number",
+                        "moneda": "[moneda|id|moneda_id]",
+                        "importe": "float",
+                        "fechainicio": "date",
+                        "fechafin": "date"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "numero": "string",
+                        "moneda_id": "number",
+                        "moneda": "[moneda|id|moneda_id]",
+                        "importe": "float",
+                        "fechainicio": "date",
+                        "fechafin": "date"
+                    },
+                    "insert": {
+                        "numero": "string",
+                        "moneda_id": "number",
+                        "moneda": "[moneda|id|moneda_id]",
+                        "importe": "float",
+                        "fechainicio": "date",
+                        "fechafin": "date"
+                    }
+                }
+            },
+            {
+                "name": "lineacredito_banco",
+                "alias": "lineacredito_banco",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "lineacredito_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "lineacredito",
+                        "value": "[lineacredito|id|lineacredito_id]",
+                        "rel": {
+                            "index": "lineacredito",
+                            "name": "lineacredito",
+                            "field": "id",
+                            "ownfield": "lineacredito_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "banco_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "banco",
+                        "value": "[banco|id|banco_id]",
+                        "rel": {
+                            "index": "banco",
+                            "name": "banco",
+                            "field": "id",
+                            "ownfield": "banco_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "lineacredito_id": "number",
+                        "lineacredito": "[lineacredito|id|lineacredito_id]",
+                        "banco_id": "number",
+                        "banco": "[banco|id|banco_id]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "lineacredito_id": "number",
+                        "lineacredito": "[lineacredito|id|lineacredito_id]",
+                        "banco_id": "number",
+                        "banco": "[banco|id|banco_id]"
+                    },
+                    "insert": {
+                        "lineacredito_id": "number",
+                        "lineacredito": "[lineacredito|id|lineacredito_id]",
                         "banco_id": "number",
                         "banco": "[banco|id|banco_id]"
                     }
@@ -6096,9 +6371,13 @@
                     },
                     {
                         "name": "anticipo_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "anticipo",
                         "value": "[anticipo|id|anticipo_id]",
                         "rel": {
-                            "index": "anticipo_id",
+                            "index": "anticipo",
                             "name": "anticipo",
                             "field": "id",
                             "ownfield": "anticipo_id",
@@ -6148,18 +6427,21 @@
                         "id": "number",
                         "movimiento_cuenta_id": "number",
                         "movimiento_cuenta": "[movimiento_cuenta|id|movimiento_cuenta]",
-                        "anticipo_id": "[anticipo|id|anticipo_id]"
+                        "anticipo_id": "number",
+                        "anticipo": "[anticipo|id|anticipo_id]"
                     },
                     "create": {
                         "id": "number",
                         "movimiento_cuenta_id": "number",
                         "movimiento_cuenta": "[movimiento_cuenta|id|movimiento_cuenta]",
-                        "anticipo_id": "[anticipo|id|anticipo_id]"
+                        "anticipo_id": "number",
+                        "anticipo": "[anticipo|id|anticipo_id]"
                     },
                     "insert": {
                         "movimiento_cuenta_id": "number",
                         "movimiento_cuenta": "[movimiento_cuenta|id|movimiento_cuenta]",
-                        "anticipo_id": "[anticipo|id|anticipo_id]"
+                        "anticipo_id": "number",
+                        "anticipo": "[anticipo|id|anticipo_id]"
                     }
                 }
             },

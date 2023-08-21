@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { {xnombrecapx}Service } from "../servicios/{xnombrex}.service";
 import { NotificacionService } from "src/app/core/services/notificacion.service";
+import { ActivatedRoute, Router } from "@angular/router";
 {xrelations_includex}
 
 type NewType = NotificacionService;
@@ -26,7 +27,9 @@ export class ListadoComponent implements OnInit {
   constructor(
     public {xnombrecapx}Service: {xnombrecapx}Service,
     private modalService: BsModalService,
-    private NotificacionService: NotificacionService
+    private NotificacionService: NotificacionService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,17 +42,25 @@ export class ListadoComponent implements OnInit {
   }
 
   crear(data: any, template) {
-    this.dataEdit = null;
-    this.modalRef = this.modalService.show(template, {
-      class: `modal-{xmodalsizex} modal-fullscreen-{xmodalfullscreensizex}-down modal-dialog-centered`,
-    });
+    if (this.rel_prefix == null)
+      this.router.navigate(['./nuevo', { }],{relativeTo: this.route});
+    else{
+      this.dataEdit = null;
+      this.modalRef = this.modalService.show(template, {
+        class: `modal-{xmodalsizex} modal-fullscreen-{xmodalfullscreensizex}-down modal-dialog-centered`,
+      });
+    }
   }
 
-  editar(data: any, template) {
-    this.dataEdit = data;
-    this.modalRef = this.modalService.show(template, {
-      class: `modal-{xmodalsizex} modal-fullscreen-{xmodalfullscreensizex}-down modal-dialog-centered`,
-    });
+  editar(data: any, template) {    
+    if (this.rel_prefix == null)
+      this.router.navigate(['./'+data.id, { }],{relativeTo: this.route});
+    else{
+      this.dataEdit = data;
+      this.modalRef = this.modalService.show(template, {
+        class: `modal-{xmodalsizex} modal-fullscreen-{xmodalfullscreensizex}-down modal-dialog-centered`,
+      });
+    }
   }
 
   habilitar(data: any, component) {

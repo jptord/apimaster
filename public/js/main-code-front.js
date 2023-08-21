@@ -97,6 +97,36 @@ function prepareHeaders(data){
                     <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
                     </div>
                 </div>`;
+    let cabrelAdd =   `
+                <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
+                    <app-selector-add #[{relation}]Selector  label="{texto}" [showEdit]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
+                    <ng-template #[{relation}]TemplateNuevo>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push($event['content']);form['{campo}'].setValue($event['content']['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
+                    </ng-template>
+                    <ng-template #[{relation}]TemplateEditar>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" [show_rel]="false" [dataEdit]="getDataFromFormname([{relation}], '{campo}')" (alActualizar)="[{relation}]Selector.close();setDataFromFormname([{relation}], '{campo}',$event)" ></app-formulario-{xlistadonombrex}>
+                    </ng-template>
+                </div>`;
+    let cabrelEdit =   `
+                <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
+                    <app-selector-add #[{relation}]Selector  label="{texto}" [showAdd]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
+                    <ng-template #[{relation}]TemplateNuevo>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push($event['content']);form['{campo}'].setValue($event['content']['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
+                    </ng-template>
+                    <ng-template #[{relation}]TemplateEditar>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" [show_rel]="false" [dataEdit]="getDataFromFormname([{relation}], '{campo}')" (alActualizar)="[{relation}]Selector.close();setDataFromFormname([{relation}], '{campo}',$event)" ></app-formulario-{xlistadonombrex}>
+                    </ng-template>
+                </div>`;
+    let cabrelAddEdit =   `
+                <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
+                    <app-selector-add #[{relation}]Selector  label="{texto}" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
+                    <ng-template #[{relation}]TemplateNuevo>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push($event['content']);form['{campo}'].setValue($event['content']['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
+                    </ng-template>
+                    <ng-template #[{relation}]TemplateEditar>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" [show_rel]="false" [dataEdit]="getDataFromFormname([{relation}], '{campo}')" (alActualizar)="[{relation}]Selector.close();setDataFromFormname([{relation}], '{campo}',$event)" ></app-formulario-{xlistadonombrex}>
+                    </ng-template>
+                </div>`;
     let cabreltable =   `
                 <div class="mb-6 col-sm-12" *ngIf="dataEdit">
                     <hr>
@@ -120,8 +150,16 @@ function prepareHeaders(data){
 
 
     data.cabecera.forEach(campo => {
-        if (campo.esrelacion){
+        if (campo.esrelacion ){
             let cabRep = cabrel;
+            if (campo.tipo == "seladd")
+                cabRep = cabrelAdd;
+            if (campo.tipo == "seledit")
+                cabRep = cabrelEdit;
+            if (campo.tipo == "seladdedit")
+                cabRep = cabrelAddEdit;
+
+            cabRep  = cabRep.replaceAll("{xlistadonombrex}",apiFormat(campo.relacion_tabla));
             cabRep  = cabRep.replaceAll("{xvisiblex}",campo.visible?"":"d-none");
             cabRep  = cabRep.replaceAll("{required}",campo.requerido?"required":"");
             cabRep  = cabRep.replaceAll("{texto}",(campo.requerido?"(*)":"") + campo.texto);
@@ -227,12 +265,14 @@ function prepareHeaders(data){
     let xaddmodulex = [];
     //import { {xnombrecapx}RoutingModule } from './{xnombrex}-routing.module';
     let haveArrays = false;
+    let haveRels = false;
     data.cabecera.forEach(campo => {
         if (campo.esarray=="true"){
             let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length).replaceAll("_","");
             let strCapLittle = strCap.toLowerCase();
 
             haveArrays = true;            
+            haveRels = true;
 
             let liCap = tmptabmenu;
             liCap = liCap.replaceAll("{xtabnombrerelx}",apiFormat(campo.relacion_tabla));
@@ -253,14 +293,25 @@ function prepareHeaders(data){
             xaddimportmodulex.push( `import { ${strCap}Module } from '../${apiFormat(campo.relacion_tabla)}/${apiFormat(campo.relacion_tabla)}.module';`);
             xaddmodulex.push(`${strCap}Module`);
         }
+        if (campo.tipo == 'seladd' || campo.tipo == 'seledit' || campo.tipo == 'seladdedit') {
+            let strCap = campo.relacion_tabla[0].toUpperCase()+ campo.relacion_tabla.substring(1, campo.relacion_tabla.length).replaceAll("_","");
+
+            xaddimportmodulex.push( `import { ${strCap}Module } from '../${apiFormat(campo.relacion_tabla)}/${apiFormat(campo.relacion_tabla)}.module';`);
+            xaddmodulex.push(`${strCap}Module`);
+            console.log("seladd",xaddmodulex);     
+            haveRels = true;
+        }
+
     });
     if (haveArrays){        
         cabreltable = cabreltable.replaceAll("{xtabmenux}",xtabmenux.join("\n"));
         cabreltable = cabreltable.replaceAll("{xtabcontentx}",xtabcontentx.join("\n"));
+        data.params['xrefieldtabx'] = cabreltable;
+    }
+    if (haveRels){        
         data.params['xaddimportmodulex'] = xaddimportmodulex.join("\n");
         data.params['xaddmodulex'] = xaddmodulex.join(",\n");     
         
-        data.params['xrefieldtabx'] = cabreltable;
     }
 
 }
@@ -442,9 +493,9 @@ function cargarDBs(data){
                     <td><input class="form-check-input form-checkbox-sm" data-cabecera="filtrable" type="checkbox" checked ></td>                                    
                     <td><select class="form-select form-select-sm" data-cabecera="filtrabletipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
                     <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemin" type="checkbox"  ></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="min" type="value" value="0"></td>
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="min" type="number" value="0"></td>
                     <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemax" type="checkbox"  ></td>
-                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
+                    <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="number" value="255"></td>
                     <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>
                     
                     <td><input class=" form-control form-control-sm" data-cabecera="relacion_tabla" type="text" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
@@ -657,7 +708,8 @@ function saveDBs(data){
             } );
     
 }
-function init_front() {
+
+function init_front(callback_save) {
     //console.log("init_front:",init_front);
     
     $("[data-param='xnombrex']").change((e)=>{
@@ -673,8 +725,10 @@ function init_front() {
         $("[data-param='xapix']").val( lower );
         $("[data-param='xmenux']").val( t );
         $("[data-param='xtitulox']").val( `Listado de ${tC}` );
-        $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );
+        $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );        
         $("[data-param='xtitleEditarx']").val( `Editar ${tCs} {{dataEdit.nombre}}` );
+        $("[data-param='xmodalsizex']").val('lg');
+        $("[data-param='xmodalfullscreensizex']").val( `lg` );        
         
     });
     $("#btnGenerarAngular").click((e)=>{        
@@ -737,7 +791,7 @@ function init_front() {
                     console.log("data:",data);
 
                     prepareHeaders(data);
-
+                    callback_save(data);
                     addFiles(data);
                     data_generated = data;
                     console.log("data_generated",data_generated);

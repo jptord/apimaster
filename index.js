@@ -318,7 +318,8 @@ function createPlant(content){
   console.log(`--creando diagrama `);
   fs.writeFileSync("..//diagrams/dbs.txt",content );
   //exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar "/home/jtordoya/dev/node/diagrams/dbs.txt"'`, 
-  exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/dbs.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
+   exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/dbs.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
+  //exec(`java -jar ../../plantuml.1.2023.7.jar ../diagrams/dbs.txt -o "./public/diagrams/"`, 
   (error, stdout, stderr) => {
     //exec(`ls -la`, (error, stdout, stderr) => {
     if (error) {
@@ -346,6 +347,7 @@ app.post("/toplant", function (req,res){
     fs.writeFileSync("..//diagrams/temp.txt",req.body.content );
     //exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar "/home/jtordoya/dev/node/diagrams/dbs.txt"'`, 
     exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/temp.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
+    //exec(`java -jar ../plantuml.1.2023.7.jar ../diagrams/temp.txt -o "./public/diagrams/"`, 
     (error, stdout, stderr) => {
       ontask=false;
       if (error) {

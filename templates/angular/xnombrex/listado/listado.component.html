@@ -24,7 +24,8 @@
 
   <ng-template #modalNuevo role="document" let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel"><a [routerLink]="['./nuevo']" (click)="modalRef.hide()">{xtitleNuevox}</a></h5>
+      <!-- <h5 class="modal-title" id="exampleModalLabel"><a [routerLink]="['./nuevo']" (click)="modalRef.hide()">{xtitleNuevox}</a></h5> -->
+      <h5 class="modal-title" id="exampleModalLabel">{xtitleNuevox}</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal" (click)="modalRef.hide()" ></button>
     </div>
     <app-formulario-{xnombrex} [esModal]="true" [rel_prefix]="rel_prefix" [rel_field]="rel_field" (alGuardar)="modalRef.hide(); tabla.obtenerDatos();"></app-formulario-{xnombrex}>
@@ -33,7 +34,8 @@
 
   <ng-template #modalEditar role="document" let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel"> <a [routerLink]="['./'+dataEdit.id]" (click)="modalRef.hide()">{xtitleEditarx}</a></h5>
+      <!-- <h5 class="modal-title" id="exampleModalLabel"> <a [routerLink]="['./'+dataEdit.id]" (click)="modalRef.hide()">{xtitleEditarx}</a></h5> -->
+      <h5 class="modal-title" id="exampleModalLabel"> {xtitleEditarx}</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal" (click)="modalRef.hide()" ></button>
     </div>
     <app-formulario-{xnombrex} [esModal]="true" [rel_prefix]="rel_prefix" [rel_field]="rel_field"[dataEdit]="dataEdit" (alActualizar)="modalRef.hide(); tabla.obtenerDatos();"></app-formulario-{xnombrex}>

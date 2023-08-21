@@ -309,8 +309,9 @@ class CtrlApi{
                     let f = me.toFields(group.data[api.in]);
                     let v = me.toValues(group.data[api.in],req.body);
                     console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
-                    me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();
+                    let db_data = me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();                    
                     respuesta.content = req.body;
+                    respuesta.content.id = db_data.lastInsertRowid;
                     res.end(JSON.stringify(respuesta));
                     //res.end(f);
                 });

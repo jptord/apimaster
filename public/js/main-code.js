@@ -4,7 +4,7 @@ let editorUml;
 let btnGuardar =$("#btnGuardar");
 let btnDiagrama =$("#btnDiagrama");
 var listado = $("#listado");
-
+let selectedGroup = '';
 function iniList(){
     var toggler = document.getElementsByClassName("caret");
     var i;
@@ -28,6 +28,7 @@ function toList(dbs){
                 ul.append(li_group);
                 li_group.on('click',function (e){
                     console.log("here", g);
+                    selectedGroup = g;
                     mostra_botones=false;
 
                     $("#contentAngularGen").removeClass("d-none");
@@ -47,16 +48,30 @@ function toList(dbs){
                         if (r!==undefined) {
                             if (r.array){
 
-                                let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
-                                <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
-                                <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
-                                <td><select class="form-select form-select-sm" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>                                
-                                <td><input class="","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled  checked ></td>
-                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_tabla" type="text" value="${r?r.name:''}"  disabled></td>
-                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_nombre" type="text" value="${r?r.field:''}"  disabled></td>
-                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_campo" type="text" value="${r?r.ownfield:''}"  disabled></td>
-                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_index" type="text" value="${r?r.index:''}" disabled></td>
-                                <td><input class=" form-control form-control-sm"  data-cabecera="relacion_array" type="text" value="true" disabled></td>
+                                let tr = $(`<tr><td><input class="form-control form-control-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="campo" disabled type="text" value="${f}"></td>
+                                <td><input class="form-control form-control-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="texto" type="text" value="${f}"></td>
+                                <td><select class="form-select form-select-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="tipo" value="${campo(g.data.create[f])}">
+
+                                    <option value="text" ${esdefault(g.data.create[f],'text')}>text</option>
+                                    <option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option>
+                                    <option value="number" ${esdefault(g.data.create[f],'number')}>number</option>
+                                    <option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option>
+                                    <option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option>
+                                    <option value="date" ${esdefault(g.data.create[f],'date')}>date</option>
+                                    <option value="time" ${esdefault(g.data.create[f],'time')}>time</option>
+                                    <option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option>
+                                    <option value="seladd" ${esdefault(g.data.create[f],'seladd')}>seladd</option>
+                                    <option value="seledit" ${esdefault(g.data.create[f],'seledit')}>seledit</option>
+                                    <option value="seladdedit" ${esdefault(g.data.create[f],'seladdedit')}>seladdedit</option>
+                                    </select></td>
+
+                                <td><select class="form-select form-select-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>                                
+                                <td><input class="","")} form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="esrelacion" type="checkbox" disabled  checked ></td>
+                                <td><input class=" form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_tabla" type="text" value="${r?r.name:''}"  disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_nombre" type="text" value="${r?r.field:''}"  disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_campo" type="text" value="${r?r.ownfield:''}"  disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_index" type="text" value="${r?r.index:''}" disabled></td>
+                                <td><input class=" form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_array" type="text" value="true" disabled></td>
                                 <td></td>
                                 </tr> `);
                                 tbodyFields.append(tr);
@@ -73,33 +88,48 @@ function toList(dbs){
                                     forRel = rr;
                             });
                         }
-                        let tr = $(`<tr><td><input class="form-control form-control-sm" data-cabecera="campo" disabled type="text" value="${f}"></td>
-                        <td><input class="form-control form-control-sm" data-cabecera="texto" type="text" value="${f}"></td>
-                        <td><select class="form-select form-select-sm" data-cabecera="tipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option><option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="time" ${esdefault(g.data.create[f],'time')}>time</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
-                        <td><select class="form-select form-select-sm" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="requerido" type="checkbox"  ></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="visible" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscable" type="checkbox" checked ></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="buscablecheck" type="checkbox" checked ></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="visiblecheck" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="sortable" type="checkbox" checked ></td>
-                        <td><input class="form-check-input form-checkbox-sm" data-cabecera="filtrable" type="checkbox" checked ></td>                                    
-                        <td><select class="form-select form-select-sm" data-cabecera="filtrabletipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
-                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemin" type="checkbox"  ></td>
-                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="min" type="value" value="0"></td>
-                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="tienemax" type="checkbox"  ></td>
-                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-cabecera="max" type="value" value="255"></td>
-                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>                                         
-                        <td><input class="d-none form-control form-control-sm"  data-cabecera="relacion_tabla" type="text" disabled><input class="d-none form-control form-control-sm"  data-cabecera="relacion_index" type="text" value="${forRel?forRel.index:''}" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_campo"></select></td>
-                        <td><input class="d-none form-control form-control-sm"  data-cabecera="relacion_array" type="text" value="false" disabled></td>
-                        <td><select class="${!esrelacional2(forRel)?'d-none ':''}" data-cabecera="relacion_nombre"></select></td></tr> `);
+                        let tr = $(`<tr><td><input class="form-control form-control-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="campo" disabled type="text" value="${f}"></td>
+                        <td><input class="form-control form-control-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="texto" type="text" value="${f}"></td>
+                        <td><select class="form-select form-select-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="tipo" value="${campo(g.data.create[f])}">
+                            <option value="text" ${esdefault(g.data.create[f],'text')}>text</option>
+                            <option value="area" ${esdefault(g.data.create[f],'area')}>textarea</option>
+                            <option value="number" ${esdefault(g.data.create[f],'number')}>number</option>
+                            <option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option>
+                            <option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option>
+                            <option value="date" ${esdefault(g.data.create[f],'date')}>date</option>
+                            <option value="time" ${esdefault(g.data.create[f],'time')}>time</option>
+                            <option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option>
+                            <option value="seladd" ${esdefault(g.data.create[f],'seladd')}>seladd</option>
+                            <option value="seledit" ${esdefault(g.data.create[f],'seledit')}>seledit</option>
+                            <option value="seladdedit" ${esdefault(g.data.create[f],'seladdedit')}>seladdedit</option>
+                            </select></td>
+                        <td><select class="form-select form-select-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="colsize" value=12><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option><option value=6>6</option><option value=7>7</option><option value=8>8</option><option value=9>9</option><option value=10>10</option><option value=11>11</option><option value=12 selected>12</option></select></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="requerido" type="checkbox"  ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="visible" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="buscable" type="checkbox" checked ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="buscablecheck" type="checkbox" checked ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="visiblecheck" type="checkbox" ${esPK(g.data.create[f],"","checked")} ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="sortable" type="checkbox" checked ></td>
+                        <td><input class="form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="filtrable" type="checkbox" checked ></td>                                    
+                        <td><select class="form-select form-select-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="filtrabletipo" value="${campo(g.data.create[f])}"><option value="text" ${esdefault(g.data.create[f],'text')}>text</option><option value="number" ${esdefault(g.data.create[f],'number')}>number</option><option value="date" ${esdefault(g.data.create[f],'date')}>date</option><option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option></select></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="tienemin" type="checkbox"  ></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="min" type="number" value="0"></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="tienemax" type="checkbox"  ></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="max" type="number" value="255"></td>
+                        <td><input class="${esrelacional2(forRel)?'d-none ':''} ${esPK(g.data.create[f],"d-none","")} form-check-input form-checkbox-sm" data-parent="${db.db}.${g.name}.${f}" data-cabecera="esrelacion" type="checkbox" disabled ${esrelacionalchecked2(forRel)} ></td>                                         
+                        <td><input class="d-none form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}"  data-cabecera="relacion_tabla" type="text" disabled><input class="d-none form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_index" type="text" value="${forRel?forRel.index:''}" disabled><select class="${!esrelacional2(forRel)?'d-none ':''}" data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_campo"></select></td>
+                        <td><input class="d-none form-control form-control-sm"  data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_array" type="text" value="false" disabled></td>
+                        <td><select class="${!esrelacional2(forRel)?'d-none ':''}" data-parent="${db.db}.${g.name}.${f}" data-cabecera="relacion_nombre"></select></td></tr> `);
                         
                         //let r = relacional(g.data.create[f]);                  
                         //console.log("r",r);
                         if (forRel!==undefined && forRel!=null){
-                            let gr = db.groups.find(gx => gx.name == forRel.name)                        
+                            let gr = db.groups.find(gx => gx.name == forRel.name)          
+                                           
                             let trSelT = $($(tr).find(`[data-cabecera="relacion_tabla"]`));
+                            console.log('--',trSelT,forRel.name);
                             trSelT.val(forRel.name);
+
                             let trSelC = $($(tr).find(`[data-cabecera="relacion_nombre"]`));              
                             let trSelN = $($(tr).find(`[data-cabecera="relacion_campo"]`));
                             Object.keys(gr.data.create).forEach(f => {
@@ -130,6 +160,8 @@ function toList(dbs){
                     });
                     $("[data-param='xnombrex']").val(g.name).change(); 
     
+                    cargarCookies(selectedGroup.name);
+                    cargarCookiesHeader();
                 });
             });
             li.append(ul);
@@ -139,25 +171,103 @@ function toList(dbs){
     iniList();
 }
 
-
-function setCookie(name,value,days) {
-    var expires = "";
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+function setValType(e,v){
+    let t = e.prop("tagName")
+    if (t == 'SELECT'){
+        e.val(v).change();
+        return;
     }
-    return null;
+    if(t == 'INPUT'){
+        let tt = e.attr("type");
+        console.log("e is ", tt, `'${v}'`);
+        if (tt=='text' || tt =='number')
+            e.val(v);                
+        if (tt=='checkbox')
+            e.prop('checked',v=='true'||v=='on'?true:false);
+        return;
+    }
+    e.val(v);
+}
+function getValType(e){
+    let t = e.prop("tagName")
+    if (t == 'SELECT'){
+        return e.val();
+    }
+    if(t == 'INPUT'){
+        let tt = e.attr("type");
+        if (tt=='text' || tt =='number')
+            return e.val();
+        if (tt=='checkbox')
+            return e.prop('checked');        
+    }
+    return e.val();
+}
+
+function cargarCookies(prefix){
+    let galletas = new Galletas();
+    let inputsParam = $("[data-param]");
+    console.log("cargar cookies");
+    if (prefix!='') prefix=prefix+'.';
+    for(let i=0; i< inputsParam.length; i++) {
+        let element = $(inputsParam[i]);          
+        let name = element.attr("data-param");           
+        console.log(`cargando ${prefix}${name} '${element.val()}' ${element.prop("tagName")}`);
+        var v = galletas.get(prefix + name);
+        if (v != '' && v!=null && v!==undefined)
+            setValType(element,v);
+    };
+}
+function cargarCookiesHeader(){
+    let galletas = new Galletas();
+    let inputsParam = $("[data-cabecera]");
+    console.log("guardar cookies header");
+    for(let i=0; i< inputsParam.length; i++) {
+        let element = $(inputsParam[i]);          
+        let name = element.attr("data-cabecera");
+        let prefix = element.attr("data-parent");
+        if (prefix != '') prefix = prefix + '.';
+        console.log(`cargando ${prefix}${name} '${element.val()}' ${element.prop("tagName")}`);
+        var v = galletas.get(prefix + name);
+        if (v != '' && v!=null && v!==undefined)
+            setValType(element,v);
+    };
+}
+
+
+function guardarCookies(prefix){
+    let galletas = new Galletas();
+    let inputsParam = $("[data-param]");
+    console.log("guardar cookies ",prefix);
+    if (prefix!='') prefix=prefix+'.';
+    for(let i=0; i< inputsParam.length; i++) {
+        let element = $(inputsParam[i]);
+        let name = element.attr("data-param");                
+        console.log(`guardando ${prefix}${name} '${element.val()}' `);
+        galletas.set(prefix + name, getValType(element));
+    };
+}
+function guardarCookiesHeader(){
+    let galletas = new Galletas();
+    let inputsParam = $("[data-cabecera]");
+    console.log("guardar cookies header");
+    for(let i=0; i< inputsParam.length; i++) {
+        let element = $(inputsParam[i]);
+        let name = element.attr("data-cabecera");
+        let prefix = element.attr("data-parent");
+        if (prefix != '') prefix = prefix + '.';
+        console.log(`guardando ${prefix}${name} '${element.val()}'`);
+        galletas.set(prefix + name, getValType(element));
+    };
+}
+
+function onSave(data){
+    guardarCookies(selectedGroup.name);
+    guardarCookiesHeader();
 }
 
 function init(){
     iniList();
-    init_front();
+    init_front(onSave);
     document.addEventListener("keydown", (event) => {
         //event.preventDefault();
         switch (event.which) {
