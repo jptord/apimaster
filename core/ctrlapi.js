@@ -3,20 +3,21 @@ const router = express.Router()
 
 const { Database } = require('../core/database.js');
 
-var cors = require('cors')
+var cors = require('cors');
+const { forEach } = require('jszip');
 var corsOptions = {
-    origin: ["http://localhost","http://172.20.50.60"],
+    origin: ["http://localhost","http://172.20.50.60","http://172.20.50.60"],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 
 class CtrlApi{
 
     toColumnName(column, value){
-
         let values = value.split("|");
         let name = values[0];
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `${column} INTEGER PRIMARY KEY AUTOINCREMENT`;
+        if (name == "uuid" && pk==true) return `${column} UUID PRIMARY KEY`;
         if (name == "number" || "integer" ) return `${column} INTEGER`;
         if (name == "float" ) return `${column} FLOAT`;
         if (name == "double" ) return `${column} FLOAT`;
@@ -39,7 +40,10 @@ class CtrlApi{
         let strArr = [];
         Object.keys(data).forEach( c => {
             if (!data[c].includes('[[') && !data[c].includes('[') ) 
-                strArr.push("'"+req[c]+"'");
+                if (req[c]==null)
+                    strArr.push("null");
+                else
+                    strArr.push("'"+req[c]+"'");
         });
         return strArr.join(",");
     }
@@ -84,6 +88,14 @@ class CtrlApi{
         }
         return null;
     }
+    toFieldSeed(fields,data){
+        let temp_fields = [];
+        data.forEach((d,i) => {
+            temp_fields.push(`'${d}'`);
+        });
+        console.log("temp_fields",temp_fields);
+        return temp_fields.join(',');
+    }
 
     appendSubquerys(content,data_fields){
         let me = this;
@@ -110,10 +122,25 @@ class CtrlApi{
         });
         return content;
     }
-
+    createTriggerUuid(database, group, uuid){
+        let trigger = `
+        CREATE TRIGGER AutoGenerate_${group.name}_${uuid}
+        AFTER INSERT ON ${group.name}
+        FOR EACH ROW
+        WHEN (NEW.${uuid} IS NULL)
+        BEGIN
+           UPDATE ${group.name} SET ${uuid} = (select lower(hex( randomblob(4)) || '-' || hex( randomblob(2))
+                     || '-' || '4' || substr( hex( randomblob(2)), 2) || '-'
+                     || substr('AB89', 1 + (abs(random()) % 4) , 1)  ||
+                     substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) ) WHERE rowid = NEW.rowid;
+        END;`;
+//console.log("trigger",trigger);
+        database.writeSQL(trigger);
+    }
     constructor(dbData,dbData_global=null){
         this.dbData = dbData;
         this.dbData_global = dbData_global;
+        let me = this;
 
         if(this.dbData!==undefined){
             console.log("db_name",this.dbData.db);
@@ -127,14 +154,35 @@ class CtrlApi{
                     let dataCreate =  Object.keys(group.data.create);
                     console.log("list table.columns", dataCreate);
                     let fieldsArr = [];
+                    let haveUuid = false;
+                    let uuid = '';
                     dataCreate.forEach(c => {
                         if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
-                            fieldsArr.push(this.toColumnName(c,group.data.create[c]));
+                        let colInsert = this.toColumnName(c,group.data.create[c]);
+                        if (colInsert.includes("UUID")){
+                            haveUuid = true;
+                            uuid = c;
+                        }
+                        fieldsArr.push(colInsert);
                     });
                     let fieldStr = fieldsArr.join(",");
                     console.log("fieldStr:",fieldStr);
                     console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
                     this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+
+                    if (haveUuid) me.createTriggerUuid(this.database, group, uuid);
+                    
+                    group.seeder.forEach( (seed)=> {                        
+                        let f = me.toFields(group.data[seed.data]);
+                        console.log("f");
+                        console.log(f);
+                        let f_data = me.toFieldSeed(f,seed.values);
+                        console.log("f_data");
+                        console.log(f_data);
+                        console.log(`INSERT INTO  ${group.name} (${f}) values (${f_data})`);                    
+                        me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${f_data})`).run();      
+                    });
+                       
                 }else{
                     let fields = this.database.getFields(group.name);
                     let dataCreate =  Object.keys(group.data.create);
@@ -149,15 +197,45 @@ class CtrlApi{
                     if (isDifferent)         {
                         this.database.writeSQL(` DROP TABLE ${group.name}; `);                        
                         let fieldsArr = [];
+                        let haveUuid = false;
+                        let uuid = '';
                         dataCreate.forEach(c => {
                             if (!c,group.data.create[c].includes('[[') && !c,group.data.create[c].includes('[') ) return;
-                                fieldsArr.push(this.toColumnName(c,group.data.create[c]));
+                            fieldsArr.push(this.toColumnName(c,group.data.create[c]));                            
+                            let colInsert = this.toColumnName(c,group.data.create[c]);
+                            if (colInsert.includes("UUID")){
+                                haveUuid = true;
+                                uuid = c;
+                            }
+                            fieldsArr.push(colInsert);
                         });
                         let fieldStr = fieldsArr.join(",");
                         console.log("fieldStr:",fieldStr);
                         console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
                         this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+
+                        if (haveUuid) me.createTriggerUuid(this.database, group, uuid);
                     }
+                    /* si seeders son desiguales */
+                        
+                        let tot = me.database.db.prepare(`select count (*) as total from ${group.name} `).all();
+                        let rowsNumber = tot[0]['total'];
+                        if (rowsNumber < group.seeder.length ){
+                            //this.database.writeSQL(`DELETE  ${group.name}`);
+                            me.database.db.prepare(`DELETE FROM ${group.name}`).run();
+
+                            group.seeder.forEach( (seed)=> {                        
+                                let f = me.toFields(group.data[seed.data]);
+                                console.log("f");
+                                console.log(f);
+                                let f_data = me.toFieldSeed(f,seed.values);
+                                console.log("f_data");
+                                console.log(f_data);
+                                console.log(`INSERT INTO  ${group.name} (${f}) values (${f_data})`);                                  
+                                    me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${f_data})`).run();      
+                               
+                            });
+                        }
 
                 }
             });
@@ -191,6 +269,56 @@ class CtrlApi{
         })*/
         return router;
     }
+
+    convertirACamel(text) { 
+        let texto = text;
+        let letras = 'abcdefghijklmnopqrstuvwxyz';
+        for (var i = 0; i < letras.length; i++) 
+            texto = texto.replaceAll('_'+letras.charAt(i),letras.charAt(i).toUpperCase());
+        return texto;
+    }
+
+    convertirASnake(text) { 
+        let texto = text;
+        let letras = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
+        for (var i = 0; i < letras.length; i++) 
+            texto = texto.replaceAll(letras.charAt(i),'_'+letras.charAt(i).toLowerCase());
+        return texto;
+    }
+    
+    contentACamelCase(respuesta){
+        let me = this;        
+        let camel_data = [];
+        
+        if (Array.isArray(respuesta.content)){
+            respuesta.content.forEach(data => {
+                let data_fields = {};            
+                Object.keys(data).forEach( f => {
+                    data_fields[me.convertirACamel(f)] = data[f];
+                });
+                camel_data.push(data_fields);
+                
+            })
+        }else{
+                 
+                let data_fields = {};            
+                Object.keys(respuesta.content).forEach( f => {
+                    data_fields[me.convertirACamel(f)] = respuesta.content[f];
+                });
+                camel_data.push(data_fields);
+        }
+        
+        respuesta.content = camel_data;
+    }
+    contentASnakeCase(data_obj){
+        let me = this;        
+        let snake_data = [];
+        let data_obj_temp = {... data_obj};        
+        Object.keys(data_obj).forEach( f => {
+            data_obj_temp[me.convertirASnake(f)] = data_obj_temp[f];
+        });            
+        return data_obj_temp;
+    }
     autoApiGen(group){
         var me = this;
         group.apis.forEach(api => {
@@ -208,7 +336,7 @@ class CtrlApi{
                     let findcondition = '';
                     console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
-                        findcondition = ` WHERE ${api.route.replace(":","")} = ${req.params[api.route.replace(":","")]}`;
+                        findcondition = ` WHERE ${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;
 
                     if (req.query.page != undefined && req.query.size != undefined &&
                         req.query.sortBy != undefined && req.query.descending != undefined ){
@@ -240,9 +368,8 @@ class CtrlApi{
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
                         me.appendSubquerys(respuesta.content,group.data[api.out]);
-                    }                        
-
-
+                    }
+                    me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));
                 });
             }
@@ -296,6 +423,7 @@ class CtrlApi{
                     }                        
 
 
+                    me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));
                 });
             }
@@ -307,11 +435,12 @@ class CtrlApi{
                         pagination: { pages : 0, rowsNumber: 0 }
                     };
                     let f = me.toFields(group.data[api.in]);
-                    let v = me.toValues(group.data[api.in],req.body);
+                    let v = me.toValues(group.data[api.in],me.contentASnakeCase(req.body));
                     console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
                     let db_data = me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();                    
                     respuesta.content = req.body;
                     respuesta.content.id = db_data.lastInsertRowid;
+                    me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));
                     //res.end(f);
                 });
@@ -342,7 +471,7 @@ class CtrlApi{
                         pagination: { pages : 0, rowsNumber: 0 }
                     };
                     let f = me.toFields(group.data[api.in]);
-                    let v = me.toValuesUpd(group.data[api.in],req.body);
+                    let v = me.toValuesUpd(group.data[api.in],me.contentASnakeCase(req.body));
                     let id = req.params.id;
                     me.database.db.prepare(`UPDATE ${group.name} SET ${v} WHERE id = '${id}'`).run();
                     respuesta.content = req.body;

@@ -15,10 +15,10 @@
         "menu.ts"
         ],
     "injection":{
-      "path":"/home/jtordoya/dev/tesoreria/kernobi_tesoreria_ui/src/app",
-      "subpath":"/tesoreria/configuracion",
+      "path":"/home/jtordoya/dev/empresas/account_tenan_ui/src/app",
+      "subpath":"/empresas",
       "files":[
-        {file:"app-routing.module.ts","where":"tesoreria/configuracion/configuracion-routing.module.ts",before:"const routes: Routes = ["},
+        {file:"app-routing.module.ts","where":"empresas/empresas-routing.module.ts",before:"const routes: Routes = ["},
         {file:"menu.ts","where":"layouts/sidebar/menu.ts",before:"export const MENU: MenuItem[] = ["}
       ]
     },
@@ -27,6 +27,9 @@
         "xnombrecapx" : "Clientes",
         "xtitulox" : "Listado de clientes",
         "xmenux" : "clientes",
+        "xmenuidx" : "1",
+        "xmenuroutex" : "",
+        "xmenuiconx" : "far fa-folder-open",
         "xapix" : "clientes",
         "xestadox" : "estado",
         "xmodalsizex" : "xl",

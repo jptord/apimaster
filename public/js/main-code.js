@@ -1,8 +1,12 @@
 let data_db;
 let editorX; 
+let editorSQL; 
 let editorUml;
 let btnGuardar =$("#btnGuardar");
 let btnDiagrama =$("#btnDiagrama");
+let btnSeeder =$("#btnSeeder");
+let btnACamelCase = $("#btnACamelCase");
+let btnASnakeCase = $("#btnASnakeCase");
 var listado = $("#listado");
 let selectedGroup = '';
 function iniList(){
@@ -16,10 +20,54 @@ function iniList(){
         });
     }
 }
+function dbsToCamelCase(dbs){
+    let _dbs = [... dbs];
+    _dbs.forEach( db => { 
+        db.groups.forEach( g => { 
+            g.fields.forEach( f => {
+                f.name = convertirACamel(f.name);                
+            });
+            let data_array = {};
+            Object.keys(g.data).forEach( f => {
+                let fields_array = {};
+                Object.keys(g.data[f]).forEach( ff => {
+                    let regDbl = /(?<=\[\[).*(?=\]\])/gm;
+                    //console.log("regDbl",regDbl);
+                    //console.log("g.data[f][ff]",g.data[f][ff]);
+                    let regSgl = /(?<=\[).*(?=\])/gm;
+                    let dbl = g.data[f][ff].match(regDbl);
+                    let sgl = g.data[f][ff].match(regSgl);
+                    //console.log("dbl",dbl);
+                    //console.log("sgl",sgl);
 
+                    if (dbl){
+                        let data_split = dbl[0].split("|");
+                        for (let i = 1; i<data_split.length; i++) data_split[i] = convertirACamel(data_split[i]);
+                        let data_temp = data_split.join("|");
+                        fields_array[convertirACamel(ff)] = `[[${data_temp}]]`;
+                    }else if (sgl){
+                        let data_split = sgl[0].split("|");
+                        for (let i = 1; i<data_split.length; i++) data_split[i] = convertirACamel(data_split[i]);
+                        let data_temp = data_split.join("|");
+                        fields_array[convertirACamel(ff)] = `[${data_temp}]`;
+                    }else{
+                        fields_array[convertirACamel(ff)] = convertirACamel(g.data[f][ff]);
+                    }
+                    
+                });
+                data_array[f] = fields_array;
+            });
+            g.data = data_array;
+        });
+    });
+    console.log(`dbs`,dbs);
+    console.log(`dbsToCamelCase`,_dbs);
+    return _dbs
+}
 function toList(dbs){
     listado.empty();
-    dbs.forEach( db => { 
+    let dbs_camel = dbsToCamelCase(dbs);
+    dbs_camel.forEach( db => { 
         let li = $(`<li><span class="caret">${db.db}</span></li>`);    
         if (db.groups.length>0){
             let ul = $(`<ul class="nested"></ul>`);
@@ -57,6 +105,7 @@ function toList(dbs){
                                     <option value="number" ${esdefault(g.data.create[f],'number')}>number</option>
                                     <option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option>
                                     <option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option>
+                                    <option value="image64" ${esdefault(g.data.create[f],'image64')}>image base64</option>
                                     <option value="date" ${esdefault(g.data.create[f],'date')}>date</option>
                                     <option value="time" ${esdefault(g.data.create[f],'time')}>time</option>
                                     <option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option>
@@ -96,6 +145,7 @@ function toList(dbs){
                             <option value="number" ${esdefault(g.data.create[f],'number')}>number</option>
                             <option value="checkbox" ${esdefault(g.data.create[f],'checkbox')}>checkbox</option>
                             <option value="checkboxsel" ${esdefault(g.data.create[f],'checkboxsel')}>checkbox select</option>
+                            <option value="imagebase64" ${esdefault(g.data.create[f],'image64')}>image base64</option>
                             <option value="date" ${esdefault(g.data.create[f],'date')}>date</option>
                             <option value="time" ${esdefault(g.data.create[f],'time')}>time</option>
                             <option value="relational" ${esdefault(g.data.create[f],'relational')}>relational</option>
@@ -124,14 +174,17 @@ function toList(dbs){
                         //let r = relacional(g.data.create[f]);                  
                         //console.log("r",r);
                         if (forRel!==undefined && forRel!=null){
+                            
+                            console.log("gr.data.create",db.groups);     
+                            console.log("gr.data.create",forRel);               
                             let gr = db.groups.find(gx => gx.name == forRel.name)          
-                                           
                             let trSelT = $($(tr).find(`[data-cabecera="relacion_tabla"]`));
-                            console.log('--',trSelT,forRel.name);
+                       //     console.log('--',trSelT,forRel.name);
                             trSelT.val(forRel.name);
 
                             let trSelC = $($(tr).find(`[data-cabecera="relacion_nombre"]`));              
                             let trSelN = $($(tr).find(`[data-cabecera="relacion_campo"]`));
+                            
                             Object.keys(gr.data.create).forEach(f => {
                                 /*console.log("object.key:", f);
                                 console.log("gr.data.create:", gr.data.create[f]);
@@ -277,9 +330,50 @@ function init(){
             case 117:
                 console.log("generando diagrama :3");
                 btnDiagrama.click();
+            case 118:
+                console.log("generando seeders");
+                btnSeeder.click();
             break;
         }
     });
+    
+      
+    editorX = CodeMirror(document.getElementById("codeText"), {
+        value: "",
+        mode:  "text",
+        theme: 'blackboard',
+        //lineWrapping: true,
+        lineNumbers: true,
+        lineWrapping: false,
+        styleActiveLine: true,
+        smartIndent: false,
+        indentWithTabs:true,
+        //matchBrackets: true,
+      });
+
+      editorUml = CodeMirror(document.getElementById("codeUmlText"), {
+        value: "",
+        mode:  "text",
+        theme: 'blackboard',
+        //lineWrapping: true,
+        lineNumbers: true,
+        lineWrapping: false,
+        styleActiveLine: true,
+        //matchBrackets: true,
+      });
+
+      editorSQL = CodeMirror(document.getElementById("codeSQL"), {
+        value: "",
+        mode:  "sql",
+        theme: 'blackboard',
+        //lineWrapping: true,
+        lineNumbers: true,
+        lineWrapping: false,
+        styleActiveLine: true,
+        //matchBrackets: true,
+      });
+      
+/*
     editorX = CodeMirror(document.getElementById("codeText"), {
         mode: "javascript",
         theme: "neonsyntax",
@@ -291,7 +385,6 @@ function init(){
         matchBrackets: true,
         value: ''
     });
-
     editorUml = CodeMirror(document.getElementById("codeUmlText"), {
         mode: "javascript",
         theme: "neonsyntax",
@@ -302,7 +395,7 @@ function init(){
         indentWithTabs: true,
         matchBrackets: true,
         value: ''
-    });
+    });*/
 /*
     editorX.on('change',(e) => {
         let val = editorX.getValue();
@@ -351,9 +444,8 @@ function cargarJson (){
         url:"/db_all", dataType: 'json', data: {}, method: 'GET' })
             .done(function (data) {
                 data_db = data;
-                toList(data_db);
-            //    console.log("data_db > ", data);                         
                 editorX.setValue(toHuman(data_db));
+                toList(data_db);                  
                 //toPlants(data_db[2]);
                 setTimeout(()=>{
                     editorUml.setValue(toPlants(data_db));
@@ -378,13 +470,42 @@ function esRelacion(campos,d){
 
 btnGuardar.click((e)=>{
     data_db = toJson(editorX.getValue());
+    console.log("btnGuardar.toJson.data_db",data_db);
     saveDBs(data_db);
+});
+
+btnSeeder.click((e)=>{
+    data_db = toJson(editorX.getValue());
+    let seederText = toSeeder(data_db);    
+    editorSQL.setValue(seederText);
 });
 
 btnDiagrama.click((e)=>{
     //toJson(editorX.getValue());
     generarPlant(toPlants(toJson(editorX.getValue())));
 });
+btnACamelCase.click((e)=>{
+    editorX.setValue(convertirACamel(editorX.getValue()));
+});
+btnASnakeCase.click((e)=>{
+    editorX.setValue(convertirASnake(editorX.getValue()));
+});
+
+function convertirACamel(text) { 
+    let texto = text;
+    let letras = 'abcdefghijklmnopqrstuvwxyz';
+    for (var i = 0; i < letras.length; i++) 
+        texto = texto.replaceAll('_'+letras.charAt(i),letras.charAt(i).toUpperCase());
+    return texto;
+}
+
+function convertirASnake(text) { 
+    let texto = text;
+    let letras = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
+    for (var i = 0; i < letras.length; i++) 
+        texto = texto.replaceAll(letras.charAt(i),'_'+letras.charAt(i).toLowerCase());
+    return texto;
+}
 
 function toJson(texto){
     //let regclass
@@ -417,7 +538,7 @@ function toJson(texto){
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[]};
+                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[]};
                 acDb.groups.push(acGroup);
                 return;
             }            
@@ -431,7 +552,7 @@ function toJson(texto){
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[]};
+                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[]};
                 acDb.groups.push(acGroup);
                 return;
             }            
@@ -441,9 +562,19 @@ function toJson(texto){
                 console.log("line",l);
                 console.log("Tabs",Tabs);
                 console.log("values",values,l);           
-                field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
+                //field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
+                if (values[0].trim().includes("[seeder]")){
+                    acGroup.seeder.push({data:"create",values:values[1].trim().split('|')});
+                    return;
+                }
+                if (values[0].trim().includes("[api]")){
+                    acGroup.apicustom.push({values:values[1].trim().toUpperCase().split('|')});
+                    return;
+                }
+                
+                let field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
                 acGroup.fields.push(field);
-                return;
+                
             }
         }
     });
@@ -588,8 +719,67 @@ function formatearArrayRel(groupNor,groups){
     return groupNor;
 }
 
+function toFields(data){
+    let strArr = [];
+    Object.keys(data).forEach( c => {
+        //evitar las subconsultas
+        if (!data[c].includes('[[') && !data[c].includes('[') ) 
+            strArr.push(c);
+    });
+    return strArr.join(",");
+}
+
+function toValuesSeeder(data,values,uuids){
+    let strArr = [];
+    let counter_seed = 0;
+    Object.keys(data).forEach( (c,i) => {
+        if (!data[c].includes('[[') && !data[c].includes('[') ) 
+            if (values[counter_seed]!=null){
+                let regex = new RegExp('uuid\-[a-zA-Z_]+\-[0-9]{1,3}','gm');
+                if ( regex.test(values[counter_seed]) == true ){
+                    let num = values[counter_seed].match(/(?=uuid\-)?[a-zA-Z_]+\-[0-9]{1,3}/gm);
+                    console.log("num",num);
+                    if (uuids[num[0]]===undefined)
+                        uuids[num[0]] = uuidv4();
+                    strArr.push("'"+uuids[num[0]]+"'");                    
+                }else                
+                    strArr.push("'"+values[counter_seed]+"'");
+                counter_seed++;
+            }
+            else {
+                console.log("values",values,i,values[i],data);
+                throw new Error('valor nulo!');
+            }
+    });
+    return strArr.join(",");
+}
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
+function toSeeder(dbs){
+    let sql_array = [];
+    let sql_texto = "";
+    
+    let uuids = {}
+    dbs.forEach( (db)=> {
+        db.groups.forEach( (group)=> {
+            group.seeder.forEach( (seed)=>{
+                let fields = toFields(group.data['create']);
+                let values = toValuesSeeder(group.data['create'],seed.values,uuids) ;
+                sql_array.push(`INSERT INTO ${group.name} (${fields}) VALUES (${values});`);
+            } );
+        });    
+    });
+    sql_texto = sql_array.join('\n');
+    return sql_texto;
+}
+
 function toHuman(dbs){
     let testX = "";
+    console.log("tohuman.dbs",dbs);
     dbs.forEach(db => {
         let clase = [];
         let relations = [];
@@ -605,7 +795,15 @@ function toHuman(dbs){
                     campos.push(`\t\t\t${d}:${data_create[d]}`);
             });
             testX += campos.join("\n");
-            testX += `\n\n`; 
+
+            let seeders = [];
+            data_seeder = group.seeder;
+            data_seeder.forEach(seed => {
+                seeders.push(`\n\t\t\t[seeder]:${seed.values.join("|")}`);
+            });
+            testX += seeders.join("");
+            
+            testX += `\n\n`;             
         });
     });
 
@@ -632,7 +830,6 @@ function  toPlant(db){
         testX += campos.join("\n");
         testX += `\n}\n`; 
     });
-
     relations.forEach(r => {
         let tTest = `${r.reltable} *-- ${r.table}`;
         if ( testX.includes(tTest) )
@@ -665,14 +862,30 @@ function  toPlant2str(db){
         testX += `\n\t}\n`; 
     });
 
+    relation_counts = [];
     relations.forEach(r => {
-        let tTest = `${r.reltable} *-- ${r.table}`;
-        if ( testX.includes(tTest) )
-            testX = testX.replaceAll(tTest,`${r.reltable} *--* ${r.table}`);
-        else
-            testX += `${r.table} *-- ${r.reltable}\n`;
+        if (relation_counts[r.reltable] == undefined )
+            relation_counts[r.reltable] = 0;
+        relation_counts[r.reltable]++;
     });
+    relations.forEach(r => {
+        if (relation_counts[r.table] == undefined )
+            relation_counts[r.table] = 0;
+        relation_counts[r.table]++;
+    });
+    console.log("relation_counts : ", relation_counts);
 
+    relations.forEach(r => {
+        let line_width = ''
+        for(let ix = 0; ix < relation_counts[r.table]; ix++ )
+            line_width+='-';
+        let tTest = `${r.reltable} *${line_width} ${r.table}`;
+        if ( testX.includes(tTest) )
+            testX = testX.replaceAll(tTest,`${r.reltable} *${line_width}* ${r.table}`);
+        else
+            testX += `${r.table} *${line_width} ${r.reltable}\n`;
+    });
+    //console.log("toPlant2str",testX);
     return testX;
 };
 

@@ -83,6 +83,12 @@ function prepareHeaders(data){
                     <div *ngIf="form['{campo}'].errors['max']">Debe tener menor o igual que {{form['{campo}'].errors['max']['max']}} </div>
                     </div>
                 </div>`;
+    
+    let cabImage64 =  `
+                <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">                
+                    <label for="nombre">{texto} </label>
+                    <app-selector-image formControlName="{campo}"></app-selector-image>
+                </div>`;
     let cabrel =   `
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
                     <label for="formrow-firstname-input ">{texto}</label>
@@ -99,7 +105,7 @@ function prepareHeaders(data){
                 </div>`;
     let cabrelAdd =   `
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
-                    <app-selector-add #[{relation}]Selector  label="{texto}" [showEdit]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
+                    <app-selector-add #[{relation}]Selector  label="{texto}" [campoNombre]="'[{nombre}]'" [campoValor]="'[{id}]'" [showEdit]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
                     <ng-template #[{relation}]TemplateNuevo>
                         <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push($event['content']);form['{campo}'].setValue($event['content']['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
                     </ng-template>
@@ -109,7 +115,7 @@ function prepareHeaders(data){
                 </div>`;
     let cabrelEdit =   `
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
-                    <app-selector-add #[{relation}]Selector  label="{texto}" [showAdd]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
+                    <app-selector-add #[{relation}]Selector  label="{texto}" [campoNombre]="'[{nombre}]'" [campoValor]="'[{id}]'" [showAdd]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
                     <ng-template #[{relation}]TemplateNuevo>
                         <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push($event['content']);form['{campo}'].setValue($event['content']['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
                     </ng-template>
@@ -119,7 +125,7 @@ function prepareHeaders(data){
                 </div>`;
     let cabrelAddEdit =   `
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
-                    <app-selector-add #[{relation}]Selector  label="{texto}" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
+                    <app-selector-add #[{relation}]Selector  label="{texto}" [campoNombre]="'[{nombre}]'" [campoValor]="'[{id}]'" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
                     <ng-template #[{relation}]TemplateNuevo>
                         <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push($event['content']);form['{campo}'].setValue($event['content']['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
                     </ng-template>
@@ -176,6 +182,7 @@ function prepareHeaders(data){
             let cabRep = cab;
             if (campo.tipo == "checkbox") cabRep = cabChk;
             if (campo.tipo == "checkboxsel") cabRep = cabChkSel;
+            if (campo.tipo == "imagebase64") cabRep = cabImage64;
             if (campo.tipo == "area") cabRep = cabArea;
             if (campo.tipo == "time") cabRep = cabRep.replaceAll("{step}","step=600");
             else cabRep  = cabRep.replaceAll("{step}","");
@@ -199,7 +206,8 @@ function prepareHeaders(data){
         if (campo.tienemin && campo.tipo == "area") validators.push(`Validators.minLength(${campo.min})`);
         if (campo.tienemax && campo.tipo == "area") validators.push(`Validators.maxLength(${campo.max})`);        
         if (campo.tienemin && (campo.tipo == "number" || campo.tipo == "integer")) validators.push(`Validators.min(${campo.min})`);
-        if (campo.tienemax && (campo.tipo == "number" || campo.tipo == "integer")) validators.push(`Validators.max(${campo.max})`);        
+        if (campo.tienemax && (campo.tipo == "number" || campo.tipo == "integer")) validators.push(`Validators.max(${campo.max})`);     
+
         if (campo.tipo == "checkbox" || campo.tipo == "checkboxsel")
             xformbuilderx.push(`${campo.campo}:[false,[${validators.join(',')}] ]`);
         else
@@ -354,18 +362,21 @@ function addFiles(data){
 
         let editor = CodeMirror(document.getElementById(id), {
             mode: getExtMode(f),
-            theme: "neonsyntax",
+            theme: "dracula",
             lineWrapping: true,
             lineNumbers: true,
             lineWrapping: false,
             styleActiveLine: true,
             matchBrackets: true,
-
             extraKeys: {
                 "Ctrl-Space": "autocomplete"
             },
             value: getExt(f)?pretty_content_html:pretty_content
             //value: <!doctype html>\n<html>\n  " + document.documentElement.innerHTML + "\n</html>pretty_content
+        });
+        //editores.push(editor);
+        tab.click( ()=> {
+            editor.refresh();
         });
     });
     //<button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">servicios/xnombrex.service.ts</button>
@@ -725,6 +736,7 @@ function init_front(callback_save) {
         $("[data-param='xapix']").val( lower );
         $("[data-param='xmenux']").val( t );
         $("[data-param='xtitulox']").val( `Listado de ${tC}` );
+        $("[data-param='xmenuiconx']").val( `far fa-dot-circle` );
         $("[data-param='xtitleNuevox']").val( `Nuev${fem(tCs)} ${tCs}` );        
         $("[data-param='xtitleEditarx']").val( `Editar ${tCs} {{dataEdit.nombre}}` );
         $("[data-param='xmodalsizex']").val('lg');

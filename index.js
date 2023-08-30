@@ -27,7 +27,9 @@ var public = path.join(__dirname, "public");
 app.use(cors());
 //app.use(express.bodyParser({limit: '50mb'}))
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true,parameterLimit: 100000, limit: '50mb' }));
+app.use(express.json({limit: '25mb'}));
+app.use(express.urlencoded({limit: '25mb'}));
+app.use(bodyParser.urlencoded({ extended: true,parameterLimit: 100000, dlimit: '50mb' }));
 //app.use(express.multipart());
 //app.use(express.bodyParser());
 app.use("/", express.static(public));
@@ -59,6 +61,7 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   db_array.forEach((db_var) => {
     let ctrlapi = new CtrlApi(db_var, db_array);
+    console.log(`use /${ctrlapi.dbData.db}/`);
     app.use(`/${ctrlapi.dbData.db}`, ctrlapi.publicar());
   });
 
@@ -73,11 +76,11 @@ fs.readdirSync(dbscript).forEach((file) => {
   app.post("/save_all", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
-    let db_array = JSON.parse(req.body.content);
+    let db_array_content = JSON.parse(req.body.content);
 
     fs.writeFileSync(
       `${dbscript}dbs.js`,
-      JSON.stringify(db_array, null, 4),
+      JSON.stringify(db_array_content, null, 4),
       function (err) {
         if (err) {
           console.log(err);
@@ -86,7 +89,8 @@ fs.readdirSync(dbscript).forEach((file) => {
         }
       }
     );
-    createPlant(toPlants(db_array));
+    db_array = db_array_content;
+    createPlant(toPlants(db_array_content));
     res.end(JSON.stringify({ mesage: "ok" }));
   });
 

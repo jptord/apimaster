@@ -21,6 +21,7 @@ export class FormularioComponent implements OnInit {
   @Input() dataEdit: any;
   @Input() rel_prefix: any;
   @Input() rel_field: any = '';
+  @Input() rel_id: any = '';
 
   {xrelations_varx}
   estados: any = [
@@ -69,9 +70,15 @@ export class FormularioComponent implements OnInit {
     if (id != null && !this.esModal && id!="nuevo" ) {
       this.{xnombrecapx}Service.find(id).subscribe((result:any) => {
         if (result.content.length == 0) return;
-        this.dataEdit= result.content[0];
+        
+        if (Array.isArray(result.content))
+          this.dataEdit= result.content[0];
+        else
+          this.dataEdit= result.content;
+
           this.formGroup.setValue({xformeditx});
           this.rel_prefix = "/{xnombrex}/"+id;
+          this.rel_id = id;
       });
     }
   }
@@ -82,6 +89,11 @@ export class FormularioComponent implements OnInit {
     this.submitted = true;    
     if (this.formGroup.valid) {
       this.submitted = false;
+
+      if (this.rel_prefix && this.rel_field) {
+        this.formGroup.enable();//*
+        this.formGroup.get(this.rel_field).setValue(this.rel_id);//*
+      }
       let sendData = this.formGroup.value;
       if (this.dataEdit == null) {
         this.{xnombrecapx}Service.register(sendData).subscribe(

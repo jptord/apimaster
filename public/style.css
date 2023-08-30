@@ -122,3 +122,23 @@ ul, #myUL {
 .nav-pills .nav-link{
   text-align: left !important; 
 }
+
+
+.icondiv{
+  padding:5px;
+  font-size: 36px;
+}
+
+.icondiv div:hover{
+  color:blue;
+  cursor: pointer
+}
+
+.iconlabel{
+  display:block;
+  font-size: 12px;
+}
+
+.icondivinput{
+  font-size: 12px;
+}
