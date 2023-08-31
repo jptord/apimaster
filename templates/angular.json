@@ -15,20 +15,26 @@
         "menu.ts"
         ],
     "injection":{
-      "path":"/home/jtordoya/dev/empresas/account_tenan_ui/src/app",
-      "subpath":"/empresas",
+      "path":"{xinjectionpathx}",
+      "subpath":"/{xsubpathx}{xbarmenuroutex}",
       "files":[
-        {file:"app-routing.module.ts","where":"empresas/empresas-routing.module.ts",before:"const routes: Routes = ["},
+        {file:"app-routing.module.ts","where":"{xsubpathx}/{xmenuroutebarx}{xroutemodulenamex}-routing.module.ts",before:"const routes: Routes = ["},
         {file:"menu.ts","where":"layouts/sidebar/menu.ts",before:"export const MENU: MenuItem[] = ["}
       ]
     },
     "params": {
+        "xinjectionpathx" : "/home/jtordoya/dev/empresas/account_tenan_ui/src/app",
+        "xinjectionmoduleroutex" : "empresa",
+        "xsubpathx" : "empresa",
         "xnombrex" : "clientes",
         "xnombrecapx" : "Clientes",
         "xtitulox" : "Listado de clientes",
         "xmenux" : "clientes",
         "xmenuidx" : "1",
         "xmenuroutex" : "",
+        "xbarmenuroutex" : "",
+        "xmenuroutebarx" : "",
+        "xbarmenuroutebarx" : "",
         "xmenuiconx" : "far fa-folder-open",
         "xapix" : "clientes",
         "xestadox" : "estado",

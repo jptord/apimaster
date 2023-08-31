@@ -333,6 +333,25 @@ function addFiles(data){
             f.file = f.file.replaceAll(`${p}`, data.params[p]);
         });
     });
+    console.log("addFiles",data);
+    Object.keys(data.injection).forEach((reg) => {
+        if ( Array.isArray(data.injection[reg]) ){
+            data.injection[reg].forEach( (regreg => {
+                Object.keys(regreg).forEach( reg_att => {
+                    Object.keys(data.params).forEach((p) => {
+                        regreg[reg_att] = regreg[reg_att].replaceAll(`{${p}}`, data.params[p]);    
+                    });
+                    
+                });
+            }));
+        }else{
+            Object.keys(data.params).forEach((p) => {
+                data.injection[reg] = data.injection[reg].replaceAll(`{${p}}`, data.params[p]);    
+            });
+            
+       }        
+    });
+
 
     data.files.forEach( (f,ix) => {
         var tab = $(`<button class="nav-link" id="v-pills-${ix}-tab" data-bs-toggle="pill" data-bs-target="#v-pills-${ix}" type="button" role="tab" aria-controls="v-pills-${ix}" aria-selected="false">${f.file}</button>`);
@@ -357,7 +376,6 @@ function addFiles(data){
         v_pills_tabContent.append(cont);
         //code.text(pretty_content);
         let id = `code-${ix}`;
-
         //let ext = getExt(f);
 
         let editor = CodeMirror(document.getElementById(id), {
@@ -798,12 +816,23 @@ function init_front(callback_save) {
                     //console.log("xnombrecapx:",xnombrecapx);
                     data.cabecera = cabeceras;
                     data.params = params;
+                    
                     console.log("cabeceras:",cabeceras);
                     console.log("params:",params);
                     console.log("data:",data);
-
+                    if (data.params['xmenuroutex']==""){                        
+                        data.params['xroutemodulenamex'] = data.params['xsubpathx'];
+                        data.params['xbarmenuroutebarx'] = "";
+                        data.params['xbarmenuroutex'] = "";
+                        data.params['xmenuroutebarx'] = "";
+                    }else{
+                        data.params['xroutemodulenamex'] = data.params['xmenuroutex'];
+                        data.params['xbarmenuroutex'] = "/"+data.params['xmenuroutex'];
+                        data.params['xmenuroutebarx'] = data.params['xmenuroutex']+"/";
+                        data.params['xbarmenuroutebarx'] = "/"+data.params['xmenuroutex']+"/";
+                    }
                     prepareHeaders(data);
-                    callback_save(data);
+                    callback_save(data);                    
                     addFiles(data);
                     data_generated = data;
                     console.log("data_generated",data_generated);

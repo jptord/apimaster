@@ -430,10 +430,10 @@ function saveDBs(data){
 
 function generarPlant(valor){
     $.ajax({ 
-        url:"/toplant", dataType: 'json', data: {content:valor}, method: 'POST' })
+        url:"http://172.20.50.60:9797/plant",  data: {texto:valor}, method: 'POST' })
             .done(function (data) {
-                console.log(data);
-                $(".diagramImg").attr("src","/diagrams/temp.png?" + new Date().getTime());
+                console.log("generarPlant",data);
+                $(".diagramImg").attr("src","http://172.20.50.60:9797/"+data);
 
             }
     );
@@ -558,7 +558,7 @@ function toJson(texto){
             }            
             if (cTabs == 3){
                 modo="field";
-                let values = Tabs[3].trim().split(":");
+                let values = Tabs[3].trim().split(":",2);
                 console.log("line",l);
                 console.log("Tabs",Tabs);
                 console.log("values",values,l);           
@@ -748,6 +748,7 @@ function toValuesSeeder(data,values,uuids){
             }
             else {
                 console.log("values",values,i,values[i],data);
+                console.log("counter_seed",counter_seed);
                 throw new Error('valor nulo!');
             }
     });

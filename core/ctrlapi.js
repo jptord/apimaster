@@ -88,13 +88,32 @@ class CtrlApi{
         }
         return null;
     }
-    toFieldSeed(fields,data){
-        let temp_fields = [];
-        data.forEach((d,i) => {
-            temp_fields.push(`'${d}'`);
+    
+    uuidv4() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    toFieldSeed(fields,values){
+        let me = this;
+        let strArr = [];
+        var uuids = {};
+        let counter_seed = 0;
+        values.forEach((d,i) => {
+            let regex = new RegExp('uuid\-[a-zA-Z_]+\-[0-9]{1,3}','gm');
+            if ( regex.test(values[counter_seed]) == true ){
+                let num = values[counter_seed].match(/(?=uuid\-)?[a-zA-Z_]+\-[0-9]{1,3}/gm);
+                console.log("num",num);
+                if (uuids[num[0]]===undefined)
+                    uuids[num[0]] = me.uuidv4();
+                strArr.push("'"+uuids[num[0]]+"'");                    
+            }else                
+                strArr.push("'"+values[counter_seed]+"'");
+            counter_seed++;
         });
-        console.log("temp_fields",temp_fields);
-        return temp_fields.join(',');
+        console.log("strArr",strArr);
+        return strArr.join(',');
     }
 
     appendSubquerys(content,data_fields){

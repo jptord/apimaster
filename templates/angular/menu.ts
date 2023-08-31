@@ -1,6 +1,6 @@
 {
     id: 2,
     label: '{xmenux}',
-    link : '{xmenuroutex}{xnombrex}',
+    link : '{xmenuroutebarx}{xnombrex}',
     icon: '{xmenuiconx}',
 },
