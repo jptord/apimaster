@@ -8,19 +8,11 @@ var cors = require("cors");
 const app = express();
 const path = require("path");
 const { exec } = require('child_process');
-
-
 const JSZip = require ("jszip");
 
 const database = new Database();
 const ctrlApi = new CtrlApi();
 database.iniciar();
-//console.log("runSQL:",database.runSQL(`SELECT * FROM sharks `));
-/*database.sql(`SELECT * FROM sharks`).then((data)=>{
-    console.log("data",data);
-    console.log("end");
-});
-*/
 const port = 9988;
 var public = path.join(__dirname, "public");
 
@@ -50,13 +42,8 @@ let db_array = [];
 fs.readdirSync(dbscript).forEach((file) => {
   console.log(file);
   const content = fs.readFileSync(`${dbscript}${file}`, "utf8");
-  // const obj = vm.runInNewContext(code + ';obj');
-  //vm.runInNewContext(content );
-  //let db_var= eval(content)[0];
-  //let db_varx= eval(content);
   let db_array = eval(content);
 
-  //db_array.push(db_var);
   console.log(db_array);
 
   db_array.forEach((db_var) => {
@@ -65,8 +52,6 @@ fs.readdirSync(dbscript).forEach((file) => {
     app.use(`/${ctrlapi.dbData.db}`, ctrlapi.publicar());
   });
 
-  //console.log("db_var-:",db_array[0] );
-  //console.log("db_var.length:",db_varx[] );
 
   app.get("/db_all", (req, res) => {
     res.setHeader("Content-Type", "application/json");
@@ -90,7 +75,7 @@ fs.readdirSync(dbscript).forEach((file) => {
       }
     );
     db_array = db_array_content;
-    createPlant(toPlants(db_array_content));
+    //createPlant(toPlants(db_array_content));
     res.end(JSON.stringify({ mesage: "ok" }));
   });
 
@@ -148,8 +133,6 @@ fs.readdirSync(dbscript).forEach((file) => {
     }
     res.end(JSON.stringify({ message: "framework no encontrado" }));
     return;
-
-    //res.end(content);
   });
 
   app.post("/zipfront", (req, res) => {
@@ -181,76 +164,35 @@ fs.readdirSync(dbscript).forEach((file) => {
   });
 
   app.post("/injectfront", (req, res) => {
+    console.log("POST injectfront");
     let content =  JSON.parse(req.body.data) ;
     let path = content.injection.path;
     let subpath = content.injection.subpath;
     content.files.forEach((f) => {
-    let inj = esInyectable(f.file,content);
-      if (inj==null){
-        console.log("content.file to write", path + subpath +"/"+ f.file);
-        ensureDirectoryExistence(path + subpath +"/"+ f.file);
-        fs.writeFileSync(
-          path + subpath +"/"+ f.file,
-          f.content,
-          function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(`file injected on `);
+      let inj = esInyectable(f.file,content);
+        if (inj==null){
+          console.log("content.file to write", path + subpath +"/"+ f.file);
+          ensureDirectoryExistence(path + subpath +"/"+ f.file);
+          fs.writeFileSync(path + subpath +"/"+ f.file,f.content,
+            function (err) {
+              if (err) console.log("ERRO", err);
+              else console.log(`file injected on `);
             }
-          }
-        );
-      }else{
-
-        let rewrite_content  = fs.readFileSync(path + "/" + inj.where , "utf8");
-        console.log("rewrite_content.indexOf(f.content):",rewrite_content.indexOf(f.content));
-        if (rewrite_content.indexOf(f.content)>0) return ; 
-        //console.log(rewrite_content);
-        let len = inj.before.length;
-        let pos = rewrite_content.indexOf(inj.before);
-        let strA =rewrite_content.substr(0,pos+len);
-        let strB =rewrite_content.substr(pos+len,rewrite_content.length - (pos+len));
-        //console.log("strA",strA);
-        //console.log("strB",strB);
-
-        rewrite_content = strA + "\n" + f.content + "\n" + strB;
-        //console.log("rewrite_content",rewrite_content);
-
-
-        fs.writeFileSync(path + "/" + inj.where, rewrite_content);
-
-      }
-      //zip.file(f.file, f.content);  
-    });
-    /*
-    const fileName = 'public/descargas/'+`${content.folder}-${content.params.xnombrex}.zip`;
-    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-    .pipe(fs.createWriteStream(fileName))
-    .on('finish', function () {
-        console.log(fileName+" written.");
-
-      const options = {
-        root: path.join(__dirname)
-      };
-      res.sendFile(fileName, options, function (err) {
-        if (err) {
-            next(err);
-        } else {
-            console.log('Sent:', fileName);
+          );
+        }else{
+          let rewrite_content  = fs.readFileSync(path + "/" + inj.where , "utf8");
+          console.log("rewrite_content.indexOf(f.content):",rewrite_content.indexOf(f.content));
+          if (rewrite_content.indexOf(f.content)>0) return ; 
+          let len = inj.before.length;
+          let pos = rewrite_content.indexOf(inj.before);
+          let strA =rewrite_content.substr(0,pos+len);
+          let strB =rewrite_content.substr(pos+len,rewrite_content.length - (pos+len));
+          rewrite_content = strA + "\n" + f.content + "\n" + strB;
+          fs.writeFileSync(path + "/" + inj.where, rewrite_content);
         }
       });
-    });*/
-
-  });
-  //console.log("content:",content);
-  /*
-  fs.writeFileSync(`${dbscript}dbs_array.js`, JSON.stringify(db_array, null, 4), function(err) {
-    if(err) {
-      console.log(err);
-    } else {
-      console.log("JSON saved to " + `${dbscript}dbs_array.js`);
-    }
-  }); */
+    });
+ 
 });
 
 function ensureDirectoryExistence(filePath) {
@@ -322,10 +264,9 @@ function createPlant(content){
   console.log(`--creando diagrama `);
   fs.writeFileSync("..//diagrams/dbs.txt",content );
   //exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar "/home/jtordoya/dev/node/diagrams/dbs.txt"'`, 
-   exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/dbs.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
+  exec(`/home/jtordoya/.sdkman/candidates/java/current/bin/java -jar /home/jtordoya/plantuml.1.2023.7.jar /home/jtordoya/dev/node/diagrams/dbs.txt -o "/home/jtordoya/dev/node/apimaster/public/diagrams/"`, 
   //exec(`java -jar ../../plantuml.1.2023.7.jar ../diagrams/dbs.txt -o "./public/diagrams/"`, 
   (error, stdout, stderr) => {
-    //exec(`ls -la`, (error, stdout, stderr) => {
     if (error) {
       console.error(`error: ${error.message}`);
       return;
@@ -341,6 +282,42 @@ function createPlant(content){
 }
 
 let ontask = false;
+let printroutes = [];
+
+function print (path, layer) {
+  if (layer.route) {
+    layer.route.stack.forEach(print.bind(null, path.concat(split(layer.route.path))))
+  } else if (layer.name === 'router' && layer.handle.stack) {
+    layer.handle.stack.forEach(print.bind(null, path.concat(split(layer.regexp))))
+  } else if (layer.method) {
+    //console.log('%s /%s', layer.method.toUpperCase(), path.concat(split(layer.regexp)).filter(Boolean).join('/'))
+    printroutes.push(layer.method.toUpperCase() + ' ' + path.concat(split(layer.regexp)).filter(Boolean).join('/'));
+  }
+}
+
+function split (thing) {
+  if (typeof thing === 'string') {
+    return thing.split('/')
+  } else if (thing.fast_slash) {
+    return ''
+  } else {
+    var match = thing.toString()
+      .replace('\\/?', '')
+      .replace('(?=\\/|$)', '$')
+      .match(/^\/\^((?:\\[.*+?^${}()|[\]\\\/]|[^.*+?^${}()|[\]\\\/])*)\$\//)
+    return match
+      ? match[1].replace(/\\(.)/g, '$1').split('/')
+      : '<complex:' + thing.toString() + '>'
+  }
+}
+
+
+app.get("/getroutes", (req,res) => {
+  printroutes = [];
+  app._router.stack.forEach(print.bind(null, []));
+
+  res.end(printroutes.join('\n') );
+});
 
 app.post("/toplant", function (req,res){
   console.log(`--creando diagrama `);

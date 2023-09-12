@@ -7,6 +7,8 @@ let btnDiagrama =$("#btnDiagrama");
 let btnSeeder =$("#btnSeeder");
 let btnACamelCase = $("#btnACamelCase");
 let btnASnakeCase = $("#btnASnakeCase");
+let btnToSeeder = $("#btnToSeeder");
+let btnToSeederNew = $("#btnToSeederNew");
 var listado = $("#listado");
 let selectedGroup = '';
 function iniList(){
@@ -490,6 +492,75 @@ btnACamelCase.click((e)=>{
 btnASnakeCase.click((e)=>{
     editorX.setValue(convertirASnake(editorX.getValue()));
 });
+btnToSeeder.click(e =>{
+    let data_db = toJson(editorX.getValue());
+    let seeder_db = convertirSqlQSeeder(editorSQL.getValue());
+    let data_db_joined = unirSeederADb(data_db,seeder_db);        
+    editorX.setValue(toHuman(data_db_joined));
+});
+btnToSeederNew.click(e =>{
+    let data_db = toJson(editorX.getValue());
+    let seeder_db = convertirSqlQSeeder(editorSQL.getValue());
+    limpiarSeederDb(data_db);
+    let data_db_joined = unirSeederADb(data_db,seeder_db);        
+    editorX.setValue(toHuman(data_db_joined));
+});
+
+function limpiarSeederDb(data_db){
+    data_db.forEach( db => {
+        db.groups.forEach( g => {
+            g.seeder = [];
+        });
+    });
+}
+
+function unirSeederADb(data_db,seeder_db){
+    console.log("data_db",data_db);
+    seeder_db.forEach( seeder => {        
+        findgroup = data_db[0].groups.find( group => group.name == seeder.tabla );
+        if (findgroup){
+            fieldsGroup = findgroup.fields;
+            let valuesOrdered = [];
+            fieldsGroup.forEach(fg => {                
+                valuesOrdered.push(seeder.valores[fg.name.toLowerCase()]);
+            });
+
+            findgroup.seeder.push({ data:'create', values:valuesOrdered});
+           // let i = data_db[0].groups.indexOf(findgroup);
+           // data_db[0].groups[i].seeder = [];
+        }
+        //console.log(findgroup,seeder.tabla);
+    });
+    return data_db;
+}
+
+function convertirSqlQSeeder(textSql){
+    let regInserts = new RegExp(/(?=(INSERT INTO|insert into))+[A-Za-z0-9áéíóúÁÉÍÓÚÑñ \#\@\:\t\.\-\(\)\_\=\'\"\,\n]+(?=;)+/g);
+    let rgNombre = new RegExp(/(?<=(INSERT INTO[\t ]|insert into[\t ]))[A-Za-z0-9\_]+(?=[\t ]*\()/g);
+    let rgValues = new RegExp(/(?<=(VALUES[\n\t ]*\(|values[\n\t ]*\()|,[ \n\t]*\()[A-Za-z0-9áéíóúÁÉÍÓÚÑñ \#\@\:\t\.\-\_\=\'\",\n]+(?=\))+/g);
+    let rgFields = new RegExp(/(?<=\()[a-zA-Z ,\_]+(?=\) VALUES|\)[ \t\n]*values)/g);
+    let insertsArray =  textSql.match(regInserts);
+    let seeders = [];
+    insertsArray.forEach( ins => {
+        let nombreTabla = ins.match(rgNombre);
+        let values = ins.match(rgValues);
+        let fieldsSection = ins.match(rgFields);
+        let fields = fieldsSection[0].split(",");
+        values.forEach( (value) =>{
+            let valoresObj = {};
+            let valores = value.replaceAll("'","").split(",");
+            fields.forEach((f,i) => {
+                valoresObj[f.trim().toLowerCase()] = valores[i];
+            });
+            seeders.push({
+                tabla : nombreTabla[0],
+                valores : valoresObj
+            });
+        });        
+    });    
+    console.log("seeders",seeders);
+    return seeders;
+}
 
 function convertirACamel(text) { 
     let texto = text;
