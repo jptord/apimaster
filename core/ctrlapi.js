@@ -108,8 +108,9 @@ class CtrlApi{
                 if (uuids[num[0]]===undefined)
                     uuids[num[0]] = me.uuidv4();
                 strArr.push("'"+uuids[num[0]]+"'");                    
-            }else                
-                strArr.push("'"+values[counter_seed]+"'");
+            }else 
+                strArr.push("'"+d+"'");               
+                //strArr.push("'"+values[counter_seed]+"'");
             counter_seed++;
         });
         console.log("strArr",strArr);

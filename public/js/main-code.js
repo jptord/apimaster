@@ -9,8 +9,10 @@ let btnACamelCase = $("#btnACamelCase");
 let btnASnakeCase = $("#btnASnakeCase");
 let btnToSeeder = $("#btnToSeeder");
 let btnToSeederNew = $("#btnToSeederNew");
+let globalConfig = new Config();
 var listado = $("#listado");
 let selectedGroup = '';
+
 function iniList(){
     var toggler = document.getElementsByClassName("caret");
     var i;
@@ -216,6 +218,7 @@ function toList(dbs){
                     $("[data-param='xnombrex']").val(g.name).change(); 
     
                     cargarCookies(selectedGroup.name);
+                    setGlobalSetup();
                     cargarCookiesHeader();
                 });
             });
@@ -224,6 +227,23 @@ function toList(dbs){
         listado.append(li);
     });
     iniList();
+}
+function setGlobalSetup(){
+    
+    $(`[data-param='xsubpathx']`).val("");
+/*
+    let galletas = new Galletas();
+    let inputsParam = $("[data-param]");
+    console.log("cargar cookies");
+    if (prefix!='') prefix=prefix+'.';
+    for(let i=0; i< inputsParam.length; i++) {
+        let element = $(inputsParam[i]);          
+        let name = element.attr("data-param");           
+        console.log(`cargando ${prefix}${name} '${element.val()}' ${element.prop("tagName")}`);
+        var v = galletas.get(prefix + name);
+        if (v != '' && v!=null && v!==undefined)
+            setValType(element,v);
+    };*/
 }
 
 function setValType(e,v){
