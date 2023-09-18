@@ -363,7 +363,7 @@ class CtrlApi{
 
                         let page = parseInt(req.query.page);
                         let size = parseInt(req.query.size);
-                        let sort = req.query.sortBy;
+                        let sort = me.convertirASnake(req.query.sortBy);
                         let descending = req.query.descending=='false'?"ASC":"DESC" ;
                         let offset = (page ) * size;
                         let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
@@ -407,7 +407,7 @@ class CtrlApi{
                     let findcondition = '';
                     //console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[ rel.field ] !== undefined && req.params[ rel.field ] != "" ){
-                        findcondition = ` WHERE ${rel.field} = ${req.params[ rel.field ]}`;
+                        findcondition = ` WHERE ${rel.field} = '${req.params[ rel.field ]}'`;
                     }
 
                     if (req.query.page != undefined && req.query.size != undefined &&
@@ -448,7 +448,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "POST" && api.type == "auto"){
-                console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
+                console.log(`route POST ${api.type} /${group.alias===undefined?group.name:group.alias}${api.route}`);
                 router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -466,7 +466,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "POST" && api.type == "rel"){
-                console.log(`route POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
+                console.log(`route ${api.type} POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
                 router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -475,10 +475,11 @@ class CtrlApi{
                     group.data[api.in][rel.field] = "number";
                     req.body[rel.field] = req.params[rel.field];
                     let f = me.toFields(group.data[api.in]);
-                    let v = me.toValues(group.data[api.in],req.body);
-                    console.log(`INSERT INTO  ${rel.table} (${f}) values (${v})`);
+                    let v = me.toValues(group.data[api.in],me.contentASnakeCase(req.body));
+                    console.log(`${api.type} INSERT INTO  ${rel.table} (${f}) values (${v})`);
                     me.database.db.prepare(`INSERT INTO  ${rel.table} (${f}) values (${v})`).run();
                     respuesta.content = req.body;
+                    me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));
                     //res.end(f);
                 });

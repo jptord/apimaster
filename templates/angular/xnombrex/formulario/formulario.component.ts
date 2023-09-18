@@ -58,12 +58,17 @@ export class FormularioComponent implements OnInit {
     console.log("control",control);
   }
 
-  ngOnInit(): void {    
+  cargarArrays()
+  {
     {xrelations_initx}
+  }
+
+  ngOnInit(): void {    
+    this.cargarArrays();
     this.formGroup = this.FormBuilder.group({xformbuilderx});
     if (this.dataEdit != null) {
       this.formGroup.setValue({xformeditx});
-      this.rel_prefix = "/{xnombrex}/"+this.dataEdit.id;
+      this.rel_prefix = "/{xapix}/"+this.dataEdit.id;
     }
     let id = this.route.snapshot.params['id'];
     if (this.rel_prefix && this.rel_field) this.formGroup.get(this.rel_field).disable();
@@ -77,10 +82,18 @@ export class FormularioComponent implements OnInit {
           this.dataEdit= result.content;
 
           this.formGroup.setValue({xformeditx});
-          this.rel_prefix = "/{xnombrex}/"+id;
+          this.rel_prefix = "/{xapix}/"+id;
           this.rel_id = id;
       });
     }
+  }
+  arrayToSingle(posibleArray){
+    if (Array.isArray(posibleArray))
+      if (posibleArray.length>0)
+        return posibleArray[0];
+      else
+        return {}
+    return posibleArray;
   }
   volver(){
     this.router.navigate(['..'], {relativeTo: this.route});

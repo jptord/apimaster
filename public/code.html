@@ -241,7 +241,24 @@
             </div>
             <div class="tab-pane " id="tabconfig">
                 <div class="card bg-white m-5 p-3">
-                    <h3>Inyección Angular</h3>
+                    <h3><strong>Configuraciones</strong></h3>
+
+                    <div class="row">
+                        <div class="col-10">
+                            <select class="form-select" id="selConfig">
+                            </select>
+                        </div>
+                        <div class="col-2">                          
+                            <div class="content-fluid">
+                                <button type="button" class="float-end btn btn-primary" id="btnNewConfig">Nuevo</button>
+                                <button type="button" class="float-end btn btn-danger" id="btnDelConfig">Eliminar</button>
+                                <button type="button" class="float-end btn btn-success" id="btnSaveConfig">Guardar</button>
+                            </div>  
+                        </div>
+                    </div>
+                    <label class="text-success" id="labelConfigMessage"></label>
+                    <br>
+                    <h5><strong>Inyección Angular</strong></h5>
                     <div class="row g-3 align-items-center">                        
                         <div class="col-2">
                             <label class="col-form-label" >Path:</label>

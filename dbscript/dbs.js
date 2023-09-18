@@ -19,48 +19,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_dato-1",
-                            "Cadena",
-                            "Cadena de caracteres"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_dato-2",
-                            "Número",
-                            "Números enteros"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_dato-3",
-                            "Float",
-                            "Número reales"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_dato-4",
-                            "Json",
-                            "Formato JSON"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_dato-5",
-                            "Boolean",
-                            "Formato falso-verdadero"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -233,32 +192,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-moneda-1",
-                            "Bolivianos",
-                            "Bs"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-moneda-2",
-                            "Dólares",
-                            "USD"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-moneda-3",
-                            "Unidad de fondo de Vivienda",
-                            "UFV"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -541,6 +475,79 @@
                 }
             },
             {
+                "name": "forma_pago",
+                "alias": "forma_pago",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string"
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string"
+                    }
+                }
+            },
+            {
                 "name": "medio_transferencia",
                 "alias": "medio_transferencia",
                 "fields": [
@@ -557,32 +564,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-medio_transferencia-1",
-                            "Efectivo",
-                            "Transferencia en efectivo"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-medio_transferencia-2",
-                            "Cheque",
-                            "Transferencia en cheque"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-medio_transferencia-3",
-                            "Transferencia Bancaria",
-                            "Transferencia por banco"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -648,25 +630,10 @@
                     },
                     {
                         "name": "nombre",
-                        "value": "string|pk"
+                        "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-vias-1",
-                            "Bancaria"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-vias-2",
-                            "Caja"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -708,14 +675,14 @@
                 "data": {
                     "select": {
                         "id": "uuid|pk",
-                        "nombre": "string|pk"
+                        "nombre": "string"
                     },
                     "create": {
                         "id": "uuid|pk",
-                        "nombre": "string|pk"
+                        "nombre": "string"
                     },
                     "insert": {
-                        "nombre": "string|pk"
+                        "nombre": "string"
                     }
                 }
             },
@@ -747,16 +714,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_pago-1",
-                            "pago_compra_efectivo_factura",
-                            "Pago por compra con factura"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -914,24 +872,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_pago_via-1",
-                            "uuid-tipo_pago-1",
-                            "uuid-vias-1"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_pago_via-2",
-                            "uuid-tipo_pago-1",
-                            "uuid-vias-2"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -1032,32 +973,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_pago_medios-1",
-                            "uuid-tipo_pago-1",
-                            "uuid-medio_transferencia-1"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_pago_medios-2",
-                            "uuid-tipo_pago-1",
-                            "uuid-medio_transferencia-2"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_pago_medios-3",
-                            "uuid-tipo_pago-1",
-                            "uuid-medio_transferencia-3"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -1296,32 +1212,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_identificacion-1",
-                            "CI",
-                            "Carnet de Identidad"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_identificacion-2",
-                            "NIT",
-                            "Número de identificación Tributaria"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_identificacion-3",
-                            "PAS",
-                            "Pasaporte"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -1394,56 +1285,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-grupo-1",
-                            "Clientes Nacionales",
-                            ""
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-grupo-2",
-                            "Clientes Internacionales",
-                            ""
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-grupo-3",
-                            "Proveedores Nacionales",
-                            ""
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-grupo-4",
-                            "Proveedores Internacionales",
-                            ""
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-grupo-5",
-                            "Empleados",
-                            ""
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-grupo-6",
-                            "Consultores",
-                            ""
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -1625,7 +1467,7 @@
                         "value": "string"
                     },
                     {
-                        "name": "descripción",
+                        "name": "descripcion",
                         "value": "string"
                     },
                     {
@@ -1745,7 +1587,7 @@
                         "telefono": "number",
                         "correo": "string",
                         "direccion": "string",
-                        "descripción": "string",
+                        "descripcion": "string",
                         "identificacion": "string",
                         "tipo_identificacion_id": "number",
                         "tipo_identificacion": "[tipo_identificacion|id|tipo_identificacion_id]",
@@ -1757,7 +1599,7 @@
                         "telefono": "number",
                         "correo": "string",
                         "direccion": "string",
-                        "descripción": "string",
+                        "descripcion": "string",
                         "identificacion": "string",
                         "tipo_identificacion_id": "number",
                         "tipo_identificacion": "[tipo_identificacion|id|tipo_identificacion_id]",
@@ -1768,7 +1610,7 @@
                         "telefono": "number",
                         "correo": "string",
                         "direccion": "string",
-                        "descripción": "string",
+                        "descripcion": "string",
                         "identificacion": "string",
                         "tipo_identificacion_id": "number",
                         "tipo_identificacion": "[tipo_identificacion|id|tipo_identificacion_id]",
@@ -1809,29 +1651,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_entidad-1",
-                            "Cliente"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_entidad-2",
-                            "Proveedor"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_entidad-3",
-                            "Empleado"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -1912,32 +1732,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-entidades-1",
-                            "Banco Bisa",
-                            "100010110"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-entidades-2",
-                            "Tecnopreco",
-                            "100010112"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-entidades-3",
-                            "Alianza Seguros",
-                            "100010113"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -2095,16 +1890,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-entidades_tipo_entidad-1",
-                            "uuid-tipo_entidad_id-1",
-                            "uuid-entidad-1"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -2280,36 +2066,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-estado_credito-1",
-                            "Revisión"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-estado_credito-2",
-                            "En Proceso"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-estado_credito-3",
-                            "Observado"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-estado_credito-4",
-                            "Pagado"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -3500,6 +3257,86 @@
                 }
             },
             {
+                "name": "forma_cobro",
+                "alias": "forma_cobro",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string"
+                    },
+                    {
+                        "name": "estado",
+                        "value": "string"
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "estado": "string"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "estado": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "estado": "string"
+                    }
+                }
+            },
+            {
                 "name": "cobros",
                 "alias": "cobros",
                 "fields": [
@@ -3774,32 +3611,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_cobro-1",
-                            "cobro_anticipo_clientes",
-                            "Cobro de anticipo a clientes"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_cobro-2",
-                            "cobro_anticipo_proveedores",
-                            "Cobro de anticipo a proveedores"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-tipo_cobro-3",
-                            "cobro_anticipo_empleados",
-                            "Cobro de anticipo a empleados"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -5322,57 +5134,7 @@
                         "value": "string"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-1",
-                            "Lunes"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-2",
-                            "Martes"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-3",
-                            "Miércoles"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-4",
-                            "Jueves"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-5",
-                            "Viernes"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-6",
-                            "Sábado"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-dias-7",
-                            "Domingo"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -5449,22 +5211,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario-1",
-                            "Turno Mañana"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario-1",
-                            "Turno Turno"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -5633,108 +5380,7 @@
                         "value": "time"
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-1",
-                            "uuid-horario-1",
-                            "uuid-dias-1",
-                            "0800",
-                            "1200"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-2",
-                            "uuid-horario-1",
-                            "uuid-dias-2",
-                            "0800",
-                            "1200"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-3",
-                            "uuid-horario-1",
-                            "uuid-dias-3",
-                            "0800",
-                            "1200"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-4",
-                            "uuid-horario-1",
-                            "uuid-dias-4",
-                            "0800",
-                            "1200"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-5",
-                            "uuid-horario-1",
-                            "uuid-dias-5",
-                            "0800",
-                            "1200"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-1",
-                            "uuid-horario-2",
-                            "uuid-dias-1",
-                            "1400",
-                            "1800"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-2",
-                            "uuid-horario-2",
-                            "uuid-dias-2",
-                            "1400",
-                            "1800"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-3",
-                            "uuid-horario-2",
-                            "uuid-dias-3",
-                            "1400",
-                            "1800"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-4",
-                            "uuid-horario-2",
-                            "uuid-dias-4",
-                            "1400",
-                            "1800"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-horario_dia-5",
-                            "uuid-horario-2",
-                            "uuid-dias-5",
-                            "1400",
-                            "1800"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [],
                 "apis": [
                     {
@@ -5828,17 +5474,6 @@
                     {
                         "name": "nombre",
                         "value": "string"
-                    },
-                    {
-                        "name": "caja_horarios",
-                        "value": "[[caja_horarios|caja_id|id]]",
-                        "rel": {
-                            "index": "caja_horarios",
-                            "name": "caja_horarios",
-                            "field": "caja_id",
-                            "ownfield": "id",
-                            "array": true
-                        }
                     }
                 ],
                 "seeder": [],
@@ -5878,46 +5513,6 @@
                         "in": null,
                         "type": "auto",
                         "out": null
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":caja_id/caja_horarios",
-                        "in": null,
-                        "rel": "[[caja_horarios|caja_id|id]]",
-                        "type": "rel",
-                        "out": "select_caja_horarios"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":caja_id/caja_horarios/:id",
-                        "in": null,
-                        "rel": "[[caja_horarios|caja_id|id]]",
-                        "type": "rel",
-                        "out": "select_caja_horarios"
-                    },
-                    {
-                        "method": "POST",
-                        "route": ":caja_id/caja_horarios",
-                        "in": "insert_caja_horarios",
-                        "rel": "[[caja_horarios|caja_id|id]]",
-                        "type": "rel",
-                        "out": "select_caja_horarios"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":caja_id/caja_horarios/:id",
-                        "in": "insert_caja_horarios",
-                        "rel": "[[caja_horarios|caja_id|id]]",
-                        "type": "rel",
-                        "out": "select_caja_horarios"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":caja_id/caja_horarios/:id",
-                        "in": null,
-                        "rel": "[[caja_horarios|caja_id|id]]",
-                        "type": "rel",
-                        "out": null
                     }
                 ],
                 "data": {
@@ -5925,47 +5520,18 @@
                         "id": "uuid|pk",
                         "fondo_id": "number",
                         "fondo": "[fondo|id|fondo_id]",
-                        "nombre": "string",
-                        "caja_horarios": "[[caja_horarios|caja_id|id]]"
+                        "nombre": "string"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "fondo_id": "number",
                         "fondo": "[fondo|id|fondo_id]",
-                        "nombre": "string",
-                        "caja_horarios": "[[caja_horarios|caja_id|id]]"
+                        "nombre": "string"
                     },
                     "insert": {
                         "fondo_id": "number",
                         "fondo": "[fondo|id|fondo_id]",
-                        "nombre": "string",
-                        "caja_horarios": "[[caja_horarios|caja_id|id]]"
-                    },
-                    "select_caja_horarios": {
-                        "id": "uuid|pk",
-                        "caja_id": "number",
-                        "caja": "[caja|id|caja_id]",
-                        "horario_id": "number",
-                        "horarios": "[horarios|id|horario_id]",
-                        "responsable_id": "number",
-                        "responsables": "[usuarios|id|responsable_id]"
-                    },
-                    "create_caja_horarios": {
-                        "id": "uuid|pk",
-                        "caja_id": "number",
-                        "caja": "[caja|id|caja_id]",
-                        "horario_id": "number",
-                        "horarios": "[horarios|id|horario_id]",
-                        "responsable_id": "number",
-                        "responsables": "[usuarios|id|responsable_id]"
-                    },
-                    "insert_caja_horarios": {
-                        "caja_id": "number",
-                        "caja": "[caja|id|caja_id]",
-                        "horario_id": "number",
-                        "horarios": "[horarios|id|horario_id]",
-                        "responsable_id": "number",
-                        "responsables": "[usuarios|id|responsable_id]"
+                        "nombre": "string"
                     }
                 }
             },
@@ -6348,7 +5914,7 @@
                         "value": "string"
                     },
                     {
-                        "name": "descripción",
+                        "name": "descripcion",
                         "value": "string"
                     },
                     {
@@ -6399,18 +5965,18 @@
                     "select": {
                         "id": "uuid|pk",
                         "nombre": "string",
-                        "descripción": "string",
+                        "descripcion": "string",
                         "estado": "string"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "nombre": "string",
-                        "descripción": "string",
+                        "descripcion": "string",
                         "estado": "string"
                     },
                     "insert": {
                         "nombre": "string",
-                        "descripción": "string",
+                        "descripcion": "string",
                         "estado": "string"
                     }
                 }
@@ -7664,6 +7230,383 @@
                         "saldo": "float",
                         "documento_id": "number",
                         "documento": "[documento|id|documento_id]"
+                    }
+                }
+            },
+            {
+                "name": "medio_forma_pago",
+                "alias": "medio_forma_pago",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string"
+                    },
+                    {
+                        "name": "forma_pago_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "forma_pago",
+                        "value": "[forma_pago|id|forma_pago_id]",
+                        "rel": {
+                            "index": "forma_pago",
+                            "name": "forma_pago",
+                            "field": "id",
+                            "ownfield": "forma_pago_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "forma_pago_id": "number",
+                        "forma_pago": "[forma_pago|id|forma_pago_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "forma_pago_id": "number",
+                        "forma_pago": "[forma_pago|id|forma_pago_id]"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "descripcion": "string",
+                        "forma_pago_id": "number",
+                        "forma_pago": "[forma_pago|id|forma_pago_id]"
+                    }
+                }
+            },
+            {
+                "name": "caja_banco_medio",
+                "alias": "caja_banco_medio",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "tabla_relacion",
+                        "value": "string"
+                    },
+                    {
+                        "name": "descripcion",
+                        "value": "string"
+                    },
+                    {
+                        "name": "id_relacion",
+                        "value": "uuid"
+                    },
+                    {
+                        "name": "medio_forma_pago_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "medio_forma_pago",
+                        "value": "[medio_forma_pago|id|medio_forma_pago_id]",
+                        "rel": {
+                            "index": "medio_forma_pago",
+                            "name": "medio_forma_pago",
+                            "field": "id",
+                            "ownfield": "medio_forma_pago_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "caja_banco_transferencia",
+                        "value": "[[caja_banco_transferencia|caja_banco_medio_id|id]]",
+                        "rel": {
+                            "index": "caja_banco_transferencia",
+                            "name": "caja_banco_transferencia",
+                            "field": "caja_banco_medio_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":caja_banco_medio_id/caja_banco_transferencia",
+                        "in": null,
+                        "rel": "[[caja_banco_transferencia|caja_banco_medio_id|id]]",
+                        "type": "rel",
+                        "out": "select_caja_banco_transferencia"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":caja_banco_medio_id/caja_banco_transferencia/:id",
+                        "in": null,
+                        "rel": "[[caja_banco_transferencia|caja_banco_medio_id|id]]",
+                        "type": "rel",
+                        "out": "select_caja_banco_transferencia"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":caja_banco_medio_id/caja_banco_transferencia",
+                        "in": "insert_caja_banco_transferencia",
+                        "rel": "[[caja_banco_transferencia|caja_banco_medio_id|id]]",
+                        "type": "rel",
+                        "out": "select_caja_banco_transferencia"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":caja_banco_medio_id/caja_banco_transferencia/:id",
+                        "in": "insert_caja_banco_transferencia",
+                        "rel": "[[caja_banco_transferencia|caja_banco_medio_id|id]]",
+                        "type": "rel",
+                        "out": "select_caja_banco_transferencia"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":caja_banco_medio_id/caja_banco_transferencia/:id",
+                        "in": null,
+                        "rel": "[[caja_banco_transferencia|caja_banco_medio_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "tabla_relacion": "string",
+                        "descripcion": "string",
+                        "id_relacion": "uuid",
+                        "medio_forma_pago_id": "number",
+                        "medio_forma_pago": "[medio_forma_pago|id|medio_forma_pago_id]",
+                        "caja_banco_transferencia": "[[caja_banco_transferencia|caja_banco_medio_id|id]]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "tabla_relacion": "string",
+                        "descripcion": "string",
+                        "id_relacion": "uuid",
+                        "medio_forma_pago_id": "number",
+                        "medio_forma_pago": "[medio_forma_pago|id|medio_forma_pago_id]",
+                        "caja_banco_transferencia": "[[caja_banco_transferencia|caja_banco_medio_id|id]]"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "tabla_relacion": "string",
+                        "descripcion": "string",
+                        "id_relacion": "uuid",
+                        "medio_forma_pago_id": "number",
+                        "medio_forma_pago": "[medio_forma_pago|id|medio_forma_pago_id]",
+                        "caja_banco_transferencia": "[[caja_banco_transferencia|caja_banco_medio_id|id]]"
+                    },
+                    "select_caja_banco_transferencia": {
+                        "id": "uuid|pk",
+                        "caja_banco_medio_id": "number",
+                        "caja_banco_medio": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "medio_transferencia_id": "number",
+                        "medio_transferencia": "[medio_transferencia|id|medio_transferencia_id]"
+                    },
+                    "create_caja_banco_transferencia": {
+                        "id": "uuid|pk",
+                        "caja_banco_medio_id": "number",
+                        "caja_banco_medio": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "medio_transferencia_id": "number",
+                        "medio_transferencia": "[medio_transferencia|id|medio_transferencia_id]"
+                    },
+                    "insert_caja_banco_transferencia": {
+                        "caja_banco_medio_id": "number",
+                        "caja_banco_medio": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "medio_transferencia_id": "number",
+                        "medio_transferencia": "[medio_transferencia|id|medio_transferencia_id]"
+                    }
+                }
+            },
+            {
+                "name": "caja_banco_transferencia",
+                "alias": "caja_banco_transferencia",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "caja_banco_medio_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "caja_banco_medio",
+                        "value": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "rel": {
+                            "index": "caja_banco_medio",
+                            "name": "caja_banco_medio",
+                            "field": "id",
+                            "ownfield": "caja_banco_medio_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "medio_transferencia_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "medio_transferencia",
+                        "value": "[medio_transferencia|id|medio_transferencia_id]",
+                        "rel": {
+                            "index": "medio_transferencia",
+                            "name": "medio_transferencia",
+                            "field": "id",
+                            "ownfield": "medio_transferencia_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "caja_banco_medio_id": "number",
+                        "caja_banco_medio": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "medio_transferencia_id": "number",
+                        "medio_transferencia": "[medio_transferencia|id|medio_transferencia_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "caja_banco_medio_id": "number",
+                        "caja_banco_medio": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "medio_transferencia_id": "number",
+                        "medio_transferencia": "[medio_transferencia|id|medio_transferencia_id]"
+                    },
+                    "insert": {
+                        "caja_banco_medio_id": "number",
+                        "caja_banco_medio": "[caja_banco_medio|id|caja_banco_medio_id]",
+                        "medio_transferencia_id": "number",
+                        "medio_transferencia": "[medio_transferencia|id|medio_transferencia_id]"
                     }
                 }
             }

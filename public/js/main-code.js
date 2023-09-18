@@ -9,7 +9,13 @@ let btnACamelCase = $("#btnACamelCase");
 let btnASnakeCase = $("#btnASnakeCase");
 let btnToSeeder = $("#btnToSeeder");
 let btnToSeederNew = $("#btnToSeederNew");
-let globalConfig = new Config();
+
+let btnSaveConfig = $("#btnSaveConfig");
+let btnDelConfig = $("#btnDelConfig");
+let btnNewConfig = $("#btnNewConfig");
+let selConfig = $("#selConfig");
+
+let globalConfig = new Config(btnSaveConfig,btnDelConfig,btnNewConfig,selConfig);
 var listado = $("#listado");
 let selectedGroup = '';
 
@@ -229,21 +235,7 @@ function toList(dbs){
     iniList();
 }
 function setGlobalSetup(){
-    
-    $(`[data-param='xsubpathx']`).val("");
-/*
-    let galletas = new Galletas();
-    let inputsParam = $("[data-param]");
-    console.log("cargar cookies");
-    if (prefix!='') prefix=prefix+'.';
-    for(let i=0; i< inputsParam.length; i++) {
-        let element = $(inputsParam[i]);          
-        let name = element.attr("data-param");           
-        console.log(`cargando ${prefix}${name} '${element.val()}' ${element.prop("tagName")}`);
-        var v = galletas.get(prefix + name);
-        if (v != '' && v!=null && v!==undefined)
-            setValType(element,v);
-    };*/
+    globalConfig.actualizar();
 }
 
 function setValType(e,v){
