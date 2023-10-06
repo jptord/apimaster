@@ -1,0 +1,188 @@
+[{
+
+    "folder" : "spring",
+    "files": [
+        "command/core/xnombrecapxCreateCmd.java",
+        "command/core/xnombrecapxUpdateCmd.java",
+        "jpa/entity/xnombrecapx.java",
+        "jpa/repository/xnombrecapxRepository.java",
+        "jpa/service/xnombrecapxService.java",
+        "rest/controller/io/request/xnombrecapxRequest.java",
+        "rest/controller/io/response/xnombrecapxResponse.java",
+        "rest/controller/mapper/xnombrecapxMapper.java",
+        "rest/controller/xnombrecapxController.java",        
+        "db.changelog-master.xml",
+        "xnombrex-changelog.xml"
+        ],
+    "injection":{
+      "path":"",
+      "subpath":"",
+      "packagename":"{xpackagenamex}",
+      "files":[
+        {file:"db.changelog-master.xml","where":"/home/jtordoya/dev/tesoreria/kernobi_tesoreria/target/classes/db/changelog/db.changelog-master.xml",before:"",after:"<changeSet"},
+        {file:"xnombrex-changelog.xml","where":"l/home/jtordoya/dev/tesoreria/kernobi_tesoreria/target/classes/db/changelog/{xnombrecamelx}-changelog.xml",before:"",after:"</databaseChangeLog>"}
+      ]
+    },
+    "params": {
+        "xinjectionpathx" : "/home/jtordoya/dev/empresas/account_tenan_ui/src/app",
+        "xinjectionmoduleroutex" : "empresa",
+        "xpackagenamex" : "com.kernotec.kernobi.tesoreria",
+        "xnombrecamelx" : "regularizacion",
+        "xnombrecamelpluralx" : "regularizaciones",
+        "xtextx" : "Regularización",
+        "xtextpluralx" : "regularizaciones",
+        "xnombrecapcamelx" : "Regularizacion",        
+        "xsetfieldscreatex" : "     vc.setNombre(request.getNombre());",
+        "xrequestcreatecmdx" : "    int Nombre;",
+        "xsetfieldsupdatex" : "     vc.setNombre(request.getNombre());",
+        "xrequestupdatecmdx" : "    int Nombre;",
+        "xentityfieldsx" : `@Column(name = "fecha", nullable = false )
+                          private Date fecha;
+                          
+                            @OneToMany(fetch = FetchType.LAZY, mappedBy = "entidades", cascade= CascadeType.ALL)
+                            @JsonManagedReference
+                          private List<EntidadesTipoEntidad> entidadesTipoEntidad;
+                          `,
+        "xmethodsrepositoryx" : "public List<Entidades> findByNombre(String nombre);",
+        "xmethodsallservicex" : "public List<Fondo> findByNombre(String nombre) {return repository.findByNombre(nombre);}",
+        "xmethodsallservicex" : `	public Page<{xnombrecapcamelx}> findByAllFondoId(String keyword, UUID fondoId, Pageable pageable) {
+          String recurso = keyword == null ? null : "%" + keyword.toLowerCase() + "%";
+          return repository.findAll( (Specification<{xnombrecapcamelx}>) (root, query, cb) -> cb.and( cb.equal(root.get("fondoId"), fondoId), cb.or( recurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("nombre").as(String.class)), recurso))), pageable);}`,
+        "xrequestfieldsx" : "private Date fecha;",
+        "xresponsefieldsx" : "private Date fecha;",
+        "xcontrollerrelx" : "",
+        "xfieldschangelogx" : `<createTable tableName="pagos_devengados">
+          <column defaultValueComputed="uuid_generate_v4()" name="id" type="uuid">
+              <constraints nullable="false" primaryKey="true" primaryKeyName="pk_pagos_devengados"/>
+          </column></createTable>`,
+
+        "xsubpathx" : "empresa",
+        "xnombrex" : "clientes",
+        "xnombrecapx" : "Clientes",
+        "xtitulox" : "Listado de clientes",
+        "xmenux" : "clientes",
+        "xmenuidx" : "1",
+        "xmenuroutex" : "",
+        "xbarmenuroutex" : "",
+        "xmenuroutebarx" : "",
+        "xbarmenuroutebarx" : "",
+        "xmenuiconx" : "far fa-folder-open",
+        "xapix" : "clientes",
+        "xestadox" : "estado",
+        "xmodalsizex" : "xl",
+        "xmodalfullscreensizex" : "xl",
+        "xsoftdeletex" : "false",
+        "xestadoenabledx" : "habilitado",
+        "xestadodisabledx" : "deshabilitado",
+        "xtitleNuevox" : "Nuevo cliente",
+        "xtitleEditarx" : `Editar cliente {{dataEdit.nombre_razon_social}}`,         
+        "xrelations_constructorx" : `private TipodocumentoService: TipodocumentoService,`,
+        "xrelations_initx" : `this.TipodocumentoService.getAll().subscribe((res:any) => { this.tipo_documentos = res.content; });`,
+        "xrelations_varx" : `tipo_documentos:any = [];`,
+        "xrelations_includex" : `import { TipodocumentoService } from 'src/app/core/services/tipodocumento.service';`,
+
+        "xformbuilderx" : `{
+              id: [{ value: "", disabled: true }],
+              nombre_razon_social: [ "", [Validators.required,Validators.minLength(2), Validators.maxLength(255)], ],
+              valor_documento: ["", [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
+              estado: ["", [Validators.required, Validators.maxLength(100)]],
+              codigo_cliente: ["", [Validators.required,Validators.minLength(2), Validators.maxLength(100)]],
+              tipo_documento_id: ["habilitado"],
+            }`,
+    
+        "xformeditx" : `{
+                id: this.dataEdit.id,
+                nombre_razon_social: this.dataEdit.nombre_razon_social,
+                valor_documento: this.dataEdit.valor_documento,
+                estado: this.dataEdit.estado,
+                codigo_cliente: this.dataEdit.codigo_cliente,
+                tipo_documento_id: this.dataEdit.tipo_documento_id,
+              }`,
+    
+        "xrefieldx" : `
+        <div class="mb-6">
+                      <label for="nombre">Nombre / Razón Social </label>
+                      <input type="text" class="form-control uppercase" id="nombre_razon_social" (click)="alCambiar(form)" required formControlName="nombre_razon_social" [ngClass]="{ 'is-invalid': submitted && form['nombre_razon_social'].errors }">
+                      <div *ngIf="submitted && form['nombre_razon_social'].errors" class="invalid-feedback" align="left">
+                        <div *ngIf="form['nombre_razon_social'].errors['required']">Es requerido</div>
+                        <div *ngIf="form['nombre_razon_social'].errors['minlength']">Debe tener al menos {{form['nombre_razon_social'].errors['minlength']['requiredLength']}} caracteres</div>
+                        <div *ngIf="form['nombre_razon_social'].errors['maxlength']">Debe tener menos de {{form['nombre_razon_social'].errors['maxlength']['requiredLength']}} caracteres</div>
+                      </div>
+                    </div>
+    
+    
+                    <div class="mb-6">
+                      <label for="formrow-firstname-input ">Tipo de documento</label>
+                      <select class="form-control form-select" id="tipo_documento_id" formControlName="tipo_documento_id" name="tipo_documento_id">
+                        <option *ngFor="let t of tipo_documentos" value="{{t.id}}"  >{{t.nombre}} </option>
+                      </select>
+                    </div>`,
+        "xroutingx" : `{ path: 'clientes', loadChildren: () => import('./clientes/clientes.module').then(m => m.ClientesModule  )},`,
+        "xrefieldtabx": ``,
+        "xaddimportmodulex" : ``,
+        "xaddmodulex" : '',
+        "xcabecerasx" : {
+                id: {
+                  visible: false,
+                  buscable: false,
+                  buscableCheck: true,
+                  visibleCheck: false,
+                  sortable: true,
+                  filtrable: true,
+                  texto: "id",
+                  filtrotipo: "texto",
+                },
+                nombre_razon_social: {
+                  visible: true,
+                  buscable: true,
+                  buscableCheck: true,
+                  visibleCheck: true,
+                  sortable: true,
+                  filtrable: true,
+                  texto: "Nombre",
+                  filtrotipo: "texto",
+                },
+                valor_documento: {
+                  visible: true,
+                  buscable: true,
+                  buscableCheck: true,
+                  visibleCheck: true,
+                  sortable: true,
+                  filtrable: true,
+                  texto: "Número de documento",
+                  filtrotipo: "texto",
+                },
+                estado: {
+                  visible: true,
+                  buscable: true,
+                  buscableCheck: true,
+                  visibleCheck: true,
+                  sortable: true,
+                  filtrable: true,
+                  texto: "Estado",
+                  filtrotipo: "texto",
+                },
+                codigo_cliente: {
+                  visible: true,
+                  buscable: true,
+                  buscableCheck: true,
+                  visibleCheck: true,
+                  sortable: true,
+                  filtrable: true,
+                  texto: "Código de cliente",
+                  filtrotipo: "texto",
+                },
+                tipo_documento_id: {
+                  visible: true,
+                  mascara: { campo: "tipo_documentos", valor: "nombre" },
+                  buscable: true,
+                  buscableCheck: true,
+                  visibleCheck: true,
+                  sortable: true,
+                  filtrable: true,
+                  texto: "Tipo de documento",
+                  filtrotipo: "texto",
+                },
+              },
+        }
+}]

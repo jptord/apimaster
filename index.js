@@ -131,6 +131,26 @@ fs.readdirSync(dbscript).forEach((file) => {
       res.end(JSON.stringify(template));
       return;
     }
+    if (req.query.framework == "spring") {
+      res.setHeader("Content-Type", "application/json");
+      const content = fs.readFileSync(`templates/spring.json`, "utf8");
+      //let template = eval(content)[0];
+      let template = eval(content)[0];
+      let result = [];
+      template.files.forEach((f) => {
+        let contentFile = fs.readFileSync(
+          `templates/${template.folder}/${f}`,
+          "utf8"
+        );
+      
+        result.push({ file: f, content: contentFile });
+      });
+
+      template.files = result;
+
+      res.end(JSON.stringify(template));
+      return;
+    }
     res.end(JSON.stringify({ message: "framework no encontrado" }));
     return;
   });

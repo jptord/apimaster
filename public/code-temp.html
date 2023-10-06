@@ -73,10 +73,7 @@
                 <a href="#tabdiag" class="nav-link" data-bs-toggle="tab">Diagrama</a>
             </li>
             <li class="nav-item">
-                <a href="#tabgen" class="nav-link" data-bs-toggle="tab">@Angular</a>
-            </li>
-            <li class="nav-item">
-                <a href="#tabgen-spring" class="nav-link" data-bs-toggle="tab">@Spring</a>
+                <a href="#tabgen" class="nav-link" data-bs-toggle="tab">Generador</a>
             </li>
             <li class="nav-item">
                 <a href="#tabconfig" class="nav-link" data-bs-toggle="tab">Configurar</a>
@@ -97,12 +94,10 @@
                         <div id="codeText" class="codeText"></div>
                     </div>
                     <div class="card col-sm-8">            
-                        <div class="diagramDiv " >
+                        <div class="diagramDiv" >
                             <!-- <img id="diagramImg" width="auto" height="auto" uml=""> -->
-                            <!-- <img class="diagramImg" width="auto" height="800px" src="/diagrams/temp.png">  -->
-                            <iframe src="http://localhost:8787/eas.html" style="width:100%;height:100%;">  </iframe>
+                            <img class="diagramImg" width="auto" height="800px" src="/diagrams/temp.png"> 
                         </div>
-
                     </div>
                     <div class="card col-sm-6 d-none">
                         <div id="codeUmlText"></div>
@@ -114,9 +109,9 @@
                         <span id="btnToSeederNew" class="btn btn-outline-primary">SQL a Seeder (Nuevo)</span>
                     </div>
                 </div>
-                <div class="content row d-none" >
-                    <div class="card col-sm-12 " >
-                        <div id="codeSQL" ></div>
+                <div class="content row">
+                    <div class="card col-sm-12 ">
+                        <div id="codeSQL"></div>
                     </div> 
                 </div>
             </div>
@@ -131,67 +126,9 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane " id="tabgen-spring"> 
-                <div class="content row " >
-                    <div class="col-sm-1 bg-white listGroups">
-                        <ul id="listado-spring">
-                            <li><span class="caret">Base de Datos</span>
-                              <ul class="nested">
-                                <li>Contabilidad</li>
-                                <li><span class="caret">Tesoreria</span>
-                                  <ul class="nested">
-                                    <li>Usuarios</li>
-                                    <li>Roles</li>
-                                    </li>
-                                  </ul>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                    </div>
-                    <div class="col-sm-11 bg-white border">
-                        <label><h3>spring generator</h3></label>
-                        <div class=" d-none" id="contentSpringGen">
-                            <div class="row">
-                                <div class="row mb-3 col-sm-4">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label class="col-sm-4 col-form-label col-form-label-sm" >Nombre files</label>
-                                            <div class="col-sm-8">
-                                                <input data-param="xnombrex" class="form-control form-control-sm" type="text" value="clientes"> 
-                                            </div>    
-                                            
-                                            <span id="btnGenerarSpring" class="btn btn-sm btn-primary">Generar Spring</span>  
-                                            <div class="d-flex align-items-start">
-                                                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical"> </div>
-                                                <div class="tab-content" id="v-pills-tabContent"></div>
-                                            </div>
-                        
-                                            <span id="btnZip" class="btn btn-sm btn-primary">Descargar Zip </span>
-                                            <span id="btnInject" disabled class="btn btn-sm btn-danger">Inyectar </span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="col-sm-4 col-form-label col-form-label-sm" >Nombre files</label>
-                                            <div class="col-sm-8">
-                                                <input data-param="xnombrex" class="form-control form-control-sm" type="text" value="clientes"> 
-                                            </div>    
-                                        </div>
-                                    </div>                                    
-                                </div>
-                                <div class="row mb-3 col-sm-8">
-                                    <label class="col-sm-4 col-form-label col-form-label-sm" >Nombre files</label>
-                                    <div class="col-sm-8">
-                                        <input data-param="xnombrex" class="form-control form-control-sm" type="text" value="clientes"> 
-                                    </div>    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="tab-pane " id="tabgen"> 
                 <div class="content row " >
-                    <div class="col-sm-1 bg-white listGroups">
+                    <div class="col-sm-1 bg-white">
                         <ul id="listado">
                             <li><span class="caret">Base de Datos</span>
                               <ul class="nested">
@@ -374,7 +311,6 @@
 <script src="js/galletas.js"></script>
 <script src="js/config.js"></script>
 <script src="js/main-code-front.js"></script>
-<script src="js/main-code-spring.js"></script>
 <script src="js/main-code.js"></script>
 
 </html>

@@ -107,7 +107,7 @@ function prepareHeaders(data){
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
                     <app-selector-add #[{relation}]Selector  label="{texto}" [campoNombre]="'[{nombre}]'" [campoValor]="'[{id}]'" [showEdit]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
                     <ng-template #[{relation}]TemplateNuevo>
-                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push(arrayToSingle($event['content']));form['{campo}'].setValue(arrayToSingle($event['content'])['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="cargarArrays();[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
                     </ng-template>
                     <ng-template #[{relation}]TemplateEditar>
                         <app-formulario-{xlistadonombrex} [esModal]="true" [show_rel]="false" [dataEdit]="getDataFromFormname([{relation}], '{campo}')" (alActualizar)="[{relation}]Selector.close();setDataFromFormname([{relation}], '{campo}',$event)" ></app-formulario-{xlistadonombrex}>
@@ -117,7 +117,7 @@ function prepareHeaders(data){
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
                     <app-selector-add #[{relation}]Selector  label="{texto}" [campoNombre]="'[{nombre}]'" [campoValor]="'[{id}]'" [showAdd]="false" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
                     <ng-template #[{relation}]TemplateNuevo>
-                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push(arrayToSingle($event['content']));form['{campo}'].setValue(arrayToSingle($event['content'])['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="cargarArrays();[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
                     </ng-template>
                     <ng-template #[{relation}]TemplateEditar>
                         <app-formulario-{xlistadonombrex} [esModal]="true" [show_rel]="false" [dataEdit]="getDataFromFormname([{relation}], '{campo}')" (alActualizar)="[{relation}]Selector.close();setDataFromFormname([{relation}], '{campo}',$event)" ></app-formulario-{xlistadonombrex}>
@@ -127,7 +127,7 @@ function prepareHeaders(data){
                 <div class="mb-6 col-sm-{xcolsizex} {xvisiblex}">
                     <app-selector-add #[{relation}]Selector  label="{texto}" [campoNombre]="'[{nombre}]'" [campoValor]="'[{id}]'" [templateEditar]="[{relation}]TemplateEditar" [templateNuevo]="[{relation}]TemplateNuevo" name="{campo}" [submitted]="submitted" [dataArray]="[{relation}]" formControlName="{campo}"  ></app-selector-add>
                     <ng-template #[{relation}]TemplateNuevo>
-                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="[{relation}].push(arrayToSingle($event['content']));form['{campo}'].setValue(arrayToSingle($event['content'])['id']);[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
+                        <app-formulario-{xlistadonombrex} [esModal]="true" (alGuardar)="cargarArrays();[{relation}]Selector.close()" ></app-formulario-{xlistadonombrex}>
                     </ng-template>
                     <ng-template #[{relation}]TemplateEditar>
                         <app-formulario-{xlistadonombrex} [esModal]="true" [show_rel]="false" [dataEdit]="getDataFromFormname([{relation}], '{campo}')" (alActualizar)="[{relation}]Selector.close();setDataFromFormname([{relation}], '{campo}',$event)" ></app-formulario-{xlistadonombrex}>

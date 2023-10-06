@@ -3257,6 +3257,417 @@
                 }
             },
             {
+                "name": "pagos_devengados",
+                "alias": "pagos_devengados",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "pago_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "pagos",
+                        "value": "[pagos|id|pago_id]",
+                        "rel": {
+                            "index": "pagos",
+                            "name": "pagos",
+                            "field": "id",
+                            "ownfield": "pago_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "realizado",
+                        "value": "boolean"
+                    },
+                    {
+                        "name": "fecha",
+                        "value": "date"
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "pago_id": "number",
+                        "pagos": "[pagos|id|pago_id]",
+                        "realizado": "boolean",
+                        "fecha": "date"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "pago_id": "number",
+                        "pagos": "[pagos|id|pago_id]",
+                        "realizado": "boolean",
+                        "fecha": "date"
+                    },
+                    "insert": {
+                        "pago_id": "number",
+                        "pagos": "[pagos|id|pago_id]",
+                        "realizado": "boolean",
+                        "fecha": "date"
+                    }
+                }
+            },
+            {
+                "name": "regularizacion",
+                "alias": "regularizacion",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "fecha",
+                        "value": "date"
+                    },
+                    {
+                        "name": "transferencia",
+                        "value": "number"
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "fecha": "date",
+                        "transferencia": "number"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "fecha": "date",
+                        "transferencia": "number"
+                    },
+                    "insert": {
+                        "fecha": "date",
+                        "transferencia": "number"
+                    }
+                }
+            },
+            {
+                "name": "regularizacion_pagos",
+                "alias": "regularizacion_pagos",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "regularizacion_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "regularizacion",
+                        "value": "[regularizacion|id|regularizacion_id]",
+                        "rel": {
+                            "index": "regularizacion",
+                            "name": "regularizacion",
+                            "field": "id",
+                            "ownfield": "regularizacion_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "pagos_devengados_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "pagos_devengados",
+                        "value": "[pagos_devengados|id|pagos_devengados_id]",
+                        "rel": {
+                            "index": "pagos_devengados",
+                            "name": "pagos_devengados",
+                            "field": "id",
+                            "ownfield": "pagos_devengados_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "proveedor_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "proveedor",
+                        "value": "[entidades|id|proveedor_id]",
+                        "rel": {
+                            "index": "proveedor",
+                            "name": "entidades",
+                            "field": "id",
+                            "ownfield": "proveedor_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "regularizacion_id": "number",
+                        "regularizacion": "[regularizacion|id|regularizacion_id]",
+                        "pagos_devengados_id": "number",
+                        "pagos_devengados": "[pagos_devengados|id|pagos_devengados_id]",
+                        "proveedor_id": "number",
+                        "proveedor": "[entidades|id|proveedor_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "regularizacion_id": "number",
+                        "regularizacion": "[regularizacion|id|regularizacion_id]",
+                        "pagos_devengados_id": "number",
+                        "pagos_devengados": "[pagos_devengados|id|pagos_devengados_id]",
+                        "proveedor_id": "number",
+                        "proveedor": "[entidades|id|proveedor_id]"
+                    },
+                    "insert": {
+                        "regularizacion_id": "number",
+                        "regularizacion": "[regularizacion|id|regularizacion_id]",
+                        "pagos_devengados_id": "number",
+                        "pagos_devengados": "[pagos_devengados|id|pagos_devengados_id]",
+                        "proveedor_id": "number",
+                        "proveedor": "[entidades|id|proveedor_id]"
+                    }
+                }
+            },
+            {
+                "name": "regularizacion_cobros",
+                "alias": "regularizacion_cobros",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "regularizacion_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "regularizacion",
+                        "value": "[regularizacion|id|regularizacion_id]",
+                        "rel": {
+                            "index": "regularizacion",
+                            "name": "regularizacion",
+                            "field": "id",
+                            "ownfield": "regularizacion_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "cobros_devengados_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "cobros_devengados",
+                        "value": "[cobros_devengados|id|cobros_devengados_id]",
+                        "rel": {
+                            "index": "cobros_devengados",
+                            "name": "cobros_devengados",
+                            "field": "id",
+                            "ownfield": "cobros_devengados_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "cliente_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "cliente",
+                        "value": "[entidades|id|cliente_id]",
+                        "rel": {
+                            "index": "cliente",
+                            "name": "entidades",
+                            "field": "id",
+                            "ownfield": "cliente_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "regularizacion_id": "number",
+                        "regularizacion": "[regularizacion|id|regularizacion_id]",
+                        "cobros_devengados_id": "number",
+                        "cobros_devengados": "[cobros_devengados|id|cobros_devengados_id]",
+                        "cliente_id": "number",
+                        "cliente": "[entidades|id|cliente_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "regularizacion_id": "number",
+                        "regularizacion": "[regularizacion|id|regularizacion_id]",
+                        "cobros_devengados_id": "number",
+                        "cobros_devengados": "[cobros_devengados|id|cobros_devengados_id]",
+                        "cliente_id": "number",
+                        "cliente": "[entidades|id|cliente_id]"
+                    },
+                    "insert": {
+                        "regularizacion_id": "number",
+                        "regularizacion": "[regularizacion|id|regularizacion_id]",
+                        "cobros_devengados_id": "number",
+                        "cobros_devengados": "[cobros_devengados|id|cobros_devengados_id]",
+                        "cliente_id": "number",
+                        "cliente": "[entidades|id|cliente_id]"
+                    }
+                }
+            },
+            {
                 "name": "forma_cobro",
                 "alias": "forma_cobro",
                 "fields": [
@@ -3490,6 +3901,100 @@
                         "cobro_fecha": "date",
                         "tipo_cobro_id": "number",
                         "tipo_cobro": "[tipo_cobro|id|tipo_cobro_id]"
+                    }
+                }
+            },
+            {
+                "name": "cobros_devengados",
+                "alias": "cobros_devengados",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "cobro_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "cobro",
+                        "value": "[cobros|id|cobro_id]",
+                        "rel": {
+                            "index": "cobro",
+                            "name": "cobros",
+                            "field": "id",
+                            "ownfield": "cobro_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "realizado",
+                        "value": "boolean"
+                    },
+                    {
+                        "name": "fecha",
+                        "value": "date"
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "cobro_id": "number",
+                        "cobro": "[cobros|id|cobro_id]",
+                        "realizado": "boolean",
+                        "fecha": "date"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "cobro_id": "number",
+                        "cobro": "[cobros|id|cobro_id]",
+                        "realizado": "boolean",
+                        "fecha": "date"
+                    },
+                    "insert": {
+                        "cobro_id": "number",
+                        "cobro": "[cobros|id|cobro_id]",
+                        "realizado": "boolean",
+                        "fecha": "date"
                     }
                 }
             },

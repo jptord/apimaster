@@ -80,7 +80,7 @@ function toList(dbs){
     dbs_camel.forEach( db => { 
         let li = $(`<li><span class="caret">${db.db}</span></li>`);    
         if (db.groups.length>0){
-            let ul = $(`<ul class="nested"></ul>`);
+            let ul = $(`<ul class="nested active"></ul>`);
             db.groups.forEach( g => { 
                 let li_group = $(`<li class="liGroup" ><span class="caretNo ">${g.name}</span></li>`);                                
                 ul.append(li_group);
@@ -437,6 +437,7 @@ function saveDBs(data){
             setTimeout ( () => {
                 editorUml.setValue(toPlants(data_db));
                 generarPlant(toPlants(data_db));
+                toListSpring(data_db);
                 toList(data_db);
              } , 1000);
         } );    
@@ -459,6 +460,7 @@ function cargarJson (){
             .done(function (data) {
                 data_db = data;
                 editorX.setValue(toHuman(data_db));
+                toListSpring(data_db);
                 toList(data_db);                  
                 //toPlants(data_db[2]);
                 setTimeout(()=>{
