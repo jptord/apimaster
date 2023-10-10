@@ -436,7 +436,7 @@ function generateRelationController(cabecera, params){
     let ownfieldCamelCap = capitalizar(ownfieldCamel);
 
     let fieldRel_array = [];
-    fieldRel_array.push(`.grupoId(request.getGrupoId())`);
+    //fieldRel_array.push(`.grupoId(request.getGrupoId())`);
 
     
     let gr = data_db[db_index_selected].groups.find(gx => gx.name == cabecera.relacion_table_rel );
@@ -445,10 +445,13 @@ function generateRelationController(cabecera, params){
         let rel_rel = esRelacion(gr.data.create , f);
         if (rel_rel==null){
             let tipo = gr.data.create[f];
-            if (tipo == "string")
-                recursos_array.push(`\t\t\t\t\t.${convertirACamel(f)}(request.get${capitalizar(convertirACamel(f))}())`);
-            else (tipo == "boolean")
-                recursos_array.push(`\t\t\t\t\t.${convertirACamel(f)}(request.is${capitalizar(convertirACamel(f))}())`);
+            console.log("--tipo",tipo);
+            if (!tipo.includes("uuid")){
+                if (tipo == "boolean")
+                    fieldRel_array.push(`\t\t\t\t\t.${convertirACamel(f)}(request.is${capitalizar(convertirACamel(f))}())`);
+                else
+                    fieldRel_array.push(`\t\t\t\t\t.${convertirACamel(f)}(request.get${capitalizar(convertirACamel(f))}())`);
+            }
         }
     });
     
@@ -461,7 +464,7 @@ function generateRelationController(cabecera, params){
     private final ${tableCamelCap}CreateCmd ${tableCamel}Cmd;
     private final ${tableCamelCap}UpdateCmd ${tableCamel}UpdateCmd;
 
-    ContactoGrupo getObjetoAndRelacion${tableSnake}(UUID id,UUID refid){
+    ${tableCamelCap} getObjetoAndRelacion${tableSnake}(UUID id,UUID refid){
         ${tableCamelCap} ${tableCamel} = new ${tableCamelCap}();
         for(${tableCamelCap} fr : ${tableCamel}Service.findBy${fieldCamelCap}(id)){
                 if(fr.getId().equals(refid)){
@@ -494,6 +497,21 @@ function generateRelationController(cabecera, params){
                         )
                         .build();
         }
+    `;
+    endPoints_array.push(tmpSearchEndpoint);
+    tmpSearchEndpoint = `
+    @Operation(summary = "Obtener ${tableCamelCap}")
+    @GetMapping("{${fieldCamel}}/${tableSnake}/{${tableCamelCap}Id}")
+    public SingleResponse<${tableCamelCap}Response> getOne${tableSnake}(
+            @PathVariable("${fieldCamel}") UUID ${fieldCamel},
+            @PathVariable("${tableCamelCap}Id") UUID ${tableCamelCap}Id
+
+    ) {
+            ${tableCamelCap} ${tableCamel} = getObjetoAndRelacion${tableSnake}(${fieldCamel},${tableCamelCap}Id);
+            return SingleResponse.<${tableCamelCap}Response>builder().content(
+                    ${tableCamel}Mapper.toResponse(${tableCamel})
+            ).build();
+    }
     `;
     endPoints_array.push(tmpSearchEndpoint);
     tmpSearchEndpoint = `

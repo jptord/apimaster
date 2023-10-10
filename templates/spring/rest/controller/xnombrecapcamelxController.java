@@ -26,14 +26,14 @@ import java.util.*;
 @RequestMapping(value = "/{xnombrecamelx}")
 public class {xnombrecapcamelx}Controller {
 
-        private final {xnombrecapcamelx}Mapper {xnombrecamelx}Mapper;
+        private final {xnombrecapcamelx}ListMapper {xnombrecamelx}ListMapper;
         private final {xnombrecapcamelx}Service {xnombrecamelx}Service;
         private final {xnombrecapcamelx}CreateCmd {xnombrecamelx}Cmd;
         private final {xnombrecapcamelx}UpdateCmd {xnombrecamelx}UpdateCmd;
 
         @Operation(summary = "Buscar {xtextpluralx}")
         @GetMapping
-        public PageResponse<{xnombrecapcamelx}Response> findAll(
+        public PageResponse<{xnombrecapcamelx}ListResponse> findAll(
                 @RequestParam(defaultValue = "1") Integer page,
                 @RequestParam(defaultValue = "10") Integer size,
                 @RequestParam(defaultValue = "id") String sortBy,
@@ -42,8 +42,8 @@ public class {xnombrecapcamelx}Controller {
                 page = page<1? 1:page;
                 Pageable pageable = PageableUtil.of(page-1, size, sortBy, descending);
                 Page<{xnombrecapcamelx}> configuracionPage = {xnombrecamelx}Service.findAllByKeyword(kerword, pageable);
-                return PageResponse.<{xnombrecapcamelx}Response>builder()
-                        .content({xnombrecamelx}Mapper.toResponseList(configuracionPage.getContent()))
+                return PageResponse.<{xnombrecapcamelx}ListResponse>builder()
+                        .content({xnombrecamelx}ListMapper.toResponseList(configuracionPage.getContent()))
                         .pagination(PageResponse.Pagination.builder()
                                 .pages(configuracionPage.getTotalPages())
                                 .rowsNumber(configuracionPage.getTotalElements())
@@ -55,68 +55,69 @@ public class {xnombrecapcamelx}Controller {
 
         @Operation(summary = "Obtener {xtextx}")
         @GetMapping("{{xnombrecamelx}Id}")
-        public SingleResponse<{xnombrecapcamelx}Response> getOne(@PathVariable("{xnombrecamelx}Id") UUID id) {
+        public SingleResponse<{xnombrecapcamelx}ListResponse> getOne(@PathVariable("{xnombrecamelx}Id") UUID id) {
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow(id);
-                return SingleResponse.<{xnombrecapcamelx}Response>builder().content(
-                        {xnombrecamelx}Mapper.toResponse({xnombrecamelx})
+                return SingleResponse.<{xnombrecapcamelx}ListResponse>builder().content(
+                        {xnombrecamelx}ListMapper.toResponse({xnombrecamelx})
                 ).build();
         }
 
         @Operation(summary = "Crear {xtextx}")
         @PostMapping
-        public SingleResponse<{xnombrecapcamelx}Response> create(@RequestBody {xnombrecapcamelx}CreateRequest request) {
+        public SingleResponse<{xnombrecapcamelx}ListResponse> create(@RequestBody {xnombrecapcamelx}CreateRequest request) {
                 UUID variableConfiguracionID = {xnombrecamelx}Cmd.execute(
                         {xnombrecapcamelx}CreateCmd.Request.builder()
                                 {xcontrolllercreatefieldsx}
                                 .build()
                 );
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow(variableConfiguracionID);
-                return SingleResponse.<{xnombrecapcamelx}Response>builder()
-                        .content({xnombrecamelx}Mapper.toResponse({xnombrecamelx}))
+                return SingleResponse.<{xnombrecapcamelx}ListResponse>builder()
+                        .content({xnombrecamelx}ListMapper.toResponse({xnombrecamelx}))
                         .build();
         }
 
 
         @Operation(summary = "Actualizar {xtextx}")
         @PutMapping("{{xnombrecamelx}Id}")
-        public SingleResponse<{xnombrecapcamelx}Response>update(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id, @RequestBody {xnombrecapcamelx}CreateRequest request){
+        public SingleResponse<{xnombrecapcamelx}ListResponse>update(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id, @RequestBody {xnombrecapcamelx}CreateRequest request){
                 UUID id = {xnombrecamelx}UpdateCmd.execute(
                         {xnombrecapcamelx}UpdateCmd.Request.builder()
+                                .{xnombrecamelx}Id({xnombrecamelx}Id)
                                 {xcontrolllerupdatefieldsx}
                                 .build()
                 );
 
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow(id);
-                return SingleResponse.<{xnombrecapcamelx}Response>builder().content( {xnombrecamelx}Mapper.toResponse({xnombrecamelx})).build();
+                return SingleResponse.<{xnombrecapcamelx}ListResponse>builder().content( {xnombrecamelx}ListMapper.toResponse({xnombrecamelx})).build();
         }
 
         @Operation(summary = "Habilita / Deshabilitar {xnombrecapcamelx}")
         @GetMapping("{{xnombrecamelx}Id}/habilita")
-        public SingleResponse<{xnombrecapcamelx}Response> habilita(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id) {
+        public SingleResponse<{xnombrecapcamelx}ListResponse> habilita(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id) {
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow({xnombrecamelx}Id);
                 {xnombrecamelx}.setDeleted(!{xnombrecamelx}.isDeleted());
                 {xnombrecamelx} = {xnombrecamelx}Service.save({xnombrecamelx});
-                return SingleResponse.<{xnombrecapcamelx}Response>builder().content(
-                        {xnombrecamelx}Mapper.toResponse({xnombrecamelx})
+                return SingleResponse.<{xnombrecapcamelx}ListResponse>builder().content(
+                        {xnombrecamelx}ListMapper.toResponse({xnombrecamelx})
                 ).build();
         }
 
         @Operation(summary = "Eliminar {xtextx}")
         @DeleteMapping("{{xnombrecamelx}Id}")
-        public SingleResponse<{xnombrecapcamelx}Response> delete(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id) {
+        public SingleResponse<{xnombrecapcamelx}ListResponse> delete(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id) {
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow({xnombrecamelx}Id);
                 {xnombrecamelx}Service.delete({xnombrecamelx});
-                return SingleResponse.<{xnombrecapcamelx}Response>builder().content(
-                        {xnombrecamelx}Mapper.toResponse({xnombrecamelx})
+                return SingleResponse.<{xnombrecapcamelx}ListResponse>builder().content(
+                        {xnombrecamelx}ListMapper.toResponse({xnombrecamelx})
                 ).build();
         }
 
         @Operation(summary = "Listar Habilita {xnombrecapcamelx}")
         @GetMapping("listarHabilitados")
-        public ListResponse<{xnombrecapcamelx}Response> listaHabilitado(){
+        public ListResponse<{xnombrecapcamelx}ListResponse> listaHabilitado(){
                 
-                return ListResponse.<{xnombrecapcamelx}Response>builder().content(
-                        {xnombrecamelx}Mapper.toResponseList({xnombrecamelx}Service.getHabilitados())
+                return ListResponse.<{xnombrecapcamelx}ListResponse>builder().content(
+                        {xnombrecamelx}ListMapper.toResponseList({xnombrecamelx}Service.getHabilitados())
                 ).build();
         }
 

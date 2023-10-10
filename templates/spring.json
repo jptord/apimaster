@@ -9,7 +9,9 @@
         "jpa/service/xnombrecapcamelxService.java",
         "rest/controller/io/request/xnombrecapcamelxCreateRequest.java",
         "rest/controller/io/response/xnombrecapcamelxResponse.java",
+        "rest/controller/io/response/xnombrecapcamelxListResponse.java",
         "rest/controller/mapper/xnombrecapcamelxMapper.java",
+        "rest/controller/mapper/xnombrecapcamelxListMapper.java",
         "rest/controller/xnombrecapcamelxController.java",        
         "db.changelog-master.xml",
         "xnombresnakex-changelog.xml"
