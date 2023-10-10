@@ -576,6 +576,26 @@ function convertirSqlQSeeder(textSql){
     return seeders;
 }
 
+function textoAPlural(text){
+    if (text.charAt(text.length-1)=='n' || text.charAt(text.length-1)=='r' || text.charAt(text.length-1)=='s'){
+        return text + 'es';
+    }
+    if (text.charAt(text.length-1)=='a' || 
+        text.charAt(text.length-1)=='e' || 
+        text.charAt(text.length-1)=='i' || 
+        text.charAt(text.length-1)=='o' || 
+        text.charAt(text.length-1)=='u' 
+    ){
+        return text + 's';
+    }
+    return text;
+    
+}
+
+function capitalizar(text){
+    return text.charAt(0).toUpperCase() + text.slice(1);;
+}
+
 function convertirACamel(text) { 
     let texto = text;
     let letras = 'abcdefghijklmnopqrstuvwxyz';

@@ -51,11 +51,18 @@ class Config{
     nuevo(){
         const xinjectionpathx = $(`[data-param="xinjectionpathx"]`).val();
         const xsubpathx = $(`[data-param="xsubpathx"]`).val();
+        const xinjectionspringpathx = $(`[data-param="xinjectionspringpathx"]`).val();
+        const xpackagenamex = $(`[data-param="xpackagenamex"]`).val();
+        const xpackagenamepathx = $(`[data-param="xpackagenamepathx"]`).val();
         console.log("xinjectionpathx",xinjectionpathx);
         console.log("xsubpathx",xsubpathx);
+        console.log("xinjectionspringpathx",xinjectionspringpathx);
+        console.log("xpackagenamex",xpackagenamex);
         this.datos.push({name:xsubpathx,params : {
             xinjectionpathx : xinjectionpathx,
             xsubpathx : xsubpathx,
+            xinjectionpathx : xinjectionpathx,
+            xpackagenamex : xpackagenamex,
         }});
         console.log(this.datos);
         this.galletas_config.set("config_all",JSON.stringify(this.datos));        
@@ -65,6 +72,9 @@ class Config{
     guardarActual(){
         this.datos[parseInt(selConfig.val())].params.xinjectionpathx = $(`[data-param="xinjectionpathx"]`).val();
         this.datos[parseInt(selConfig.val())].params.xsubpathx = $(`[data-param="xsubpathx"]`).val();
+        this.datos[parseInt(selConfig.val())].params.xinjectionspringpathx = $(`[data-param="xinjectionspringpathx"]`).val();
+        this.datos[parseInt(selConfig.val())].params.xpackagenamex = $(`[data-param="xpackagenamex"]`).val();
+        this.datos[parseInt(selConfig.val())].params.xpackagenamepathx = $(`[data-param="xpackagenamepathx"]`).val();
         this.guardar();
         this.message("Guardado")
     }
@@ -103,5 +113,11 @@ class Config{
         
         $(`[data-param="xinjectionpathx"]`).val(this.datos[this.selConfig.val()].params.xinjectionpathx);
         $(`[data-param="xsubpathx"]`).val(this.datos[this.selConfig.val()].params.xsubpathx);
+        
+        $(`[data-param="xinjectionspringpathx"]`).val(this.datos[this.selConfig.val()].params.xinjectionspringpathx);
+        $(`[data-param="xpackagenamex"]`).val(this.datos[this.selConfig.val()].params.xpackagenamex);
+
+        $(`[data-param="xpackagenamepathx"]`).val(this.datos[this.selConfig.val()].params.xpackagenamepathx);
+        
     }
 }

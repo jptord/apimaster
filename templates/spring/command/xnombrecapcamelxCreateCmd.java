@@ -1,9 +1,7 @@
 package {xpackagenamex}.command;
 
 import {xpackagenamex}.command.core.AbstractTransactionalRequiredCommand;
-import {xpackagenamex}.jpa.entity.Caja;
 import {xpackagenamex}.jpa.entity.{xnombrecapcamelx};
-import {xpackagenamex}.jpa.service.CajaService;
 import {xpackagenamex}.jpa.service.{xnombrecapcamelx}Service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,24 +13,24 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class {xnombrecapcamelx}UpdateCmd extends AbstractTransactionalRequiredCommand<{xnombrecapcamelx}UpdateCmd.Request, UUID> {
-    private final {xnombrecamelx}Service {xnombrecapcamelx}Service;
+public class {xnombrecapcamelx}CreateCmd extends AbstractTransactionalRequiredCommand<{xnombrecapcamelx}CreateCmd.Request, UUID> {
+    private final {xnombrecapcamelx}Service {xnombrecamelx}Service;
 
     @Override
-    protected UUID run({xnombrecapcamelx}UpdateCmd.Request request) {
-        {xnombrecapcamelx} vc= {xnombrecamelx}Service.findByIdThrow(request.getId());
-
-{xsetfieldsupdatex}
-
+    protected UUID run(Request request) {
+        {xnombrecapcamelx} vc = new {xnombrecapcamelx}();
+        
+{xsetfieldscreatex}
+		
         vc = {xnombrecamelx}Service.save(vc);
         return vc.getId();
     }
 
-    @Builder
     @Getter
-    public static class Request {
-
-{xrequestupdatecmdx}
+    @Builder
+    public static class Request{
+        
+{xrequestcreatecmdx}
 
     }
 }

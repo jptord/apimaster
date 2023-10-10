@@ -411,6 +411,8 @@ function getExt(data){
 function getExtMode(data){
     if (getExt(data) == "html" || getExt(data) == "scss"){ return "text/html"};
     if (getExt(data) == "ts")  return "javascript";
+    if (getExt(data) == "java")  return "text/x-java";
+    if (getExt(data) == "xml")  return "application/xml";
 }
 function cargarDBs(data){
     $("#Contenido").empty();
@@ -833,7 +835,7 @@ function init_front(callback_save) {
                         data.params['xbarmenuroutebarx'] = "/"+data.params['xmenuroutex']+"/";
                     }
                     prepareHeaders(data);
-                    callback_save(data);                    
+                    callback_save(data);
                     addFiles(data);
                     data_generated = data;
                     console.log("data_generated",data_generated);

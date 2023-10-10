@@ -10,8 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -25,18 +24,17 @@ public class {xnombrecapcamelx}Service extends BaseServiceImpl<{xnombrecapcamelx
 
     public Page<{xnombrecapcamelx}> findAllByKeyword(String keyword, Pageable pageable) {
         String recurso = keyword == null ? null : "%"+keyword.toLowerCase()+"%";
-        return repository.findAll((Specification<{xnombrecapcamelx}>) (root, query, cb) -> cb.or(recurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("nombre").as(String.class)), recurso)),pageable);
+        return repository.findAll((Specification<{xnombrecapcamelx}>) (root, query, cb) -> cb.or(
+{xresourceservicex}
+            ),pageable);
     }
 
     public List<{xnombrecapcamelx}> getHabilitados(){
         return repository.findByDeleted(false);
     }
 
-
 {xmethodsservicex}
 
-
 {xmethodsallservicex}
-
 
 }

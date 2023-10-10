@@ -212,6 +212,39 @@ fs.readdirSync(dbscript).forEach((file) => {
         }
       });
     });
+
+    app.post("/injectspring", (req, res) => {
+      console.log("POST injectspring");
+      let content =  JSON.parse(req.body.data) ;
+      let path = content.injection.path;
+      let subpath = content.injection.subpath;
+      content.files.forEach((f) => {
+        let inj = esInyectable(f.file,content);
+          if (inj==null){
+            console.log("content.file to write", path + subpath +"/"+ f.file);
+            ensureDirectoryExistence(path + subpath +"/"+ f.file);
+            fs.writeFileSync(path + subpath +"/"+ f.file,f.content,
+              function (err) {
+                if (err) console.log("ERRO", err);
+                else console.log(`file injected on `);
+              }
+            );
+          }else{
+            if (inj.replace == 'true')
+              fs.writeFileSync(path + "/" + inj.where, f.content);
+            else{ 
+              let rewrite_content  = fs.readFileSync(path + "/" + inj.where , "utf8");
+              if (rewrite_content.indexOf(f.content)>0) return ; 
+              let len = inj.before.length;
+              let pos = rewrite_content.indexOf(inj.before);
+              let strA =rewrite_content.substr(0,pos);
+              let strB =rewrite_content.substr(pos,rewrite_content.length - (pos));
+              rewrite_content = strA + "\n" + f.content + "\n" + strB;
+              fs.writeFileSync(path + "/" + inj.where, rewrite_content);
+            }
+          }
+        });
+      });
  
 });
 

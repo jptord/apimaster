@@ -1,15 +1,13 @@
 package {xpackagenamex}.rest.controller;
 
-import {xpackagenamex}.command.{xnombrecapcamelx}CreateCmd;
-import {xpackagenamex}.command.{xnombrecapcamelx}UpdateCmd;
-import {xpackagenamex}.jpa.entity.{xnombrecapcamelx};
-import {xpackagenamex}.jpa.service.{xnombrecapcamelx}Service;
-import {xpackagenamex}.rest.controller.io.request.{xnombrecapcamelx}CreateRequest;
-import {xpackagenamex}.rest.controller.io.response.{xnombrecapcamelx}Response;
-import {xpackagenamex}.rest.controller.io.response.core.ListResponse;
+import {xpackagenamex}.command.*;
+import {xpackagenamex}.jpa.entity.*;
+import {xpackagenamex}.jpa.service.*;
+import {xpackagenamex}.rest.controller.io.request.*;
+import {xpackagenamex}.rest.controller.io.response.*;
 import {xpackagenamex}.rest.controller.io.response.core.PageResponse;
-import {xpackagenamex}.rest.controller.io.response.core.SingleResponse;
-import {xpackagenamex}.rest.controller.mapper.{xnombrecapcamelx}Mapper;
+import {xpackagenamex}.rest.controller.io.response.core.*;
+import {xpackagenamex}.rest.controller.mapper.*;
 import {xpackagenamex}.util.PageableUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,8 +15,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
+import com.fasterxml.jackson.annotation.*;
 import java.util.UUID;
+import java.util.*;
+
 
 @Tag(name = "{xnombrecapcamelx}", description = "Descripcion de {xtextpluralx}")
 @RestController
@@ -67,7 +67,7 @@ public class {xnombrecapcamelx}Controller {
         public SingleResponse<{xnombrecapcamelx}Response> create(@RequestBody {xnombrecapcamelx}CreateRequest request) {
                 UUID variableConfiguracionID = {xnombrecamelx}Cmd.execute(
                         {xnombrecapcamelx}CreateCmd.Request.builder()
-                                .fecha (request.getFecha())
+                                {xcontrolllercreatefieldsx}
                                 .build()
                 );
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow(variableConfiguracionID);
@@ -82,7 +82,7 @@ public class {xnombrecapcamelx}Controller {
         public SingleResponse<{xnombrecapcamelx}Response>update(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id, @RequestBody {xnombrecapcamelx}CreateRequest request){
                 UUID id = {xnombrecamelx}UpdateCmd.execute(
                         {xnombrecapcamelx}UpdateCmd.Request.builder()
-                                .fecha(request.getFecha())
+                                {xcontrolllerupdatefieldsx}
                                 .build()
                 );
 

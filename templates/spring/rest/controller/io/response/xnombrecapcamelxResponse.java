@@ -5,8 +5,8 @@ import {xpackagenamex}.rest.controller.io.response.core.BaseEntityResponse;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+import com.fasterxml.jackson.annotation.*;
 
 @Getter
 @Setter

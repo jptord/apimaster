@@ -42,6 +42,7 @@
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" integrity="sha512-P9pgMgcSNlLb4Z2WAB2sH5KBKGnBfyJnq+bhcfLCFusrRc4XdXrhfDluBl/usq75NF5gTDIMcwI1GaG5gju+Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js" integrity="sha512-l8ZIWnQ3XHPRG3MQ8+hT1OffRSTrFwrph1j1oc1Fzc9UKVGef5XN9fdO0vm3nW0PRgQ9LJgck6ciG59m69rvfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/addon/hint/html-hint.min.js" integrity="sha512-uBnElbHzoBjBbiy33RRVhXCOinxbjy0n/l1sLHXEHiLKWecNmGu5Yk29+iKTvtHPmWFXpgoTxvoAifiAqevKjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/addon/hint/javascript-hint.min.js" integrity="sha512-ZxcjvTwBkQ6qVuOJ4lTeHftzy+MgK4+AB9134m8FCjzh3XdzeNYyDdond2tUluDT/n1scz8JdmUWbUCTNukTKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/addon/hint/html-hint.min.js" integrity="sha512-uBnElbHzoBjBbiy33RRVhXCOinxbjy0n/l1sLHXEHiLKWecNmGu5Yk29+iKTvtHPmWFXpgoTxvoAifiAqevKjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -156,33 +157,55 @@
                                 <div class="row mb-3 col-sm-4">
                                     <div class="row">
                                         <div class="col-12">
-                                            <label class="col-sm-4 col-form-label col-form-label-sm" >Nombre files</label>
-                                            <div class="col-sm-8">
-                                                <input data-param="xnombrex" class="form-control form-control-sm" type="text" value="clientes"> 
-                                            </div>    
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-text">Nombre(SnakeCase)</div>
+                                                <input type="text" class="form-control" id="xnombresnakex" placeholder="xnombresnakex" data-param='xnombresnakex'>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-text">Nombre(CamelCase)</div>
+                                                <input type="text" class="form-control" id="xnombrecamelx" placeholder="xnombrecamelx" data-param='xnombrecamelx'>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-text">Nombre Capital Plural(CamelCase)</div>
+                                                <input type="text" class="form-control" id="xnombrecapcamelx" placeholder="xnombrecapcamelx" data-param='xnombrecapcamelx'>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-text">Nombre Plural(CamelCase)</div>
+                                                <input type="text" class="form-control" id="xnombrecamelpluralx" placeholder="xnombrecamelpluralx" data-param='xnombrecamelpluralx'>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-text">Nombre (text)</div>
+                                                <input type="text" class="form-control" id="xtextx" placeholder="xtextx" data-param='xtextx'>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-text">Nombre Plural(text)</div>
+                                                <input type="text" class="form-control" id="xtextpluralx" placeholder="xtextpluralx" data-param='xtextpluralx'>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <table class="table table-sm border table-bordered table-condensed" id="tabSpringFields">
+                                                    <thead>
+                                                        <th>Field</th><th>Type</th><th>PK</th><th>FK</th><th>Rel</th><th>Restrict</th>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             
                                             <span id="btnGenerarSpring" class="btn btn-sm btn-primary">Generar Spring</span>  
                                             <div class="d-flex align-items-start">
-                                                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical"> </div>
-                                                <div class="tab-content" id="v-pills-tabContent"></div>
+                                                <div class="nav flex-column nav-pills me-3" id="v-pills-spring-tab" role="tablist" aria-orientation="vertical"> </div>
+                                                
                                             </div>
                         
-                                            <span id="btnZip" class="btn btn-sm btn-primary">Descargar Zip </span>
-                                            <span id="btnInject" disabled class="btn btn-sm btn-danger">Inyectar </span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="col-sm-4 col-form-label col-form-label-sm" >Nombre files</label>
-                                            <div class="col-sm-8">
-                                                <input data-param="xnombrex" class="form-control form-control-sm" type="text" value="clientes"> 
-                                            </div>    
+                                            <span id="btnZipSpring" class="btn btn-sm btn-primary d-none">Descargar Zip </span>
+                                            <span id="btnInjectSpring" disabled class="btn btn-sm btn-danger d-none">Inyectar </span>
                                         </div>
                                     </div>                                    
                                 </div>
                                 <div class="row mb-3 col-sm-8">
-                                    <label class="col-sm-4 col-form-label col-form-label-sm" >Nombre files</label>
-                                    <div class="col-sm-8">
-                                        <input data-param="xnombrex" class="form-control form-control-sm" type="text" value="clientes"> 
-                                    </div>    
+                                    <div class="tab-content" id="v-pills-spring-tabContent"></div>
                                 </div>
                             </div>
                         </div>
@@ -321,6 +344,7 @@
                     </div>
                     <label class="text-success" id="labelConfigMessage"></label>
                     <br>
+                    <!-- Angular configuracion-->
                     <h5><strong>Inyección Angular</strong></h5>
                     <div class="row g-3 align-items-center">                        
                         <div class="col-2">
@@ -336,6 +360,33 @@
                         </div>
                         <div class="col-10">
                             <input class="form-control" data-param="xsubpathx" data-global="true" type="text" value="empresas">
+                        </div>
+                    </div>
+                    <br>
+                    <!-- Spring configuracion-->
+                    <h5><strong>Inyección Spring</strong></h5>
+                    <div class="row g-3 align-items-center">                        
+                        <div class="col-2">
+                            <label class="col-form-label" >Path :</label>
+                        </div>
+                        <div class="col-10">
+                            <input class="form-control" placeholder="/home/jtordoya/dev/tesoreria/kernobi_tesoreria/src/main" data-param="xinjectionspringpathx" data-global="true" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="row g-3 align-items-center">                        
+                        <div class="col-2">
+                            <label class="col-form-label">Full package Name :</label>
+                        </div>
+                        <div class="col-10">
+                            <input class="form-control" placeholder="com.kernotec.kernobi.tesoreria" id="xpackagenamex" data-param="xpackagenamex" data-global="true" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="row g-3 align-items-center">                        
+                        <div class="col-2">
+                            <label class="col-form-label">Full package path :</label>
+                        </div>
+                        <div class="col-10">
+                            <input class="form-control" placeholder="/java/com/kernotec/kernobi/tesoreria" id="xpackagenamepathx" data-param="xpackagenamepathx" data-global="true" type="text" value="">
                         </div>
                     </div>
                 </div>

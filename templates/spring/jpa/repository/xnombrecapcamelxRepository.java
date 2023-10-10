@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.*;
 
 @Repository
 public interface {xnombrecapcamelx}Repository extends BaseRepository<{xnombrecapcamelx}, UUID> {
