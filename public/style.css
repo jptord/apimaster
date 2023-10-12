@@ -35,7 +35,7 @@ input[data-param="xnombrex"] {
 }
 
 .code-style{
-  width:800px;
+  min-width:800px;
 }
 
 .codeText{

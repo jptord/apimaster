@@ -1,9 +1,7 @@
 package {xpackagenamex}.command;
 
 import {xpackagenamex}.command.core.AbstractTransactionalRequiredCommand;
-import {xpackagenamex}.jpa.entity.Caja;
 import {xpackagenamex}.jpa.entity.{xnombrecapcamelx};
-import {xpackagenamex}.jpa.service.CajaService;
 import {xpackagenamex}.jpa.service.{xnombrecapcamelx}Service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

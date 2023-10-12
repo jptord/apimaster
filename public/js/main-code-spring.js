@@ -784,7 +784,7 @@ function generateEntity(data){
                 jointext += `\t\t@JsonBackReference\n`;
                 jointext += `\t\tprivate ${relcameltablecap} ${relcameltable};\n`;
             }
-            xentityfieldsx_line += `\t\t@Column(name = "${sqlname}", nullable = false )\n`;
+            xentityfieldsx_line += `\t  @Column(name = "${sqlname}", nullable = false )\n`;
             xentityfieldsx_line += `\t\tprivate ${javatype} ${javaname};`;
             xentityfieldsx_line += jointext;
             xentityfieldsx_array.push(xentityfieldsx_line);
@@ -958,16 +958,17 @@ function addFilesSpring(data){
         v_pills_tab.append(tab);
         v_pills_tabContent.append(cont);
         let id = `code-${ix}`;
-
+    console.log(f.file,f.content);
         let editor = CodeMirror(document.getElementById(id), {
             mode: getExtMode(f),
-            theme: "dracula",
+            theme: "night",
             lineNumbers: true,
             lineWrapping: false,
             styleActiveLine: true,
             smartIndent: false,
-            indentWithTabs:true,
-            value: getExt(f)?pretty_content_html:pretty_content
+            //indentWithTabs:true,
+            insertSoftTab:false,
+            value: f.content //getExt(f)?pretty_content_html:pretty_content
         });
 
         editor.setSize("100%", 800);
