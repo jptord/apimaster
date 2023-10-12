@@ -1,7 +1,7 @@
 package {xpackagenamex}.rest.controller.mapper;
 
 import {xpackagenamex}.jpa.entity.{xnombrecapcamelx};
-import {xpackagenamex}.rest.controller.io.response.{xnombrecapcamelx}Response;
+import {xpackagenamex}.rest.controller.io.response.{xnombrecapcamelx}ListResponse;
 import org.mapstruct.Mapper;
 
 import java.util.List;
