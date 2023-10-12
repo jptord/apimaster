@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
+var uuids = {};
 const { Database } = require('../core/database.js');
 
 var cors = require('cors');
@@ -98,15 +98,17 @@ class CtrlApi{
     toFieldSeed(fields,values){
         let me = this;
         let strArr = [];
-        var uuids = {};
+//        var uuids = {};
         let counter_seed = 0;
         values.forEach((d,i) => {
             let regex = new RegExp('uuid\-[a-zA-Z_]+\-[0-9]{1,3}','gm');
             if ( regex.test(values[counter_seed]) == true ){
                 let num = values[counter_seed].match(/(?=uuid\-)?[a-zA-Z_]+\-[0-9]{1,3}/gm);
                 console.log("num",num);
-                if (uuids[num[0]]===undefined)
+                if (uuids[num[0]]===undefined){
+                    console.log("new!");
                     uuids[num[0]] = me.uuidv4();
+                }
                 strArr.push("'"+uuids[num[0]]+"'");                    
             }else 
                 strArr.push("'"+d+"'");               
@@ -126,7 +128,7 @@ class CtrlApi{
             content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
             //console.log("idArr",idArr);
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
-            //console.log("relGroup,",relGroup);
+            console.log("relGroup,",relGroup,r.table);
             let f = me.toFields(relGroup.data['select']);          
             //console.log("relGroup.f ",f);
             let res_temp = me.database.db.prepare(`select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) `).all();

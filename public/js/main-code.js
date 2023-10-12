@@ -533,18 +533,26 @@ function unirSeederADb(data_db,seeder_db){
     seeder_db.forEach( seeder => {        
         findgroup = data_db[0].groups.find( group => group.name == seeder.tabla );
         if (findgroup){
-            fieldsGroup = findgroup.fields;
+            let dataType = 'insert';
+            Object.keys(seeder.valores).forEach( key_seeder => {
+                console.log("key_seeder",key_seeder);
+                if (key_seeder.toLowerCase() == 'id') dataType="create";
+            });
+            
+            fieldsGroup = Object.keys(findgroup.data[dataType]);
             let valuesOrdered = [];
-            fieldsGroup.forEach(fg => {                
-                valuesOrdered.push(seeder.valores[fg.name.toLowerCase()]);
+            fieldsGroup.forEach(fg => {           
+                if (findgroup.data[dataType][fg].includes("[")) return;
+                valuesOrdered.push(seeder.valores[fg.toLowerCase()]);
             });
 
-            findgroup.seeder.push({ data:'create', values:valuesOrdered});
+            findgroup.seeder.push({ data:dataType, values:valuesOrdered});
            // let i = data_db[0].groups.indexOf(findgroup);
            // data_db[0].groups[i].seeder = [];
         }
         //console.log(findgroup,seeder.tabla);
     });
+    console.log("unirSeederADb",data_db);
     return data_db;
 }
 
@@ -563,8 +571,10 @@ function convertirSqlQSeeder(textSql){
         values.forEach( (value) =>{
             let valoresObj = {};
             let valores = value.replaceAll("'","").split(",");
+            console.log("sql valores",valores);
             fields.forEach((f,i) => {
-                valoresObj[f.trim().toLowerCase()] = valores[i];
+                if ( valores[i]!== undefined )
+                valoresObj[f.trim().toLowerCase()] = valores[i].trim();
             });
             seeders.push({
                 tabla : nombreTabla[0],
@@ -670,6 +680,10 @@ function toJson(texto){
                 //field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
                 if (values[0].trim().includes("[seeder]")){
                     acGroup.seeder.push({data:"create",values:values[1].trim().split('|')});
+                    return;
+                }
+                if (values[0].trim().includes("[seeder-insert]")){
+                    acGroup.seeder.push({data:"insert",values:values[1].trim().split('|')});
                     return;
                 }
                 if (values[0].trim().includes("[api]")){
@@ -905,7 +919,10 @@ function toHuman(dbs){
             let seeders = [];
             data_seeder = group.seeder;
             data_seeder.forEach(seed => {
-                seeders.push(`\n\t\t\t[seeder]:${seed.values.join("|")}`);
+                if (seed.data == "create" )
+                    seeders.push(`\n\t\t\t[seeder]:${seed.values.join("|")}`);
+                else
+                    seeders.push(`\n\t\t\t[seeder-${seed.data}]:${seed.values.join("|")}`);
             });
             testX += seeders.join("");
             
