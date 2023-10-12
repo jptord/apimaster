@@ -361,16 +361,15 @@ function generateChangelog(data){
         }
     });
     xfieldschangelogx_line = '';
-    xfieldschangelogx_line += `\t\t\t</column>\n`;
-    xfieldschangelogx_line += `<column defaultValueBoolean="false" name="deleted" type="boolean">`;
-    xfieldschangelogx_line += `<constraints nullable="false"/>`;
-    xfieldschangelogx_line += `</column>`;
-    xfieldschangelogx_line += `<column defaultValueNumeric="0" name="version" type="bigint">`;
-    xfieldschangelogx_line += `<constraints nullable="false"/>`;
-    xfieldschangelogx_line += `</column>`;
-    xfieldschangelogx_line += `<column defaultValueComputed="now()" name="created_at" type="timestamp">`;
-    xfieldschangelogx_line += `<constraints nullable="false"/>`;
-    xfieldschangelogx_line += `</column>`;
+    xfieldschangelogx_line += `\t<column defaultValueBoolean="false" name="deleted" type="boolean">\n`;
+    xfieldschangelogx_line += `\t\t<constraints nullable="false"/>\n`;
+    xfieldschangelogx_line += `\t</column>\n`;
+    xfieldschangelogx_line += `\t\t<column defaultValueNumeric="0" name="version" type="bigint">\n`;
+    xfieldschangelogx_line += `\t\t<constraints nullable="false"/>\n`;
+    xfieldschangelogx_line += `\t</column>\n`;
+    xfieldschangelogx_line += `\t<column defaultValueComputed="now()" name="created_at" type="timestamp">\n`;
+    xfieldschangelogx_line += `\t\t<constraints nullable="false"/>\n`;
+    xfieldschangelogx_line += `\t</column>\n`;
     xfieldschangelogx_array.push(xfieldschangelogx_line);
 
     xfieldschangelogx_array.push(`\t\t</createTable>\n\t</changeSet>`);
