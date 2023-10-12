@@ -7,14 +7,5 @@
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
             
 {xfieldschangelogx}
-
-        <column defaultValueBoolean="false" name="deleted" type="boolean">
-                <constraints nullable="false"/>
-        </column>
-        <column defaultValueNumeric="0" name="version" type="bigint">
-                <constraints nullable="false"/>
-        </column>
-        <column defaultValueComputed="now()" name="created_at" type="timestamp">
-                <constraints nullable="false"/>
-        </column>
+        
 </databaseChangeLog>
