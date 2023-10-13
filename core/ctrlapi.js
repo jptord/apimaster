@@ -341,14 +341,33 @@ class CtrlApi{
         });            
         return data_obj_temp;
     }
+    buildQueryApi(findcondition, api_query, req_query){
+        //let regParam = /\:[a-zA-Z\_\-]+/g;
+        //let getParamApi = api.route.match(regParam);
+        if (api_query===undefined) return findcondition;
+        let api_query_array = api_query.split(",");
+        let where_array = []; 
+        api_query_array.forEach( query => {
+            if (req_query[query] !== undefined)
+                where_array.push(`${query} = '${req_query[query]}'`);
+        });
+        let sql_conditions = where_array.join(" AND ");
+        console.log("sql_conditions", sql_conditions);
+        if (findcondition.includes("WHERE"))
+            return `${findcondition} ${sql_conditions}`;
+        else
+            return `WHERE ${findcondition} ${sql_conditions}`;
+    }
     autoApiGen(group){
         var me = this;
         group.apis.forEach(api => {
             let rel;
             if (api.type == "rel") rel = me.toRelation('',api.rel);
-            if (api.method == "GET" && api.type == "auto"){
-                console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+            if (api.method == "GET" && (api.type == "auto" || api.type == "custom" )){
+                console.log(`route ${api.type} GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
+                    console.log(`-route ${api.type} `);
+                    console.log("-route:",`/${group.alias===undefined?group.name:group.alias}/${api.route}`);
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
                         pagination: { pages : 0, rowsNumber: 0 }
@@ -356,10 +375,16 @@ class CtrlApi{
                     let f = me.toFields(group.data[api.out]);                        
 
                     let findcondition = '';
+                    //console.log("getParamApi",getParamApi);
                     console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
                         findcondition = ` WHERE ${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;
-
+                    
+                        findcondition = me.buildQueryApi(findcondition, api.query, req.query);//` WHERE ${api.query.replace(":","")} = '${req.query[api.query]}'`;
+                        
+                        console.log("---- findcondition:", findcondition);
+                        console.log("--req.query:",req.query );
+                        console.log("--api.query:",api.query );
                     if (req.query.page != undefined && req.query.size != undefined &&
                         req.query.sortBy != undefined && req.query.descending != undefined ){
 
@@ -396,7 +421,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "GET" && api.type == "rel"){
-                console.log(`route GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                console.log(`route ${api.type} GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
 
                     
@@ -450,7 +475,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "POST" && api.type == "auto"){
-                console.log(`route POST ${api.type} /${group.alias===undefined?group.name:group.alias}${api.route}`);
+                console.log(`route ${api.type} POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
                 router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -487,7 +512,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "PUT" && api.type=="auto" ){
-                console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                console.log(`route ${api.type} PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -502,7 +527,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "PUT" && api.type=="rel" ){
-                console.log(`route PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                console.log(`route ${api.type} PUT /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.put(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -519,7 +544,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "DELETE" && api.type=="auto" ){
-                console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                console.log(`route ${api.type} DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -532,7 +557,7 @@ class CtrlApi{
                 });
             }
             if (api.method == "DELETE" && api.type=="rel" ){
-                console.log(`route DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
+                console.log(`route ${api.type} DELETE /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.delete(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],

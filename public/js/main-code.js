@@ -687,7 +687,7 @@ function toJson(texto){
                     return;
                 }
                 if (values[0].trim().includes("[api]")){
-                    acGroup.apicustom.push({values:values[1].trim().toUpperCase().split('|')});
+                    acGroup.apicustom.push(apiCustomFormat(values[1].trim().toLowerCase()));
                     return;
                 }
                 
@@ -699,8 +699,11 @@ function toJson(texto){
     });
 
     arDb.forEach( d => {
-        d.groups.forEach( g => {
+        d.groups.forEach( g => {            
             let grouptemp = formatearArray( g );
+            let customApi = g.apicustom ;
+            grouptemp.apis = getAllApis(grouptemp,customApi);
+            
             g['apis'] = grouptemp.apis;
             g['data'] = grouptemp.data;            
         });
@@ -718,6 +721,39 @@ function toJson(texto){
    // generarPlant(toPlants(arDb));
     console.log(`arDb: `, arDb);
     return arDb;
+}
+
+//[api]:method=get|route=|query=modulo_id|in=|out=|type=auto
+function getAllApis(group,customApi){    
+    let apis = group.apis;
+    console.log("--customApi--",customApi);
+    if (customApi==null || customApi==undefined || customApi.length==0) return apis;
+    console.log("--group--",group);
+    console.log("--customapi--",customApi);
+    customApi.forEach( (api) => {
+        apis.push({
+            method: api.method?api.method.toUpperCase():'GET',
+            route:  api.route?api.route:'',
+            query:  api.query,
+            in:     api.in?api.in:null,
+            type:   api.type?api.type:'custom',
+            out:    api.out?api.out:null,
+        });
+    } );
+    return apis;
+}
+
+function apiCustomFormat(value){
+    let apiCustom = [];
+    let options = value.split("|");
+    let objapi = {};
+    options.forEach(op => {
+        let values = op.trim().split("=");
+        objapi[values[0].trim()] = values[1].trim();
+        objapi[values[0].trim()] = values[1].trim();
+        //apiCustom.push(objapi);
+    });
+    return objapi;
 }
 function apiFormat(name){
     return name.trim().toLowerCase().replaceAll("_","");
@@ -923,8 +959,21 @@ function toHuman(dbs){
                     seeders.push(`\n\t\t\t[seeder]:${seed.values.join("|")}`);
                 else
                     seeders.push(`\n\t\t\t[seeder-${seed.data}]:${seed.values.join("|")}`);
-            });
+            });            
+            
             testX += seeders.join("");
+
+            let apis_custom = [];
+            data_apis = group.apis;
+            data_apis.forEach(api => {
+                if(api.type=="custom"){
+                    let custom_api_array = [];
+                    Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':api[k]}` ));                
+                    apis_custom.push(`\n\t\t\t[api]:${custom_api_array.join("|")}`);
+                }
+            });            
+            
+            testX += apis_custom.join("");
             
             testX += `\n\n`;             
         });
