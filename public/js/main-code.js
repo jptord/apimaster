@@ -731,7 +731,7 @@ function getAllApis(group,customApi){
     console.log("--group--",group);
     console.log("--customapi--",customApi);
     customApi.forEach( (api) => {
-        apis.push({
+        apis.unshift({
             method: api.method?api.method.toUpperCase():'GET',
             route:  api.route?api.route:'',
             query:  api.query,
