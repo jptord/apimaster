@@ -35,6 +35,7 @@
         "xnombrecapcamelx" : "Regularizacion",        
         "xnombrecamelpluralx" : "regularizaciones",
         "xtextx" : "Regularización",
+        "xtextapix" : "Regularización",
         "xtextpluralx" : "regularizaciones",
         "xsetfieldscreatex" : "     vc.setNombre(request.getNombre());",
         "xrequestcreatecmdx" : "    int Nombre;",

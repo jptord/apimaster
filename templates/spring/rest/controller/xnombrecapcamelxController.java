@@ -22,7 +22,7 @@ import java.util.UUID;
 import java.util.*;
 
 
-@Tag(name = "{xnombrecapcamelx}", description = "Descripcion de {xtextpluralx}")
+@Tag(name = "{xtextapix}", description = "Gestión de {xtextpluralx}")
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = "/{xnombrecamelx}")
@@ -94,7 +94,7 @@ public class {xnombrecapcamelx}Controller {
                 return SingleResponse.<{xnombrecapcamelx}ListResponse>builder().content( {xnombrecamelx}ListMapper.toResponse({xnombrecamelx})).build();
         }
 
-        @Operation(summary = "Habilita / Deshabilitar {xnombrecapcamelx}")
+        @Operation(summary = "Habilita / Deshabilitar {xtextx}")
         @GetMapping("{{xnombrecamelx}Id}/habilita")
         public SingleResponse<{xnombrecapcamelx}ListResponse> habilita(@PathVariable("{xnombrecamelx}Id") UUID {xnombrecamelx}Id) {
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow({xnombrecamelx}Id);

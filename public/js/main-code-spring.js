@@ -103,6 +103,9 @@ function printRel2(relData){
     }
     return result.join("<br>");
 }
+function snakeToHuman(text){
+    return text.toLowerCase().replaceAll("_", " ").split(" ").map( w => w[0].toUpperCase()+w.slice(1)).join(" ");
+}
 
 function cargarFormularioSpring(group){
     let name = group.name;
@@ -117,8 +120,9 @@ function cargarFormularioSpring(group){
     $("#xnombrecamelx").val(name_camel);
     $("#xnombrecapcamelx").val(name_cap_camel);
     $("#xnombrecamelpluralx").val(name_camel_plural);
-    $("#xtextx").val(name_cap);
-    $("#xtextpluralx").val(name_cap_plural);
+    $("#xtextx").val(snakeToHuman(name_cap));
+    $("#xtextapix").val(snakeToHuman(name_cap).toUpperCase());
+    $("#xtextpluralx").val(textoAPlural(snakeToHuman(name_cap)));
 
     /*$("#xnombrecamelx").val(group.name);
     $("#xnombrecapcamelx").val(group.name);        
@@ -470,7 +474,7 @@ function generateApiCustom(data){
         }
 
         let xcontrollerapicustomx_line = '';
-        xcontrollerapicustomx_line += `\t@Operation(summary = "[API custom] Obtener ${api.route}")\n`;
+        xcontrollerapicustomx_line += `\t@Operation(summary = "[API custom] Obtener ${  snakeToHuman(api.route) }")\n`;
         xcontrollerapicustomx_line += `\t@GetMapping("${api.route}")\n`;
         xcontrollerapicustomx_line += `\tpublic PageResponse<${data.params.xnombrecapcamelx}ListResponse> findAll(\n`;
         xcontrollerapicustomx_line += `\t\t@RequestParam(defaultValue = "1") Integer page,\n`;

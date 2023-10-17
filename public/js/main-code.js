@@ -587,7 +587,7 @@ function convertirSqlQSeeder(textSql){
 }
 
 function textoAPlural(text){
-    if (text.charAt(text.length-1)=='n' || text.charAt(text.length-1)=='r' || text.charAt(text.length-1)=='s'){
+    if (text.charAt(text.length-1)=='n' || text.charAt(text.length-1)=='r'){
         return text + 'es';
     }
     if (text.charAt(text.length-1)=='a' || 

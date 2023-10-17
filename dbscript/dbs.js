@@ -1584,8 +1584,25 @@
                         ]
                     }
                 ],
-                "apicustom": [],
+                "apicustom": [
+                    {
+                        "method": "get",
+                        "route": "por_tipo_composicion",
+                        "query": "asiento_tipo_composicion_id",
+                        "in": "",
+                        "type": "custom",
+                        "out": "select"
+                    }
+                ],
                 "apis": [
+                    {
+                        "method": "GET",
+                        "route": "por_tipo_composicion",
+                        "query": "asiento_tipo_composicion_id",
+                        "in": null,
+                        "type": "custom",
+                        "out": "select"
+                    },
                     {
                         "method": "GET",
                         "route": "",
