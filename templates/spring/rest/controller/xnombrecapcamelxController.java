@@ -3,6 +3,7 @@ package {xpackagenamex}.rest.controller;
 import {xpackagenamex}.command.*;
 import {xpackagenamex}.jpa.entity.*;
 import {xpackagenamex}.jpa.service.*;
+import {xpackagenamex}.jpa.repository.*;
 import {xpackagenamex}.rest.controller.io.request.*;
 import {xpackagenamex}.rest.controller.io.response.*;
 import {xpackagenamex}.rest.controller.io.response.core.PageResponse;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.annotation.*;
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class {xnombrecapcamelx}Controller {
         private final {xnombrecapcamelx}Service {xnombrecamelx}Service;
         private final {xnombrecapcamelx}CreateCmd {xnombrecamelx}Cmd;
         private final {xnombrecapcamelx}UpdateCmd {xnombrecamelx}UpdateCmd;
+        private final {xnombrecapcamelx}Repository {xnombrecamelx}Repository;
 
         @Operation(summary = "Buscar {xtextpluralx}")
         @GetMapping
@@ -38,10 +41,10 @@ public class {xnombrecapcamelx}Controller {
                 @RequestParam(defaultValue = "10") Integer size,
                 @RequestParam(defaultValue = "id") String sortBy,
                 @RequestParam(defaultValue = "false") boolean descending,
-                @RequestParam(required = false) String kerword) {
+                @RequestParam(required = false) String keyword) {
                 page = page<1? 1:page;
                 Pageable pageable = PageableUtil.of(page-1, size, sortBy, descending);
-                Page<{xnombrecapcamelx}> configuracionPage = {xnombrecamelx}Service.findAllByKeyword(kerword, pageable);
+                Page<{xnombrecapcamelx}> configuracionPage = {xnombrecamelx}Service.findAllByKeyword(keyword, pageable);
                 return PageResponse.<{xnombrecapcamelx}ListResponse>builder()
                         .content({xnombrecamelx}ListMapper.toResponseList(configuracionPage.getContent()))
                         .pagination(PageResponse.Pagination.builder()
@@ -67,7 +70,7 @@ public class {xnombrecapcamelx}Controller {
         public SingleResponse<{xnombrecapcamelx}ListResponse> create(@RequestBody {xnombrecapcamelx}CreateRequest request) {
                 UUID variableConfiguracionID = {xnombrecamelx}Cmd.execute(
                         {xnombrecapcamelx}CreateCmd.Request.builder()
-                                {xcontrolllercreatefieldsx}
+{xcontrolllercreatefieldsx}
                                 .build()
                 );
                 {xnombrecapcamelx} {xnombrecamelx} = {xnombrecamelx}Service.findByIdThrow(variableConfiguracionID);
@@ -83,7 +86,7 @@ public class {xnombrecapcamelx}Controller {
                 UUID id = {xnombrecamelx}UpdateCmd.execute(
                         {xnombrecapcamelx}UpdateCmd.Request.builder()
                                 .{xnombrecamelx}Id({xnombrecamelx}Id)
-                                {xcontrolllerupdatefieldsx}
+{xcontrolllerupdatefieldsx}
                                 .build()
                 );
 
@@ -122,5 +125,8 @@ public class {xnombrecapcamelx}Controller {
         }
 
 {xcontrollerrelx}
+
+{xcontrollerapicustomx}
+
 
 }

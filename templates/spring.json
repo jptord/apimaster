@@ -60,7 +60,7 @@
           <column defaultValueComputed="uuid_generate_v4()" name="id" type="uuid">
               <constraints nullable="false" primaryKey="true" primaryKeyName="pk_pagos_devengados"/>
           </column></createTable>`,
-
+        "xcontrollerapicustomx": "",
         "xsubpathx" : "empresa",
         "xnombrex" : "clientes",
         "xnombrecapx" : "Clientes"

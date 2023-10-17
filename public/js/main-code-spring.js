@@ -309,6 +309,7 @@ function generateHeadersSpring(data){
     generateRestResponse(data);
     generateController(data);
     generateChangelog(data);
+    generateApiCustom(data);
 
     data_generated = data;
     console.log("data_generated",data_generated);
@@ -433,6 +434,77 @@ function generateController(data){
     data.params['xcontrolllerupdatefieldsx'] = xcontrolllerupdatefieldsx_array.join("\n");     
     data.params['xcontrollerrelx'] = xcontrollerrelx_array.join("\n");     
 }    
+
+function generateApiCustom(data){
+    let xcontrollerapicustomx = '';
+    let xcontrollerapicustomx_array = [];
+    let xqueryservicex = '';
+    let xqueryservicex_array = [];
+
+    let gr = data_db[db_index_selected].groups[group_index_selected];
+    let recursos_array = [];
+    let apis = [];
+    console.log("--gr--", gr);
+    apis = gr.apis;    
+    Object.keys(gr.data.create).forEach(f => {
+        let rel_rel = esRelacion(gr.data.create , f);
+        if (rel_rel==null){
+            let tipo = gr.data.create[f];
+            if (tipo == "string")
+                recursos_array.push(`\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
+        }
+    });
+    
+    apis.forEach( api => {
+        if (api.type != 'custom') return ;        
+        let query = '';
+        let conditions = '';
+        let xconditionx_array = '';
+        let xqueryservicex = '';
+        if (api.query != null){
+            query = api.query.split(",");
+            queryRequestParam = query.map( q => `@RequestParam(required = false) String ${convertirACamel(q)}`);
+            xconditionx_array = query.map( q => ` cb.equal(root.get("${convertirACamel(q)}").as(String.class), ${convertirACamel(q)}),`);
+            query = ',\n\t\t'+ queryRequestParam.join(",\n\t\t");
+            conditions = '\n\t\t'+ xconditionx_array.join(",\n\t\t");
+        }
+
+        let xcontrollerapicustomx_line = '';
+        xcontrollerapicustomx_line += `\t@Operation(summary = "[API custom] Obtener ${api.route}")\n`;
+        xcontrollerapicustomx_line += `\t@GetMapping("${api.route}")\n`;
+        xcontrollerapicustomx_line += `\tpublic PageResponse<${data.params.xnombrecapcamelx}ListResponse> findAll(\n`;
+        xcontrollerapicustomx_line += `\t\t@RequestParam(defaultValue = "1") Integer page,\n`;
+        xcontrollerapicustomx_line += `\t\t@RequestParam(defaultValue = "10") Integer size,\n`;
+        xcontrollerapicustomx_line += `\t\t@RequestParam(defaultValue = "id") String sortBy,\n`;        
+        xcontrollerapicustomx_line += `\t\t@RequestParam(defaultValue = "false") boolean descending,\n`;
+        xcontrollerapicustomx_line += `\t\t@RequestParam(required = false) String keyword${query}) {\n`;
+        xcontrollerapicustomx_line += `\t\tpage = page<1? 1:page;\n`;
+        xcontrollerapicustomx_line += `\t\tPageable pageable = PageableUtil.of(page-1, size, sortBy, descending);\n`;
+        xcontrollerapicustomx_line += `\t\tString recurso = keyword == null ? null : "%" + keyword.toLowerCase() + "%";\n`;
+        xcontrollerapicustomx_line += `\t\tPage<${data.params.xnombrecapcamelx}> configuracionPage = ${data.params.xnombrecamelx}Repository.findAll((Specification<${data.params.xnombrecapcamelx}>) (root, query, cb) -> cb.and(\n`;
+        xcontrollerapicustomx_line += `\t\t${conditions}\n`;
+        xcontrollerapicustomx_line += `\t\tcb.or( \n`;
+        xcontrollerapicustomx_line += recursos_array.join(",\n");
+        xcontrollerapicustomx_line += `\t\t)), pageable);\n`;
+
+        //xcontrollerapicustomx_line += `\t\tPage<${data.params.xnombrecapcamelx}> configuracionPage = {xnombrecamelx}Service.findAllBykeyword(keyword, pageable);\n`;
+        xcontrollerapicustomx_line += `\t\t${xqueryservicex}\n`;
+        xcontrollerapicustomx_line += `\t\treturn PageResponse.<${data.params.xnombrecapcamelx}ListResponse>builder()\n`;
+        xcontrollerapicustomx_line += `\t\t\t.content(${data.params.xnombrecamelx}ListMapper.toResponseList(configuracionPage.getContent()))\n`;
+        xcontrollerapicustomx_line += `\t\t\t.pagination(PageResponse.Pagination.builder()\n`;
+        xcontrollerapicustomx_line += `\t\t\t\t.pages(configuracionPage.getTotalPages())\n`;
+        xcontrollerapicustomx_line += `\t\t\t\t.rowsNumber(configuracionPage.getTotalElements())\n`;
+        xcontrollerapicustomx_line += `\t\t\t\t.perPage(size)\n`;
+        xcontrollerapicustomx_line += `\t\t\t\t.build()\n`;
+        xcontrollerapicustomx_line += `\t\t\t)\n`;
+        xcontrollerapicustomx_line += `\t\t\t.build();\n`;
+        xcontrollerapicustomx_line += `\t}\n`;
+        xcontrollerapicustomx_array.push(xcontrollerapicustomx_line);
+    });
+    
+    data.params['xcontrollerapicustomx'] = xcontrollerapicustomx_array.join("\n");  
+
+}
 function generateRelationController(cabecera, params){
     let endPoints_array = [];
     let name = cabecera.campo;
@@ -858,7 +930,7 @@ function generateService(data){
             
             return;
         };
-        let xmethodservicex_line = '\t';
+        let xmethodservicex_line = '';
 
         if (cabecera.tipo == "uuid"){
             
@@ -871,7 +943,7 @@ function generateService(data){
                 if (rel_rel==null){
                     let tipo = gr.data.create[f];
                     if (tipo == "string")
-                        recursos_array.push(`\t\t\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
+                        recursos_array.push(`\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
                 }
             });
             
@@ -895,24 +967,23 @@ function generateService(data){
                     if (rel_rel==null){
                         let tipo = gr.data.create[f];
                         if (tipo == "string")
-                            recursos_array.push(`\t\t\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
+                            recursos_array.push(`\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
                     }
                 });
 
                 
-                xmethodservicex_line += `\t\tpublic Page<${data.params.xnombrecapcamelx}> findByAll${relcamelfieldcap}(String keyword, UUID ${relcamelfieldown}, Pageable pageable) {\n`; 
-                xmethodservicex_line += `\t\t\tString recurso = keyword == null ? null : "%" + keyword.toLowerCase() + "%";\n`;
-                xmethodservicex_line += `\t\t\treturn repository.findAll(\n`;
-                xmethodservicex_line += `\t\t\t\t(Specification<${data.params.xnombrecapcamelx}>) (root, query, cb) -> cb.and(\n`;
+                xmethodservicex_line += `\tpublic Page<${data.params.xnombrecapcamelx}> findByAll${relcamelfieldcap}(String keyword, UUID ${relcamelfieldown}, Pageable pageable) {\n`; 
+                xmethodservicex_line += `\t\tString recurso = keyword == null ? null : "%" + keyword.toLowerCase() + "%";\n`;
+                xmethodservicex_line += `\t\treturn repository.findAll(\n`;
+                xmethodservicex_line += `\t\t\t(Specification<${data.params.xnombrecapcamelx}>) (root, query, cb) -> cb.and(\n`;
                 xmethodservicex_line += `\t\t\t\tcb.equal(root.get("${javaname}"), ${javaname}),\n`;
                 xmethodservicex_line += `\t\t\t\tcb.or(\n`;
                 xmethodservicex_line += recursos_array.join(",\n");
-                xmethodservicex_line += `\t\t\t\t)\n`;
-                xmethodservicex_line += `\t\t\t), pageable);}`;
+                xmethodservicex_line += `\t\t\t)\n`;
+                xmethodservicex_line += `\t\t), pageable);\n\t}\n`;
                 
             }else
-                xmethodservicex_line += `\t\tpublic List<${data.params.xnombrecapcamelx}> findBy${javanamecap}(${javatype} ${javaname}) {return repository.findBy${javanamecap}(${javaname});}\n`;
-
+                xmethodservicex_line += `\tpublic List<${data.params.xnombrecapcamelx}> findBy${javanamecap}(${javatype} ${javaname}) {return repository.findBy${javanamecap}(${javaname});}\n`;
                 xmethodsservicex_array.push(xmethodservicex_line);
         }
     });

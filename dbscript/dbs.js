@@ -371,14 +371,6 @@
                     {
                         "name": "estado",
                         "value": "boolean"
-                    },
-                    {
-                        "name": "codigo",
-                        "value": "string"
-                    },
-                    {
-                        "name": "prefix",
-                        "value": "string"
                     }
                 ],
                 "seeder": [
@@ -388,8 +380,6 @@
                             "uuid-modulos-1",
                             "CONTABILIDAD",
                             "Módulo de contabilidad",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -399,8 +389,6 @@
                             "uuid-modulos-2",
                             "COMPRAS",
                             "Módulo de compras",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -410,8 +398,6 @@
                             "uuid-modulos-3",
                             "VENTAS",
                             "Módulo de ventas",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -421,8 +407,6 @@
                             "uuid-modulos-4",
                             "INVENTARIO",
                             "Módulo de inventario",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -432,8 +416,6 @@
                             "uuid-modulos-5",
                             "TESORERÍA",
                             "Módulo de tesoreria",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -443,8 +425,6 @@
                             "uuid-modulos-6",
                             "RECURSOS HUMANOS",
                             "Módulo de recursos humanos",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -454,8 +434,6 @@
                             "uuid-modulos-7",
                             "ACTIVOS FIJOS",
                             "Módulo de activos fijos",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -465,8 +443,6 @@
                             "uuid-modulos-8",
                             "PRESUPUESTOS",
                             "Módulo de presupuestos",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -476,8 +452,6 @@
                             "uuid-modulos-9",
                             "PRODUCCIÓN",
                             "Módulo de producción",
-                            "",
-                            "",
                             ""
                         ]
                     },
@@ -487,8 +461,6 @@
                             "uuid-modulos-10",
                             "CENTRO DE COSTOS",
                             "Módulo de centro de costos",
-                            "",
-                            "",
                             ""
                         ]
                     }
@@ -536,24 +508,18 @@
                         "id": "uuid|pk",
                         "nombre": "string",
                         "descripcion": "string",
-                        "estado": "boolean",
-                        "codigo": "string",
-                        "prefix": "string"
+                        "estado": "boolean"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "nombre": "string",
                         "descripcion": "string",
-                        "estado": "boolean",
-                        "codigo": "string",
-                        "prefix": "string"
+                        "estado": "boolean"
                     },
                     "insert": {
                         "nombre": "string",
                         "descripcion": "string",
-                        "estado": "boolean",
-                        "codigo": "string",
-                        "prefix": "string"
+                        "estado": "boolean"
                     }
                 }
             },
@@ -572,6 +538,17 @@
                     {
                         "name": "modulo_id",
                         "value": "number"
+                    },
+                    {
+                        "name": "modulo",
+                        "value": "[modulos|id|modulo_id]",
+                        "rel": {
+                            "index": "modulo",
+                            "name": "modulos",
+                            "field": "id",
+                            "ownfield": "modulo_id",
+                            "array": false
+                        }
                     },
                     {
                         "name": "glosa",
@@ -664,8 +641,8 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "pormodulo",
-                        "query": "modulo_id,nombre",
+                        "route": "por_modulo",
+                        "query": "modulo_id",
                         "in": "",
                         "type": "custom",
                         "out": "select"
@@ -674,8 +651,8 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "pormodulo",
-                        "query": "modulo_id,nombre",
+                        "route": "por_modulo",
+                        "query": "modulo_id",
                         "in": null,
                         "type": "custom",
                         "out": "select"
@@ -721,17 +698,20 @@
                         "id": "uuid|pk",
                         "nombre": "string",
                         "modulo_id": "number",
+                        "modulo": "[modulos|id|modulo_id]",
                         "glosa": "string"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "nombre": "string",
                         "modulo_id": "number",
+                        "modulo": "[modulos|id|modulo_id]",
                         "glosa": "string"
                     },
                     "insert": {
                         "nombre": "string",
                         "modulo_id": "number",
+                        "modulo": "[modulos|id|modulo_id]",
                         "glosa": "string"
                     }
                 }
@@ -832,8 +812,8 @@
                 }
             },
             {
-                "name": "asiento_tipos_centrocostos",
-                "alias": "asiento_tipos_centrocostos",
+                "name": "asiento_tipo_centrocostos",
+                "alias": "asiento_tipo_centrocostos",
                 "fields": [
                     {
                         "name": "id",
@@ -1094,8 +1074,25 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [],
+                "apicustom": [
+                    {
+                        "method": "get",
+                        "route": "por_asiento_tipo",
+                        "query": "asiento_tipo_id",
+                        "in": "",
+                        "type": "custom",
+                        "out": "select"
+                    }
+                ],
                 "apis": [
+                    {
+                        "method": "GET",
+                        "route": "por_asiento_tipo",
+                        "query": "asiento_tipo_id",
+                        "in": null,
+                        "type": "custom",
+                        "out": "select"
+                    },
                     {
                         "method": "GET",
                         "route": "",
