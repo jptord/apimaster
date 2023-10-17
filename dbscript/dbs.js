@@ -25,40 +25,45 @@
                 ],
                 "seeder": [
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-grupos-1",
                             "Activo",
                             "1",
                             ""
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-grupos-2",
                             "Pasivo",
                             "2",
                             ""
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-grupos-3",
                             "Patrimonio",
                             "3",
                             ""
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-grupos-4",
                             "Ingreso",
                             "4",
                             ""
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-grupos-5",
                             "Egreso",
                             "5",
                             ""
@@ -185,7 +190,64 @@
                         }
                     }
                 ],
-                "seeder": [],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-cuentas-1",
+                            "Diesel",
+                            "5.12.2.2",
+                            "0",
+                            "true",
+                            "true",
+                            "1",
+                            "",
+                            "uuid-grupos-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-cuentas-2",
+                            "Otros Combustibles",
+                            "5.12.2.3",
+                            "0",
+                            "true",
+                            "true",
+                            "1",
+                            "",
+                            "uuid-grupos-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-cuentas-3",
+                            "Herramientas de trabajo",
+                            "5.12.4.2",
+                            "0",
+                            "true",
+                            "true",
+                            "1",
+                            "",
+                            "uuid-grupos-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-cuentas-4",
+                            "Servicios Externos",
+                            "5.12.5.2",
+                            "0",
+                            "true",
+                            "true",
+                            "1",
+                            "",
+                            "uuid-grupos-1"
+                        ]
+                    }
+                ],
                 "apicustom": [],
                 "apis": [
                     {
@@ -1073,7 +1135,24 @@
                         }
                     }
                 ],
-                "seeder": [],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-asientottcom-1",
+                            "uuid-tcompr-1",
+                            "uuid-asientot-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-asientottcom-2",
+                            "uuid-tcompr-2",
+                            "uuid-asientot-1"
+                        ]
+                    }
+                ],
                 "apicustom": [
                     {
                         "method": "get",
@@ -1710,8 +1789,9 @@
                 ],
                 "seeder": [
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-tcompr-1",
                             "INGRESO",
                             "I",
                             "true",
@@ -1719,8 +1799,9 @@
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-tcompr-2",
                             "EGRESO",
                             "E",
                             "true",
@@ -1728,8 +1809,9 @@
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-tcompr-3",
                             "TRASPASO",
                             "T",
                             "true",
@@ -1737,8 +1819,9 @@
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-tcompr-4",
                             "AJUSTE",
                             "A",
                             "true",
@@ -1746,8 +1829,9 @@
                         ]
                     },
                     {
-                        "data": "insert",
+                        "data": "create",
                         "values": [
+                            "uuid-tcompr-5",
                             "AUXILIAR",
                             "AX",
                             "false",
@@ -1929,6 +2013,168 @@
                     },
                     "insert": {
                         "nombre": "string"
+                    }
+                }
+            },
+            {
+                "name": "tipo_usos_composicion",
+                "alias": "tipo_usos_composicion",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "tipo_uso_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "tipo_uso",
+                        "value": "[tipo_usos|id|tipo_uso_id]",
+                        "rel": {
+                            "index": "tipo_uso",
+                            "name": "tipo_usos",
+                            "field": "id",
+                            "ownfield": "tipo_uso_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "debe_haber",
+                        "value": "boolean"
+                    },
+                    {
+                        "name": "asiento_tipo_composicion_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "asiento_tipo_composicion",
+                        "value": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]",
+                        "rel": {
+                            "index": "asiento_tipo_composicion",
+                            "name": "asiento_tipo_composiciones",
+                            "field": "id",
+                            "ownfield": "asiento_tipo_composicion_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-tucomp-1",
+                            "uuid-usos-1",
+                            "false",
+                            "uuid-tcomp-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-tucomp-2",
+                            "uuid-usos-2",
+                            "false",
+                            "uuid-tcomp-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-tucomp-3",
+                            "uuid-usos-3",
+                            "false",
+                            "uuid-tcomp-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-tucomp-4",
+                            "uuid-usos-4",
+                            "false",
+                            "uuid-tcomp-1"
+                        ]
+                    }
+                ],
+                "apicustom": [
+                    {
+                        "method": "get",
+                        "route": "por_tipo_composicion",
+                        "query": "asiento_tipo_composicion_id",
+                        "in": "",
+                        "type": "custom",
+                        "out": "select"
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "por_tipo_composicion",
+                        "query": "asiento_tipo_composicion_id",
+                        "in": null,
+                        "type": "custom",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "tipo_uso_id": "number",
+                        "tipo_uso": "[tipo_usos|id|tipo_uso_id]",
+                        "debe_haber": "boolean",
+                        "asiento_tipo_composicion_id": "number",
+                        "asiento_tipo_composicion": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "tipo_uso_id": "number",
+                        "tipo_uso": "[tipo_usos|id|tipo_uso_id]",
+                        "debe_haber": "boolean",
+                        "asiento_tipo_composicion_id": "number",
+                        "asiento_tipo_composicion": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]"
+                    },
+                    "insert": {
+                        "tipo_uso_id": "number",
+                        "tipo_uso": "[tipo_usos|id|tipo_uso_id]",
+                        "debe_haber": "boolean",
+                        "asiento_tipo_composicion_id": "number",
+                        "asiento_tipo_composicion": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]"
                     }
                 }
             },
