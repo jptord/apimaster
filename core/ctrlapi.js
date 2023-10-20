@@ -1,7 +1,10 @@
 const express = require('express')
-const router = express.Router()
+const util = require('util')
+
+
 var uuids = {};
 const { Database } = require('../core/database.js');
+const { ApiDoc } = require('../core/apidoc.js');
 
 var cors = require('cors');
 const { forEach } = require('jszip');
@@ -138,10 +141,14 @@ class CtrlApi{
                 me.appendSubquerys(cc[r.name],f);
                 if (!r.array)
                     cc[r.name] = cc[r.name].length>0?cc[r.name][0]:null;
+
             });
             
             //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
         });
+        
+        //let contentTemp = me.contentACamelCaseContent(content);
+        //console.log("contentTemp",contentTemp);
         return content;
     }
     createTriggerUuid(database, group, uuid){
@@ -162,10 +169,12 @@ class CtrlApi{
     constructor(dbData,dbData_global=null){
         this.dbData = dbData;
         this.dbData_global = dbData_global;
+        this.router = express.Router();
         let me = this;
 
         if(this.dbData!==undefined){
             console.log("db_name",this.dbData.db);
+            console.log("groups", this.dbData.groups.length);
             this.database = new Database(this.dbData.db);
             //console.log("this.database.getTables: ",this.database.getTables());
             this.dbData.groups.forEach(group => {
@@ -278,11 +287,24 @@ class CtrlApi{
     }
     publicar(){
         var me = this;
+        const router = this.router;
         router.all('/info',cors(corsOptions),async function (req, res){
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify( me.dbData ));
         })
-        this.dbData.groups.forEach(group => {
+        const db_actual = this.dbData;
+        router.use('/api-docs', (req,res)=>{
+            res.setHeader('Content-Type', 'application/json');
+            let apiDoc = new ApiDoc('172.20.50.148','9988');
+            let swaggerDocument = apiDoc.generarDoc(db_actual);
+            //console.log(JSON.stringify( swaggerDocument ));
+            //console.log(util.inspect(swaggerDocument, {showHidden: false, depth: null, colors: true}));
+            //res.write(JSON.stringify( util.inspect(swaggerDocument, {showHidden: false, depth: null, colors: true}) ));
+            res.write(JSON.stringify(swaggerDocument));
+            res.end();
+        });
+
+        this.dbData.groups.forEach(group => {            
             me.autoApiGen(group);
         });
         /*router.all('/',cors(corsOptions),async function (req, res){
@@ -308,12 +330,60 @@ class CtrlApi{
         return texto;
     }
     
-    contentACamelCase(respuesta){
+    contentACamelCase(respuesta,pos='A'){
+        let me = this;        
+        let camel_data = [];
+        if (respuesta.content == null) return null;
+        console.log("respuest-",respuesta,pos);
+        if (Array.isArray(respuesta.content)){
+            respuesta.content.forEach(data => {
+                let data_fields = {};            
+                Object.keys(data).forEach( f => {
+
+                    //data_fields[me.convertirACamel(f)] = data[f];
+                    console.log("data[f]",data[f]);
+                    console.log("isObject", typeof data[f] === 'object');
+                    console.log("isArray", Array.isArray(data[f]) === 'object');
+                    let isArray = Array.isArray(data[f]);
+                    let isObject = typeof data[f] === 'object';
+                    let isNull = data[f] === null;
+                    if ( !isNull && isObject )
+                        data_fields[me.convertirACamel(f)] = me.contentACamelCase({"content" :data[f]},'OBJ');
+                    else if ( !isNull && isArray )
+                        data_fields[me.convertirACamel(f)] = me.contentACamelCase({"content" :data[f]},'ARR');
+                    else
+                        data_fields[me.convertirACamel(f)] = data[f];
+                });
+                camel_data.push(data_fields);                
+            })
+        }else{                
+                let data_fields = {};            
+                Object.keys(respuesta.content).forEach( f => {
+                    let isArray = Array.isArray(respuesta.content[f]);
+                    let isObject = typeof respuesta.content[f] === 'object';
+                    let isNull = respuesta.content[f] === null;
+                    if ( !isNull && isObject )
+                        data_fields[me.convertirACamel(f)] = me.contentACamelCase({"content" :respuesta.content[f]},'OBJ');
+                    else if ( !isNull && isArray )
+                        data_fields[me.convertirACamel(f)] = me.contentACamelCase({"content" :respuesta.content[f]},'ARR');
+                    else
+                        data_fields[me.convertirACamel(f)] = respuesta.content[f];
+                });
+                camel_data.push(data_fields);
+        }
+        
+        respuesta.content = camel_data;
+        if (pos == "OBJ")
+            if ( camel_data.length > 0 )
+                return camel_data [0];
+        return camel_data;
+    }
+    contentACamelCaseContent(content){
         let me = this;        
         let camel_data = [];
         
-        if (Array.isArray(respuesta.content)){
-            respuesta.content.forEach(data => {
+        if (Array.isArray(content)){
+            content.forEach(data => {
                 let data_fields = {};            
                 Object.keys(data).forEach( f => {
                     data_fields[me.convertirACamel(f)] = data[f];
@@ -324,13 +394,13 @@ class CtrlApi{
         }else{
                  
                 let data_fields = {};            
-                Object.keys(respuesta.content).forEach( f => {
-                    data_fields[me.convertirACamel(f)] = respuesta.content[f];
+                Object.keys(content).forEach( f => {
+                    data_fields[me.convertirACamel(f)] = content[f];
                 });
                 camel_data.push(data_fields);
         }
         
-        respuesta.content = camel_data;
+        content = camel_data;
     }
     contentASnakeCase(data_obj){
         let me = this;        
@@ -359,7 +429,9 @@ class CtrlApi{
             return `WHERE ${findcondition} ${sql_conditions}`;
     }
     autoApiGen(group){
-        var me = this;
+        var me = this;        
+        const router = this.router;
+
         group.apis.forEach(api => {
             let rel;
             if (api.type == "rel") rel = me.toRelation('',api.rel);

@@ -1,7 +1,10 @@
 const { Database } = require("./core/database.js");
 const { CtrlApi } = require("./core/ctrlapi.js");
+const { ApiDoc } = require('./core/apidoc.js');
 const bodyParser = require("body-parser");
 const express = require("express");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 var fs = require("fs");
 const vm = require("vm");
 var cors = require("cors");
@@ -26,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true,parameterLimit: 100000, dlimit: '
 //app.use(express.bodyParser());
 app.use("/", express.static(public));
 
+
 app.post("/test", (req, res) => {
   console.log("req", req.body);
   res.end();
@@ -46,11 +50,27 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   console.log(db_array);
 
+  let apiDoc = new ApiDoc('172.20.50.148','9988');
+
+
   db_array.forEach((db_var) => {
     let ctrlapi = new CtrlApi(db_var, db_array);
     console.log(`use /${ctrlapi.dbData.db}/`);
     app.use(`/${ctrlapi.dbData.db}`, ctrlapi.publicar());
+    const swaggerDocument = apiDoc.generarDoc(db_var);
+    var options = { explorer: true };
+    //console.log("swagger-ui",db_var.db+'/swagger-ui');
+    app.use(`/${db_var.db}/swagger-ui`, swaggerUi.serveFiles(swaggerDocument, options), swaggerUi.setup(swaggerDocument));
+
+    
+    //app.use(`/${db_var.db}/swagger-ui`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  //app.use('/swagger-ui', swaggerUi.serve);
+    //app.get(`/swagger-ui/${db_var.db}`, swaggerUi.setup(swaggerDocument));
+    //app.use(`/swagger-ui/${db_var.db}`, swaggerUi.serve);
+    //app.get(`/swagger-ui/${db_var.db}`, swaggerUi.serveFiles(swaggerDocument), swaggerUi.setup(swaggerDocument) );
+    
   });
+
 
 
   app.get("/db_all", (req, res) => {

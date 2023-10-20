@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CONTABILIDAD API",
+    "description": "Contabilidad Envrionment",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://172.20.50.148:9988/contabilidad",
+      "description": "Servicio de Contabilidad"
+    }
+  ],
+  "security": [
+    {
+      "oidc": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "grupos",
+      "description": "Servicio de Grupos"
+    }
+  ],
+  "paths": {
+    "/grupos":{
+      "get":{
+        "tags": [
+          "grupos"
+        ],
+        "summary":"Buscar Grupos",
+        "operationId":"findAll_1",        
+        "parameters" : [
+        ],
+        "responses" : {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GruposResponse"
+                }
+              }
+            }
+          }
+        }
+      }      
+    }
+  },
+  "components": {
+    "schemas" : {
+      "GruposResponse" : {
+        "type": "object",
+        "properties": {
+          "id":{
+            "type": "string",
+            "format": "uuid"},
+          "nombre":{
+            "type": "string"},
+          "orden":{
+            "type": "number"},
+          "estado":{
+            "type": "boolean"}
+        }
+      }
+    }
+  }
+}

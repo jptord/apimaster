@@ -1962,6 +1962,27 @@
                             "uuid-usos-7",
                             "Gift Card"
                         ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-usos-8",
+                            "Gasto"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-usos-9",
+                            "Inventario"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-usos-10",
+                            "Activo Fijo"
+                        ]
                     }
                 ],
                 "apicustom": [],
@@ -2017,6 +2038,247 @@
                 }
             },
             {
+                "name": "api_usos",
+                "alias": "api_usos",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "api",
+                        "value": "string"
+                    },
+                    {
+                        "name": "route",
+                        "value": "string"
+                    },
+                    {
+                        "name": "bind_id",
+                        "value": "string"
+                    },
+                    {
+                        "name": "bind_label",
+                        "value": "string"
+                    },
+                    {
+                        "name": "bind_tree_id",
+                        "value": "string"
+                    }
+                ],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-ausos-1",
+                            "Grupo Ítem - Presentación",
+                            "compras",
+                            "/items",
+                            "id",
+                            "nombre",
+                            "supitem_id"
+                        ]
+                    }
+                ],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "api": "string",
+                        "route": "string",
+                        "bind_id": "string",
+                        "bind_label": "string",
+                        "bind_tree_id": "string"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "api": "string",
+                        "route": "string",
+                        "bind_id": "string",
+                        "bind_label": "string",
+                        "bind_tree_id": "string"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "api": "string",
+                        "route": "string",
+                        "bind_id": "string",
+                        "bind_label": "string",
+                        "bind_tree_id": "string"
+                    }
+                }
+            },
+            {
+                "name": "api_usos_composicion",
+                "alias": "api_usos_composicion",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "api_uso_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "api_uso",
+                        "value": "[api_usos|id|api_uso_id]",
+                        "rel": {
+                            "index": "api_uso",
+                            "name": "api_usos",
+                            "field": "id",
+                            "ownfield": "api_uso_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "asiento_tipo_composicion_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "asiento_tipo_composicion",
+                        "value": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]",
+                        "rel": {
+                            "index": "asiento_tipo_composicion",
+                            "name": "asiento_tipo_composiciones",
+                            "field": "id",
+                            "ownfield": "asiento_tipo_composicion_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-aucomp-1",
+                            "uuid-ausos-1",
+                            "uuid-tcomp-1"
+                        ]
+                    }
+                ],
+                "apicustom": [
+                    {
+                        "method": "get",
+                        "route": "por_tipo_composicion",
+                        "query": "asiento_tipo_composicion_id",
+                        "in": "",
+                        "type": "custom",
+                        "out": "select"
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "por_tipo_composicion",
+                        "query": "asiento_tipo_composicion_id",
+                        "in": null,
+                        "type": "custom",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "api_uso_id": "number",
+                        "api_uso": "[api_usos|id|api_uso_id]",
+                        "asiento_tipo_composicion_id": "number",
+                        "asiento_tipo_composicion": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "api_uso_id": "number",
+                        "api_uso": "[api_usos|id|api_uso_id]",
+                        "asiento_tipo_composicion_id": "number",
+                        "asiento_tipo_composicion": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]"
+                    },
+                    "insert": {
+                        "api_uso_id": "number",
+                        "api_uso": "[api_usos|id|api_uso_id]",
+                        "asiento_tipo_composicion_id": "number",
+                        "asiento_tipo_composicion": "[asiento_tipo_composiciones|id|asiento_tipo_composicion_id]"
+                    }
+                }
+            },
+            {
                 "name": "tipo_usos_composicion",
                 "alias": "tipo_usos_composicion",
                 "fields": [
@@ -2064,25 +2326,34 @@
                         "data": "create",
                         "values": [
                             "uuid-tucomp-1",
-                            "uuid-usos-1",
+                            "uuid-usos-3",
                             "false",
-                            "uuid-tcomp-1"
+                            "uuid-tcomp-2"
                         ]
                     },
                     {
                         "data": "create",
                         "values": [
                             "uuid-tucomp-2",
-                            "uuid-usos-2",
+                            "uuid-usos-4",
                             "false",
-                            "uuid-tcomp-1"
+                            "uuid-tcomp-2"
                         ]
                     },
                     {
                         "data": "create",
                         "values": [
                             "uuid-tucomp-3",
-                            "uuid-usos-3",
+                            "uuid-usos-5",
+                            "false",
+                            "uuid-tcomp-2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-tucomp-4",
+                            "uuid-usos-8",
                             "false",
                             "uuid-tcomp-1"
                         ]
@@ -2090,8 +2361,17 @@
                     {
                         "data": "create",
                         "values": [
-                            "uuid-tucomp-4",
-                            "uuid-usos-4",
+                            "uuid-tucomp-5",
+                            "uuid-usos-9",
+                            "false",
+                            "uuid-tcomp-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-tucomp-6",
+                            "uuid-usos-10",
                             "false",
                             "uuid-tcomp-1"
                         ]
@@ -2695,6 +2975,210 @@
                         "nombre": "string",
                         "tipo": "string",
                         "estado": "boolean"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "db": "compras",
+        "groups": [
+            {
+                "name": "items",
+                "alias": "items",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "nombre",
+                        "value": "string"
+                    },
+                    {
+                        "name": "supitem_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "supitem",
+                        "value": "[items|id|supitem_id]",
+                        "rel": {
+                            "index": "supitem",
+                            "name": "items",
+                            "field": "id",
+                            "ownfield": "supitem_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-1",
+                            "Lacteos",
+                            ""
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-2",
+                            "Repuestos",
+                            ""
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-3",
+                            "Leche",
+                            "uuid-items-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-4",
+                            "Polvo",
+                            "uuid-items-3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-5",
+                            "1 Litro",
+                            "uuid-items-3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-6",
+                            "Yogurt",
+                            "uuid-items-1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-7",
+                            "Natural",
+                            "uuid-items-6"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-8",
+                            "Saborizado",
+                            "uuid-items-6"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-9",
+                            "Vehiculos",
+                            "uuid-items-2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-10",
+                            "Llantas",
+                            "uuid-items-2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-11",
+                            "Insumos",
+                            "uuid-items-2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-12",
+                            "Tornillos",
+                            "uuid-items-2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-13",
+                            "Llantas de acero",
+                            "uuid-items-9"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-items-14",
+                            "Llantas de magnesio",
+                            "uuid-items-9"
+                        ]
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "supitem_id": "number",
+                        "supitem": "[items|id|supitem_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "supitem_id": "number",
+                        "supitem": "[items|id|supitem_id]"
+                    },
+                    "insert": {
+                        "nombre": "string",
+                        "supitem_id": "number",
+                        "supitem": "[items|id|supitem_id]"
                     }
                 }
             }
