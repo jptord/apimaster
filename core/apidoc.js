@@ -234,20 +234,20 @@ class ApiDoc{
         if (type == 'auto'){
             if (method == 'get')
                 resumen = `Obtener ${tagName}`;
-            if (api.method == 'post')
+            if (method == 'post')
                 resumen = `Crear ${tagName}`;
-            if (api.method == 'put')
+            if (method == 'put')
                 resumen = `Actualizar ${tagName}`;
-            if (api.method == 'delete')
+            if (method == 'delete')
                 resumen = `Eliminar ${tagName}`;
         }else{
             if (method == 'get')
                 resumen = `[CUSTOM] Obtener ${tagName}`;
-            if (api.method == 'post')
+            if (method == 'post')
                 resumen = `[CUSTOM] Crear ${tagName}`;
-            if (api.method == 'put')
+            if (method == 'put')
                 resumen = `[CUSTOM] Actualizar ${tagName}`;
-            if (api.method == 'delete')
+            if (method == 'delete')
                 resumen = `[CUSTOM] Eliminar ${tagName}`;
         }
         return resumen;
