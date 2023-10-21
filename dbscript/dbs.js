@@ -2054,6 +2054,10 @@
                         "value": "string"
                     },
                     {
+                        "name": "tipo_jerarquia",
+                        "value": "string"
+                    },
+                    {
                         "name": "route",
                         "value": "string"
                     },
@@ -2068,6 +2072,21 @@
                     {
                         "name": "bind_tree_id",
                         "value": "string"
+                    },
+                    {
+                        "name": "api_parent_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "api_parent",
+                        "value": "[api_usos|id|api_parent_id]",
+                        "rel": {
+                            "index": "api_parent",
+                            "name": "api_usos",
+                            "field": "id",
+                            "ownfield": "api_parent_id",
+                            "array": false
+                        }
                     }
                 ],
                 "seeder": [
@@ -2077,10 +2096,12 @@
                             "uuid-ausos-1",
                             "Grupo Ítem - Presentación",
                             "compras",
+                            "tree",
                             "/items",
                             "id",
                             "nombre",
-                            "supitem_id"
+                            "supitem_id",
+                            ""
                         ]
                     }
                 ],
@@ -2127,27 +2148,36 @@
                         "id": "uuid|pk",
                         "nombre": "string",
                         "api": "string",
+                        "tipo_jerarquia": "string",
                         "route": "string",
                         "bind_id": "string",
                         "bind_label": "string",
-                        "bind_tree_id": "string"
+                        "bind_tree_id": "string",
+                        "api_parent_id": "number",
+                        "api_parent": "[api_usos|id|api_parent_id]"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "nombre": "string",
                         "api": "string",
+                        "tipo_jerarquia": "string",
                         "route": "string",
                         "bind_id": "string",
                         "bind_label": "string",
-                        "bind_tree_id": "string"
+                        "bind_tree_id": "string",
+                        "api_parent_id": "number",
+                        "api_parent": "[api_usos|id|api_parent_id]"
                     },
                     "insert": {
                         "nombre": "string",
                         "api": "string",
+                        "tipo_jerarquia": "string",
                         "route": "string",
                         "bind_id": "string",
                         "bind_label": "string",
-                        "bind_tree_id": "string"
+                        "bind_tree_id": "string",
+                        "api_parent_id": "number",
+                        "api_parent": "[api_usos|id|api_parent_id]"
                     }
                 }
             },
