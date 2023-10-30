@@ -6,6 +6,7 @@ import {xpackagenamex}.jpa.service.*;
 import {xpackagenamex}.jpa.repository.*;
 import {xpackagenamex}.rest.controller.io.request.*;
 import {xpackagenamex}.rest.controller.io.response.*;
+import {xpackagenamex}.rest.controller.baseController.BaseDomainController;
 import {xpackagenamex}.rest.controller.io.response.core.PageResponse;
 import {xpackagenamex}.rest.controller.io.response.core.*;
 import {xpackagenamex}.rest.controller.mapper.*;
@@ -25,8 +26,8 @@ import java.util.*;
 @Tag(name = "{xtextapix}", description = "Gestión de {xtextpluralx}")
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/{xnombrecamelx}")
-public class {xnombrecapcamelx}Controller {
+@RequestMapping(value = BaseDomainController.PATH + "/{xnombresnakex}")
+public class {xnombrecapcamelx}Controller extends BaseDomainController {
 
         private final {xnombrecapcamelx}ListMapper {xnombrecamelx}ListMapper;
         private final {xnombrecapcamelx}Service {xnombrecamelx}Service;

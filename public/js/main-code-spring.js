@@ -458,6 +458,9 @@ function generateApiCustom(data){
                 recursos_array.push(`\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
         }
     });
+    if (recursos_array.length == 0) 
+        recursos_array.push(`\t\t\tcb.conjunction()`);
+
     
     apis.forEach( api => {
         if (api.type != 'custom') return ;        
@@ -467,8 +470,8 @@ function generateApiCustom(data){
         let xqueryservicex = '';
         if (api.query != null){
             query = api.query.split(",");
-            queryRequestParam = query.map( q => `@RequestParam(required = false) String ${convertirACamel(q)}`);
-            xconditionx_array = query.map( q => ` cb.equal(root.get("${convertirACamel(q)}").as(String.class), ${convertirACamel(q)}),`);
+            queryRequestParam = query.map( q => `@RequestParam(required = false) String ${q}`);
+            xconditionx_array = query.map( q => ` cb.equal(root.get("${convertirACamel(q)}").as(String.class), ${q}),`);
             query = ',\n\t\t'+ queryRequestParam.join(",\n\t\t");
             conditions = '\n\t\t'+ xconditionx_array.join(",\n\t\t");
         }
@@ -950,7 +953,8 @@ function generateService(data){
                         recursos_array.push(`\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
                 }
             });
-            
+            if (recursos_array.length == 0) 
+                recursos_array.push(`\t\t\tcb.conjunction()`);
             data.params['xresourceservicex'] = recursos_array.join(",\n");
             
         }else {
@@ -974,7 +978,8 @@ function generateService(data){
                             recursos_array.push(`\t\t\trecurso == null ? cb.conjunction() : cb.like(cb.lower(root.get("${f}").as(String.class)), recurso)`);
                     }
                 });
-
+                if (recursos_array.length == 0) 
+                    recursos_array.push(`\t\t\tcb.conjunction()`);
                 
                 xmethodservicex_line += `\tpublic Page<${data.params.xnombrecapcamelx}> findByAll${relcamelfieldcap}(String keyword, UUID ${relcamelfieldown}, Pageable pageable) {\n`; 
                 xmethodservicex_line += `\t\tString recurso = keyword == null ? null : "%" + keyword.toLowerCase() + "%";\n`;
