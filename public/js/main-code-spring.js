@@ -346,6 +346,7 @@ function generateChangelog(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -412,6 +413,7 @@ function generateController(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -687,6 +689,7 @@ function generateRestRequest(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -724,6 +727,7 @@ function generateRestResponse(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -732,7 +736,7 @@ function generateRestResponse(data){
                 
                 //javatype = 'UUID';
                 xresponsefieldsx_line += `\t\tprivate UUID ${relcamelfieldown};\n`;
-                xresponsefieldsx_line += `\t\tprivate ${relcameltablecap}Response ${relcameltable};`;
+                xresponsefieldsx_line += `\t\tprivate ${relcameltablecap}Response ${relname};`;
             }else {
                 xresponsefieldsx_line += `\t\tprivate ${javatype} ${javaname};`;
             }
@@ -764,6 +768,7 @@ function generateCreatecmd(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -812,6 +817,7 @@ function generateUpdatecmd(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -845,6 +851,7 @@ function generateEntity(data){
             let reltext = '';
             if (cabecera.esarray == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 reltext += `\t\t@OneToMany(fetch = FetchType.LAZY, mappedBy = "${data.params.xnombresnakex}", cascade= CascadeType.ALL)\n`;
@@ -865,6 +872,7 @@ function generateEntity(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 
@@ -872,7 +880,7 @@ function generateEntity(data){
                 jointext = `\t\t@ManyToOne(fetch = FetchType.LAZY, optional = false)\n`;
                 jointext += `\t\t@JoinColumn(name = "${sqlname}", referencedColumnName = "${sqlnamerel}", insertable = false, updatable = false)\n`;
                 jointext += `\t\t@JsonBackReference\n`;
-                jointext += `\t\tprivate ${relcameltablecap} ${relcameltable};\n`;
+                jointext += `\t\tprivate ${relcameltablecap} ${relname};\n`;
             }
             xentityfieldsx_line += `\t  @Column(name = "${sqlname}", nullable = false )\n`;
             xentityfieldsx_line += `\t\tprivate ${javatype} ${javaname};`;
@@ -903,6 +911,7 @@ function generateRepository(data){
             let jointext = '';
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
@@ -960,6 +969,7 @@ function generateService(data){
         }else {
             if (cabecera.fk == true){
                 let sqlnamerel = convertirASnake(cabecera.relacion_field_rel);
+                let relname = cabecera.relacion_index;
                 let relcameltable = convertirACamel(cabecera.relacion_table_rel);
                 let relcameltablecap = capitalizar(relcameltable);
                 let relcamelfield = convertirACamel(cabecera.relacion_field_rel);
