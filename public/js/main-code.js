@@ -424,6 +424,7 @@ function init(){
     });*/
     editorX.setSize("100%", 800);
     editorUml.setSize("100%", 300);
+	editorSQL.setSize("100%", 50);
 
     cargarJson ();
 }
