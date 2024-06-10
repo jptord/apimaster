@@ -756,11 +756,19 @@
                         "value": "date"
                     },
                     {
-                        "name": "lat",
+                        "name": "inicio_lat",
                         "value": "number"
                     },
                     {
-                        "name": "lon",
+                        "name": "inicio_lon",
+                        "value": "number"
+                    },
+                    {
+                        "name": "fin_lat",
+                        "value": "number"
+                    },
+                    {
+                        "name": "fin_lon",
                         "value": "number"
                     }
                 ],
@@ -812,8 +820,10 @@
                         "dispositivo": "[dispositivos|id|dispositivo_id]",
                         "login_date": "date",
                         "logout_date": "date",
-                        "lat": "number",
-                        "lon": "number"
+                        "inicio_lat": "number",
+                        "inicio_lon": "number",
+                        "fin_lat": "number",
+                        "fin_lon": "number"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -823,8 +833,10 @@
                         "dispositivo": "[dispositivos|id|dispositivo_id]",
                         "login_date": "date",
                         "logout_date": "date",
-                        "lat": "number",
-                        "lon": "number"
+                        "inicio_lat": "number",
+                        "inicio_lon": "number",
+                        "fin_lat": "number",
+                        "fin_lon": "number"
                     },
                     "insert": {
                         "personal_id": "number",
@@ -833,8 +845,10 @@
                         "dispositivo": "[dispositivos|id|dispositivo_id]",
                         "login_date": "date",
                         "logout_date": "date",
-                        "lat": "number",
-                        "lon": "number"
+                        "inicio_lat": "number",
+                        "inicio_lon": "number",
+                        "fin_lat": "number",
+                        "fin_lon": "number"
                     }
                 }
             },
@@ -845,6 +859,10 @@
                     {
                         "name": "id",
                         "value": "uuid|pk"
+                    },
+                    {
+                        "name": "foto",
+                        "value": "string"
                     },
                     {
                         "name": "sesion_id",
@@ -904,15 +922,18 @@
                 "data": {
                     "select": {
                         "id": "uuid|pk",
+                        "foto": "string",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
                     },
                     "create": {
                         "id": "uuid|pk",
+                        "foto": "string",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
                     },
                     "insert": {
+                        "foto": "string",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
                     }

@@ -52,7 +52,8 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   console.log(db_array);
 
-  let apiDoc = new ApiDoc('192.168.100.7','9988');
+  //let apiDoc = new ApiDoc('192.168.100.7','9988');
+  let apiDoc = new ApiDoc('172.20.50.67','9988');
 
 
   db_array.forEach((db_var) => {
