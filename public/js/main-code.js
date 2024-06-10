@@ -438,6 +438,8 @@ function saveDBs(data){
             setTimeout ( () => {
                 editorUml.setValue(toPlants(data_db));
                 generarPlant(toPlants(data_db));
+				document.getElementById('iframeEas').src += '';
+				//document.getElementById('iframeEas').contentWindow.location.reload();
                 toListSpring(data_db);
                 toList(data_db);
              } , 1000);
@@ -446,10 +448,10 @@ function saveDBs(data){
 
 function generarPlant(valor){
     $.ajax({ 
-        url:"http://172.20.50.60:9797/plant",  data: {texto:valor}, method: 'POST' })
+        url:"http://192.168.100.7:9797/plant",  data: {texto:valor}, method: 'POST' })
             .done(function (data) {
                 console.log("generarPlant",data);
-                $(".diagramImg").attr("src","http://172.20.50.60:9797/"+data);
+                $(".diagramImg").attr("src","http://192.168.100.7:9797/"+data);
 
             }
     );

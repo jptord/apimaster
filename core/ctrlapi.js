@@ -554,7 +554,14 @@ class CtrlApi{
                         pagination: { pages : 0, rowsNumber: 0 }
                     };
                     let f = me.toFields(group.data[api.in]);
-                    let v = me.toValues(group.data[api.in],me.contentASnakeCase(req.body));
+					console.log("req",req);
+					console.log("req.body",req.body);
+					console.log("me.contentASnakeCase(req.body):",me.contentASnakeCase(req.body));
+					let v;
+					if (Object.keys(req.body).length === 0)
+						v = me.toValues(group.data[api.in],me.contentASnakeCase(req.query));
+					else
+                    	v = me.toValues(group.data[api.in],me.contentASnakeCase(req.body));
                     console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
                     let db_data = me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();                    
                     respuesta.content = req.body;

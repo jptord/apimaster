@@ -24,7 +24,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb'}));
-app.use(bodyParser.urlencoded({ extended: true,parameterLimit: 100000, dlimit: '50mb' }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+//app.use(bodyParser.urlencoded({ extended: true,parameterLimit: 100000, dlimit: '50mb' }));
 //app.use(express.multipart());
 //app.use(express.bodyParser());
 app.use("/", express.static(public));
@@ -50,12 +52,13 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   console.log(db_array);
 
-  let apiDoc = new ApiDoc('172.20.50.148','9988');
+  let apiDoc = new ApiDoc('192.168.100.7','9988');
 
 
   db_array.forEach((db_var) => {
     let ctrlapi = new CtrlApi(db_var, db_array);
     console.log(`use /${ctrlapi.dbData.db}/`);
+	
     app.use(`/${ctrlapi.dbData.db}`, ctrlapi.publicar());
     const swaggerDocument = apiDoc.generarDoc(db_var);
     var options = { explorer: true };
