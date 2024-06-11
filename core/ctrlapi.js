@@ -135,9 +135,11 @@ class CtrlApi{
             let f = me.toFields(relGroup.data['select']);          
             //console.log("relGroup.f ",f);
             let res_temp = me.database.db.prepare(`select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) `).all();
-            //console.log("res_temp ",res_temp);
+            console.log("res_temp ",res_temp);
             content.forEach(cc => {                
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
+				console.log("cc[r.name] ",cc[r.name]);
+				console.log("r.array ",r.array);
                 me.appendSubquerys(cc[r.name],f);
                 if (!r.array)
                     cc[r.name] = cc[r.name].length>0?cc[r.name][0]:null;
@@ -330,7 +332,8 @@ class CtrlApi{
         return texto;
     }
     
-    contentACamelCase(respuesta,pos='A'){
+    contentACamelCase(respuesta,pos='A'){	/// java o angular
+		return respuesta;
         let me = this;        
         let camel_data = [];
         if (respuesta.content == null) return null;
@@ -343,11 +346,11 @@ class CtrlApi{
                     //data_fields[me.convertirACamel(f)] = data[f];
                     console.log("data[f]",data[f]);
                     console.log("isObject", typeof data[f] === 'object');
-                    console.log("isArray", Array.isArray(data[f]) === 'object');
+                    console.log("isArray", Array.isArray(data[f]));
                     let isArray = Array.isArray(data[f]);
                     let isObject = typeof data[f] === 'object';
                     let isNull = data[f] === null;
-                    if ( !isNull && isObject )
+                    if ( !isNull && isObject && !isArray)
                         data_fields[me.convertirACamel(f)] = me.contentACamelCase({"content" :data[f]},'OBJ');
                     else if ( !isNull && isArray )
                         data_fields[me.convertirACamel(f)] = me.contentACamelCase({"content" :data[f]},'ARR');
@@ -482,11 +485,13 @@ class CtrlApi{
                             }
                         }
                         if (size > 0) respuesta.content = respuesta.content.slice(offset,offset+size);
-                        
+                        console.log(" ----- NOT HERE -----");
                     }else{
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
+						console.log(" ----- HERE -----");
                         me.appendSubquerys(respuesta.content,group.data[api.out]);
+						console.log(" ----- HERE -----",respuesta.content);
                     }
                     me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));

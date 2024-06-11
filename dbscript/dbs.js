@@ -132,6 +132,17 @@
                     {
                         "name": "estado",
                         "value": "string"
+                    },
+                    {
+                        "name": "asignaciones",
+                        "value": "[[asignaciones|personal_id|id]]",
+                        "rel": {
+                            "index": "asignaciones",
+                            "name": "asignaciones",
+                            "field": "personal_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "seeder": [
@@ -182,6 +193,46 @@
                         "in": null,
                         "type": "auto",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":personal_id/asignaciones",
+                        "in": null,
+                        "rel": "[[asignaciones|personal_id|id]]",
+                        "type": "rel",
+                        "out": "select_asignaciones"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":personal_id/asignaciones/:id",
+                        "in": null,
+                        "rel": "[[asignaciones|personal_id|id]]",
+                        "type": "rel",
+                        "out": "select_asignaciones"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":personal_id/asignaciones",
+                        "in": "insert_asignaciones",
+                        "rel": "[[asignaciones|personal_id|id]]",
+                        "type": "rel",
+                        "out": "select_asignaciones"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":personal_id/asignaciones/:id",
+                        "in": "insert_asignaciones",
+                        "rel": "[[asignaciones|personal_id|id]]",
+                        "type": "rel",
+                        "out": "select_asignaciones"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":personal_id/asignaciones/:id",
+                        "in": null,
+                        "rel": "[[asignaciones|personal_id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
@@ -190,20 +241,49 @@
                         "nombre": "string",
                         "codigo": "string",
                         "foto": "string",
-                        "estado": "string"
+                        "estado": "string",
+                        "asignaciones": "[[asignaciones|personal_id|id]]"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "nombre": "string",
                         "codigo": "string",
                         "foto": "string",
-                        "estado": "string"
+                        "estado": "string",
+                        "asignaciones": "[[asignaciones|personal_id|id]]"
                     },
                     "insert": {
                         "nombre": "string",
                         "codigo": "string",
                         "foto": "string",
-                        "estado": "string"
+                        "estado": "string",
+                        "asignaciones": "[[asignaciones|personal_id|id]]"
+                    },
+                    "select_asignaciones": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "ruta_id": "number",
+                        "ruta": "[rutas|id|ruta_id]",
+                        "fecha_desde": "date",
+                        "fecha_hasta": "date"
+                    },
+                    "create_asignaciones": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "ruta_id": "number",
+                        "ruta": "[rutas|id|ruta_id]",
+                        "fecha_desde": "date",
+                        "fecha_hasta": "date"
+                    },
+                    "insert_asignaciones": {
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "ruta_id": "number",
+                        "ruta": "[rutas|id|ruta_id]",
+                        "fecha_desde": "date",
+                        "fecha_hasta": "date"
                     }
                 }
             },
