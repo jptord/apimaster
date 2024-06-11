@@ -21,7 +21,7 @@ var public = path.join(__dirname, "public");
 
 app.use(cors());
 //app.use(express.bodyParser({limit: '50mb'}))
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(express.json({limit: '25mb'}));
 app.use(express.urlencoded({limit: '25mb'}));
 app.use(bodyParser.json({limit: '50mb'}));
@@ -59,6 +59,11 @@ fs.readdirSync(dbscript).forEach((file) => {
     let ctrlapi = new CtrlApi(db_var, db_array);
     console.log(`use /${ctrlapi.dbData.db}/`);
 	
+	
+app.use(express.json({limit: '25mb'}));
+app.use(express.urlencoded({limit: '25mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
     app.use(`/${ctrlapi.dbData.db}`, ctrlapi.publicar());
     const swaggerDocument = apiDoc.generarDoc(db_var);
     var options = { explorer: true };
