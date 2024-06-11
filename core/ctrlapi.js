@@ -566,6 +566,15 @@ class CtrlApi{
                     let db_data = me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();                    
                     respuesta.content = req.body;
                     respuesta.content.id = db_data.lastInsertRowid;
+
+					//let rs = me.database.db.executeQuery("SELECT last_insert_rowid() as id;");					
+					let resultLast = me.database.db.prepare("SELECT last_insert_rowid() as id;").all();
+					let idIndex = resultLast[0]['id'];
+					//rs1 = me.database.db.executeQuery(`SELECT id FROM ${group.name} WHERE ROWID = ${idIndex}"`);
+					console.log("autoApiGen.POST:" + `SELECT id FROM ${group.name} WHERE ROWID = ${idIndex}`);
+					let resultLastId = me.database.db.prepare(`SELECT id FROM ${group.name} WHERE ROWID = ${idIndex}`).all();
+					let iduuid = resultLastId[0]['id'];
+					respuesta.content.id = iduuid ;
                     me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));
                     //res.end(f);
