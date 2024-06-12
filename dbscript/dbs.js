@@ -309,6 +309,7 @@
                         "fecha_hasta": "date"
                     },
                     "custom_descargar_asignaciones": {
+                        "id": "uuid|pk",
                         "personal_id": "number",
                         "ruta_id": "number",
                         "fecha_desde": "date",
@@ -548,30 +549,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "descargar",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,min_split_mt,max_split_mt,distancia"
-                    },
-                    {
-                        "method": "get",
                         "route": "descargar2",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
+                    },
+                    {
+                        "method": "get",
+                        "route": "descargar",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,min_split_mt,max_split_mt,distancia"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar2",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar2"
-                    },
                     {
                         "method": "GET",
                         "route": "descargar",
@@ -579,6 +572,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_descargar"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "descargar2",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_descargar2"
                     },
                     {
                         "method": "GET",
@@ -640,13 +641,6 @@
                         "max_split_mt": "number",
                         "distancia": "number"
                     },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distancia": "number"
-                    },
                     "custom_descargar2": {
                         "id": "uuid|pk",
                         "nombre": "string",
@@ -654,6 +648,13 @@
                         "max_split_mt": "number",
                         "distancia": "number",
                         "thumb": "string"
+                    },
+                    "custom_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distancia": "number"
                     }
                 }
             },
@@ -829,7 +830,7 @@
                         "query": "",
                         "in": "",
                         "type": "custom",
-                        "out": "personal_id,ruta_id,fecha_desde,fecha_hasta"
+                        "out": "id,personal_id,ruta_id,fecha_desde,fecha_hasta"
                     }
                 ],
                 "apis": [
@@ -905,6 +906,7 @@
                         "fecha_hasta": "date"
                     },
                     "custom_descargar": {
+                        "id": "uuid|pk",
                         "personal_id": "number",
                         "ruta_id": "number",
                         "fecha_desde": "date",
