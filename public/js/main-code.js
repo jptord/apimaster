@@ -740,20 +740,21 @@ function getAllApis(group,customApi){
             query:  api.query,
             in:     api.in?api.in:null,
             type:   api.type?api.type:'custom',
-            out:    api.out?api.out:null,
+            out:    api.out?searchDataInverse(group,api, api.out):null,
         });
     } );
     return apis;
 }
 
-function apiCustomFormat(value){
+function apiCustomFormat( value){
+    
     let apiCustom = [];
     let options = value.split("|");
     let objapi = {};
     options.forEach(op => {
         let values = op.trim().split("=");
         objapi[values[0].trim()] = values[1].trim();
-        objapi[values[0].trim()] = values[1].trim();
+        //objapi[values[0].trim()] = values[1].trim();
         //apiCustom.push(objapi);
     });
     return objapi;
@@ -971,18 +972,61 @@ function toHuman(dbs){
             data_apis.forEach(api => {
                 if(api.type=="custom"){
                     let custom_api_array = [];
-                    Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':api[k]}` ));                
+                    Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':searchData(group,k,api[k])}` ));                
+                    //console.log("custom_api_array[custom_api_array.length-1]",custom_api_array[custom_api_array.length-1]);
+                    //custom_api_array[custom_api_array.length-1] = searchData(group,custom_api_array[custom_api_array.length-1]);
+                    //console.log("@custom_api_array[custom_api_array.length-1]",custom_api_array[custom_api_array.length-1]);
                     apis_custom.push(`\n\t\t\t[api]:${custom_api_array.join("|")}`);
                 }
-            });            
+            });
             
-            testX += apis_custom.join("");
-            
+            /*  PENDIENTE PARA AGREGAR DATOS CUSTOM
+            let data_custom = Object.keys(group.data).filter( k => !(['select','create','insert'].includes(k)));            
+            let campos_extra = [];
+            data_custom.forEach( d =>{
+                campos_extra.push(`\n\t\t\t[${d}]:${group.data[d]}`);
+            });
+            testX += campos_extra.join("");
+            */
+            testX += apis_custom.join("");            
             testX += `\n\n`;             
         });
     });
 
     return testX;
+}
+function searchData(group, key, apiValue){
+    //let regOut = /(?<=out=)\w+/g;
+    //let valueOut = apiValue.match(regOut); 
+    
+    if (key != "out") return apiValue;
+    let selectData = Object.keys(group.data).filter( k=> k == apiValue );
+    let fieldNames = [];
+    console.log("apiValue",apiValue);
+    
+    if (selectData.length != 0){
+        console.log("selectData[]",selectData);
+        selectData = selectData[0];
+        console.log("selectData",selectData);
+        console.log("group.data[selectData]",group.data[selectData]);
+        Object.keys(group.data[selectData]).forEach(k => {fieldNames.push(k)});
+    }
+        
+    console.log("searchData.fieldNames",fieldNames.join(''));
+    return fieldNames.join(',');
+}
+function searchDataInverse(group, api, api_out){
+    let data_name = `custom_${api.route}`;
+    group.data[data_name] = {}
+    api_out.split(",").forEach(field_custom => {
+        let field_type = group.data.select[field_custom];
+        console.log("field_type",field_type);
+        group.data[data_name][field_custom] = field_type;
+    })
+    //group.data[data_name] = 
+
+    return data_name;
+    
 }
 
 function  toPlant(db){

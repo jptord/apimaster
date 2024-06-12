@@ -165,8 +165,7 @@
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,codigo,estado"
-                    }
-                ],
+                    }    ],
                 "apis": [
                     {
                         "method": "GET",
@@ -174,7 +173,7 @@
                         "query": "",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_descargar"
+                        "out": "select_descargar"
                     },
                     {
                         "method": "GET",
@@ -253,6 +252,12 @@
                     }
                 ],
                 "data": {
+                    "select_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "codigo": "string",
+                        "estado": "string"
+                    },
                     "select": {
                         "id": "uuid|pk",
                         "nombre": "string",
@@ -275,12 +280,6 @@
                         "foto": "string",
                         "estado": "string",
                         "asignaciones": "[[asignaciones|personal_id|id]]"
-                    },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "codigo": "string",
-                        "estado": "string"
                     },
                     "select_asignaciones": {
                         "id": "uuid|pk",
@@ -305,12 +304,6 @@
                         "personal": "[personal|id|personal_id]",
                         "ruta_id": "number",
                         "ruta": "[rutas|id|ruta_id]",
-                        "fecha_desde": "date",
-                        "fecha_hasta": "date"
-                    },
-                    "custom_descargar_asignaciones": {
-                        "personal_id": "number",
-                        "ruta_id": "number",
                         "fecha_desde": "date",
                         "fecha_hasta": "date"
                     }
@@ -545,41 +538,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "get",
-                        "route": "descargar",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,min_split_mt,max_split_mt,distancia"
-                    },
-                    {
-                        "method": "get",
-                        "route": "descargar2",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar2",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar2"
-                    },
-                    {
-                        "method": "GET",
-                        "route": "descargar",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -639,21 +599,6 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distancia": "number"
-                    },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distancia": "number"
-                    },
-                    "custom_descargar2": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distancia": "number",
-                        "thumb": "string"
                     }
                 }
             },
@@ -690,25 +635,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "get",
-                        "route": "descargar",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,ruta_id,lat,lon"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -763,12 +691,6 @@
                     "insert": {
                         "ruta_id": "number",
                         "ruta": "[rutas|id|ruta_id]",
-                        "lat": "number",
-                        "lon": "number"
-                    },
-                    "custom_descargar": {
-                        "id": "number|pk",
-                        "ruta_id": "number",
                         "lat": "number",
                         "lon": "number"
                     }
@@ -822,25 +744,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "get",
-                        "route": "descargar",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "personal_id,ruta_id,fecha_desde,fecha_hasta"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -901,12 +806,6 @@
                         "personal": "[personal|id|personal_id]",
                         "ruta_id": "number",
                         "ruta": "[rutas|id|ruta_id]",
-                        "fecha_desde": "date",
-                        "fecha_hasta": "date"
-                    },
-                    "custom_descargar": {
-                        "personal_id": "number",
-                        "ruta_id": "number",
                         "fecha_desde": "date",
                         "fecha_hasta": "date"
                     }

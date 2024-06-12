@@ -417,7 +417,8 @@ class CtrlApi{
     buildQueryApi(findcondition, api_query, req_query){
         //let regParam = /\:[a-zA-Z\_\-]+/g;
         //let getParamApi = api.route.match(regParam);
-        if (api_query===undefined) return findcondition;
+        if (api_query===undefined || req_query=="") return findcondition;
+        if (req_query===undefined || req_query=="") return findcondition;
         let api_query_array = api_query.split(",");
         let where_array = []; 
         api_query_array.forEach( query => {
@@ -426,10 +427,11 @@ class CtrlApi{
         });
         let sql_conditions = where_array.join(" AND ");
         console.log("sql_conditions", sql_conditions);
+        console.log("findcondition", findcondition);
         if (findcondition.includes("WHERE"))
             return `${findcondition} ${sql_conditions}`;
         else
-            return `WHERE ${findcondition} ${sql_conditions}`;
+            return `WHERES ${findcondition} ${sql_conditions}`;
     }
     autoApiGen(group){
         var me = this;        
@@ -453,8 +455,9 @@ class CtrlApi{
                     //console.log("getParamApi",getParamApi);
                     console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
-                        findcondition = ` WHERE ${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;
-                    
+                        findcondition = ` WHERE ${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;                    
+                        
+
                         findcondition = me.buildQueryApi(findcondition, api.query, req.query);//` WHERE ${api.query.replace(":","")} = '${req.query[api.query]}'`;
                         
                         console.log("---- findcondition:", findcondition);
