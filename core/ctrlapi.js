@@ -431,7 +431,7 @@ class CtrlApi{
         if (findcondition.includes("WHERE"))
             return `${findcondition} ${sql_conditions}`;
         else
-            return `WHERES ${findcondition} ${sql_conditions}`;
+            return `WHERE ${findcondition} ${sql_conditions}`;
     }
     autoApiGen(group){
         var me = this;        

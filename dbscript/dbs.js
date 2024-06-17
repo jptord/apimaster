@@ -165,9 +165,25 @@
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,codigo,estado"
+                    },
+                    {
+                        "method": "get",
+                        "route": "applogin",
+                        "query": "codigo",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,codigo,foto,estado"
                     }
                 ],
                 "apis": [
+                    {
+                        "method": "GET",
+                        "route": "applogin",
+                        "query": "codigo",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_applogin"
+                    },
                     {
                         "method": "GET",
                         "route": "descargar",
@@ -280,6 +296,13 @@
                         "id": "uuid|pk",
                         "nombre": "string",
                         "codigo": "string",
+                        "estado": "string"
+                    },
+                    "custom_applogin": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "codigo": "string",
+                        "foto": "string",
                         "estado": "string"
                     },
                     "select_asignaciones": {
@@ -549,30 +572,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "descargar2",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
-                    },
-                    {
-                        "method": "get",
                         "route": "descargar",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,min_split_mt,max_split_mt,distancia"
+                    },
+                    {
+                        "method": "get",
+                        "route": "descargar2",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar"
-                    },
                     {
                         "method": "GET",
                         "route": "descargar2",
@@ -580,6 +595,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_descargar2"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "descargar",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_descargar"
                     },
                     {
                         "method": "GET",
@@ -641,6 +664,13 @@
                         "max_split_mt": "number",
                         "distancia": "number"
                     },
+                    "custom_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distancia": "number"
+                    },
                     "custom_descargar2": {
                         "id": "uuid|pk",
                         "nombre": "string",
@@ -648,13 +678,6 @@
                         "max_split_mt": "number",
                         "distancia": "number",
                         "thumb": "string"
-                    },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distancia": "number"
                     }
                 }
             },
