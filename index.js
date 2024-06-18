@@ -393,6 +393,9 @@ function split (thing) {
   }
 }
 
+app.get("/connection", (req,res) => {
+	res.end(`{"response":"ok"}`);
+});
 
 app.get("/getroutes", (req,res) => {
   printroutes = [];
