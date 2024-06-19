@@ -427,7 +427,8 @@ class CtrlApi{
         });
         let sql_conditions = where_array.join(" AND ");
         console.log("sql_conditions", sql_conditions);
-        console.log("findcondition", findcondition);
+        console.log("buildQueryApi.findcondition", findcondition);
+		if (sql_conditions == "") return `${findcondition} ${sql_conditions}`;
         if (findcondition.includes("WHERE"))
             return `${findcondition} ${sql_conditions}`;
         else
