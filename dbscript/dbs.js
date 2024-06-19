@@ -160,30 +160,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "descargar",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,codigo,estado"
-                    },
-                    {
-                        "method": "get",
                         "route": "applogin",
                         "query": "codigo",
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,codigo,foto,estado"
+                    },
+                    {
+                        "method": "get",
+                        "route": "descargar",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,codigo,estado"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "applogin",
-                        "query": "codigo",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_applogin"
-                    },
                     {
                         "method": "GET",
                         "route": "descargar",
@@ -191,6 +183,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_descargar"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "applogin",
+                        "query": "codigo",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_applogin"
                     },
                     {
                         "method": "GET",
@@ -292,17 +292,17 @@
                         "estado": "string",
                         "asignaciones": "[[asignaciones|personal_id|id]]"
                     },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "codigo": "string",
-                        "estado": "string"
-                    },
                     "custom_applogin": {
                         "id": "uuid|pk",
                         "nombre": "string",
                         "codigo": "string",
                         "foto": "string",
+                        "estado": "string"
+                    },
+                    "custom_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "codigo": "string",
                         "estado": "string"
                     },
                     "select_asignaciones": {
@@ -331,12 +331,13 @@
                         "fecha_desde": "date",
                         "fecha_hasta": "date"
                     },
-                    "custom_descargar_asignaciones": {
+                    "custom_porpersonal_asignaciones": {
                         "id": "uuid|pk",
                         "personal_id": "number",
                         "ruta_id": "number",
                         "fecha_desde": "date",
-                        "fecha_hasta": "date"
+                        "fecha_hasta": "date",
+                        "ruta": "[rutas|id|ruta_id]"
                     }
                 }
             },
@@ -566,18 +567,21 @@
                     {
                         "name": "distancia",
                         "value": "number"
+                    },
+                    {
+                        "name": "puntos",
+                        "value": "[[puntos|ruta_id|id]]",
+                        "rel": {
+                            "index": "puntos",
+                            "name": "puntos",
+                            "field": "ruta_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "seeder": [],
                 "apicustom": [
-                    {
-                        "method": "get",
-                        "route": "descargar",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,min_split_mt,max_split_mt,distancia"
-                    },
                     {
                         "method": "get",
                         "route": "descargar2",
@@ -585,17 +589,17 @@
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
+                    },
+                    {
+                        "method": "get",
+                        "route": "descargar",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,min_split_mt,max_split_mt,distancia"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar2",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar2"
-                    },
                     {
                         "method": "GET",
                         "route": "descargar",
@@ -603,6 +607,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_descargar"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "descargar2",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_descargar2"
                     },
                     {
                         "method": "GET",
@@ -638,6 +650,46 @@
                         "in": null,
                         "type": "auto",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":ruta_id/puntos",
+                        "in": null,
+                        "rel": "[[puntos|ruta_id|id]]",
+                        "type": "rel",
+                        "out": "select_puntos"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":ruta_id/puntos/:id",
+                        "in": null,
+                        "rel": "[[puntos|ruta_id|id]]",
+                        "type": "rel",
+                        "out": "select_puntos"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":ruta_id/puntos",
+                        "in": "insert_puntos",
+                        "rel": "[[puntos|ruta_id|id]]",
+                        "type": "rel",
+                        "out": "select_puntos"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":ruta_id/puntos/:id",
+                        "in": "insert_puntos",
+                        "rel": "[[puntos|ruta_id|id]]",
+                        "type": "rel",
+                        "out": "select_puntos"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":ruta_id/puntos/:id",
+                        "in": null,
+                        "rel": "[[puntos|ruta_id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
@@ -647,7 +699,8 @@
                         "thumb": "string",
                         "min_split_mt": "number",
                         "max_split_mt": "number",
-                        "distancia": "number"
+                        "distancia": "number",
+                        "puntos": "[[puntos|ruta_id|id]]"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -655,21 +708,16 @@
                         "thumb": "string",
                         "min_split_mt": "number",
                         "max_split_mt": "number",
-                        "distancia": "number"
+                        "distancia": "number",
+                        "puntos": "[[puntos|ruta_id|id]]"
                     },
                     "insert": {
                         "nombre": "string",
                         "thumb": "string",
                         "min_split_mt": "number",
                         "max_split_mt": "number",
-                        "distancia": "number"
-                    },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distancia": "number"
+                        "distancia": "number",
+                        "puntos": "[[puntos|ruta_id|id]]"
                     },
                     "custom_descargar2": {
                         "id": "uuid|pk",
@@ -678,6 +726,36 @@
                         "max_split_mt": "number",
                         "distancia": "number",
                         "thumb": "string"
+                    },
+                    "custom_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distancia": "number"
+                    },
+                    "select_puntos": {
+                        "id": "number|pk",
+                        "ruta_id": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "create_puntos": {
+                        "id": "number|pk",
+                        "ruta_id": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "insert_puntos": {
+                        "ruta_id": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "custom_descargar_puntos": {
+                        "id": "number|pk",
+                        "ruta_id": "number",
+                        "lat": "number",
+                        "lon": "number"
                     }
                 }
             },
@@ -692,17 +770,6 @@
                     {
                         "name": "ruta_id",
                         "value": "number"
-                    },
-                    {
-                        "name": "ruta",
-                        "value": "[rutas|id|ruta_id]",
-                        "rel": {
-                            "index": "ruta",
-                            "name": "rutas",
-                            "field": "id",
-                            "ownfield": "ruta_id",
-                            "array": false
-                        }
                     },
                     {
                         "name": "lat",
@@ -773,20 +840,17 @@
                     "select": {
                         "id": "number|pk",
                         "ruta_id": "number",
-                        "ruta": "[rutas|id|ruta_id]",
                         "lat": "number",
                         "lon": "number"
                     },
                     "create": {
                         "id": "number|pk",
                         "ruta_id": "number",
-                        "ruta": "[rutas|id|ruta_id]",
                         "lat": "number",
                         "lon": "number"
                     },
                     "insert": {
                         "ruta_id": "number",
-                        "ruta": "[rutas|id|ruta_id]",
                         "lat": "number",
                         "lon": "number"
                     },
@@ -849,21 +913,21 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "descargar",
-                        "query": "",
+                        "route": "porpersonal",
+                        "query": "personal_id",
                         "in": "",
                         "type": "custom",
-                        "out": "id,personal_id,ruta_id,fecha_desde,fecha_hasta"
+                        "out": "id,personal_id,ruta_id,fecha_desde,fecha_hasta,ruta"
                     }
                 ],
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "descargar",
-                        "query": "",
+                        "route": "porpersonal",
+                        "query": "personal_id",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_descargar"
+                        "out": "custom_porpersonal"
                     },
                     {
                         "method": "GET",
@@ -928,12 +992,13 @@
                         "fecha_desde": "date",
                         "fecha_hasta": "date"
                     },
-                    "custom_descargar": {
+                    "custom_porpersonal": {
                         "id": "uuid|pk",
                         "personal_id": "number",
                         "ruta_id": "number",
                         "fecha_desde": "date",
-                        "fecha_hasta": "date"
+                        "fecha_hasta": "date",
+                        "ruta": "[rutas|id|ruta_id]"
                     }
                 }
             },
