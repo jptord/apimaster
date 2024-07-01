@@ -240,7 +240,8 @@ class CtrlApi{
                                 haveUuid = true;
                                 uuid = c;
                             }
-                            fieldsArr.push(colInsert);
+                            if (!fieldsArr.includes(c,group.data.create[c]))
+                                fieldsArr.push(colInsert);
                         });
                         let fieldStr = fieldsArr.join(",");
                         console.log("fieldStr:",fieldStr);

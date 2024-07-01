@@ -350,10 +350,6 @@
                         "value": "uuid|pk"
                     },
                     {
-                        "name": "info_deviceid",
-                        "value": "string"
-                    },
-                    {
                         "name": "info_brand",
                         "value": "string"
                     },
@@ -418,14 +414,6 @@
                         "value": "number"
                     },
                     {
-                        "name": "config_photomin",
-                        "value": "number"
-                    },
-                    {
-                        "name": "config_photomax",
-                        "value": "number"
-                    },
-                    {
                         "name": "registred",
                         "value": "boolean"
                     },
@@ -484,7 +472,6 @@
                 "data": {
                     "select": {
                         "id": "uuid|pk",
-                        "info_deviceid": "string",
                         "info_brand": "string",
                         "info_device": "string",
                         "info_manufacturer": "string",
@@ -501,8 +488,6 @@
                         "config_servertrack": "string",
                         "config_trackcapture": "number",
                         "config_updatestatus": "number",
-                        "config_photomin": "number",
-                        "config_photomax": "number",
                         "registred": "boolean",
                         "registred_date": "date",
                         "last_connect": "date",
@@ -510,7 +495,6 @@
                     },
                     "create": {
                         "id": "uuid|pk",
-                        "info_deviceid": "string",
                         "info_brand": "string",
                         "info_device": "string",
                         "info_manufacturer": "string",
@@ -527,15 +511,12 @@
                         "config_servertrack": "string",
                         "config_trackcapture": "number",
                         "config_updatestatus": "number",
-                        "config_photomin": "number",
-                        "config_photomax": "number",
                         "registred": "boolean",
                         "registred_date": "date",
                         "last_connect": "date",
                         "first_connect": "date"
                     },
                     "insert": {
-                        "info_deviceid": "string",
                         "info_brand": "string",
                         "info_device": "string",
                         "info_manufacturer": "string",
@@ -552,8 +533,6 @@
                         "config_servertrack": "string",
                         "config_trackcapture": "number",
                         "config_updatestatus": "number",
-                        "config_photomin": "number",
-                        "config_photomax": "number",
                         "registred": "boolean",
                         "registred_date": "date",
                         "last_connect": "date",
@@ -1087,25 +1066,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1180,9 +1142,6 @@
                         "inicio_lon": "number",
                         "fin_lat": "number",
                         "fin_lon": "number"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
                     }
                 }
             },
@@ -1318,25 +1277,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1402,9 +1344,6 @@
                         "lon": "number",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
                     }
                 }
             },
@@ -1433,14 +1372,6 @@
                         "value": "string"
                     },
                     {
-                        "name": "lat",
-                        "value": "number"
-                    },
-                    {
-                        "name": "lon",
-                        "value": "number"
-                    },
-                    {
                         "name": "sesion_id",
                         "value": "number"
                     },
@@ -1457,25 +1388,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1519,8 +1433,6 @@
                         "descripcion": "string",
                         "fechahora": "date",
                         "foto": "string",
-                        "lat": "number",
-                        "lon": "number",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
                     },
@@ -1530,8 +1442,6 @@
                         "descripcion": "string",
                         "fechahora": "date",
                         "foto": "string",
-                        "lat": "number",
-                        "lon": "number",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
                     },
@@ -1540,13 +1450,8 @@
                         "descripcion": "string",
                         "fechahora": "date",
                         "foto": "string",
-                        "lat": "number",
-                        "lon": "number",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
                     }
                 }
             },
@@ -1597,18 +1502,6 @@
                         "value": "date"
                     },
                     {
-                        "name": "abandoned",
-                        "value": "boolean"
-                    },
-                    {
-                        "name": "comments",
-                        "value": "string"
-                    },
-                    {
-                        "name": "complete",
-                        "value": "number"
-                    },
-                    {
                         "name": "rutab64",
                         "value": "string"
                     },
@@ -1618,25 +1511,8 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
+                "apicustom": [],
                 "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1682,9 +1558,6 @@
                         "sesion": "[sesion|id|sesion_id]",
                         "inicio": "date",
                         "fin": "date",
-                        "abandoned": "boolean",
-                        "comments": "string",
-                        "complete": "number",
                         "rutab64": "string",
                         "trackb64": "string"
                     },
@@ -1696,9 +1569,6 @@
                         "sesion": "[sesion|id|sesion_id]",
                         "inicio": "date",
                         "fin": "date",
-                        "abandoned": "boolean",
-                        "comments": "string",
-                        "complete": "number",
                         "rutab64": "string",
                         "trackb64": "string"
                     },
@@ -1709,14 +1579,8 @@
                         "sesion": "[sesion|id|sesion_id]",
                         "inicio": "date",
                         "fin": "date",
-                        "abandoned": "boolean",
-                        "comments": "string",
-                        "complete": "number",
                         "rutab64": "string",
                         "trackb64": "string"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
                     }
                 }
             }
