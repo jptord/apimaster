@@ -555,7 +555,7 @@ class CtrlApi{
                     res.end(JSON.stringify(respuesta));
                 });
             }
-            if (api.method == "POST" && api.type == "auto"){
+            if (api.method == "POST" && (api.type == "auto" || api.type == "custom" )){
                 console.log(`route ${api.type} POST /${group.alias===undefined?group.name:group.alias}${api.route}`);
                 router.post(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
                     res.setHeader('Content-Type', 'application/json');
@@ -571,14 +571,24 @@ class CtrlApi{
 						v = me.toValues(group.data[api.in],me.contentASnakeCase(req.query));
 					else
                     	v = me.toValues(group.data[api.in],me.contentASnakeCase(req.body));
-                    console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);
-                    let db_data = me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();                    
-                    respuesta.content = req.body;
-                    respuesta.content.id = db_data.lastInsertRowid;
-
-					//let rs = me.database.db.executeQuery("SELECT last_insert_rowid() as id;");					
-					let resultLast = me.database.db.prepare("SELECT last_insert_rowid() as id;").all();
-					let idIndex = resultLast[0]['id'];
+					
+					let idIndex ="";
+					try{
+						console.log(`INSERT INTO  ${group.name} (${f}) values (${v})`);					
+						let db_data = me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${v})`).run();                    
+						respuesta.content = req.body;
+						respuesta.content.id = db_data.lastInsertRowid;
+						//let rs = me.database.db.executeQuery("SELECT last_insert_rowid() as id;");					
+						let resultLast = me.database.db.prepare("SELECT last_insert_rowid() as id;").all();
+						idIndex = resultLast[0]['id'];
+					}catch(e){						
+						console.log("ctrlapi.post.catch ",e);
+						respuesta.content = req.body ;
+						respuesta.content['id'] = -1;
+						me.contentACamelCase(respuesta);
+						res.end(JSON.stringify(respuesta));
+						return;
+					}
 					//rs1 = me.database.db.executeQuery(`SELECT id FROM ${group.name} WHERE ROWID = ${idIndex}"`);
 					console.log("autoApiGen.POST:" + `SELECT id FROM ${group.name} WHERE ROWID = ${idIndex}`);
 					let resultLastId = me.database.db.prepare(`SELECT id FROM ${group.name} WHERE ROWID = ${idIndex}`).all();

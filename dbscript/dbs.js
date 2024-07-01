@@ -160,30 +160,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "applogin",
-                        "query": "codigo",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,codigo,foto,estado"
-                    },
-                    {
-                        "method": "get",
                         "route": "descargar",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,codigo,estado"
+                    },
+                    {
+                        "method": "get",
+                        "route": "applogin",
+                        "query": "codigo",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,codigo,foto,estado"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar"
-                    },
                     {
                         "method": "GET",
                         "route": "applogin",
@@ -191,6 +183,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_applogin"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "descargar",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_descargar"
                     },
                     {
                         "method": "GET",
@@ -292,17 +292,17 @@
                         "estado": "string",
                         "asignaciones": "[[asignaciones|personal_id|id]]"
                     },
+                    "custom_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "codigo": "string",
+                        "estado": "string"
+                    },
                     "custom_applogin": {
                         "id": "uuid|pk",
                         "nombre": "string",
                         "codigo": "string",
                         "foto": "string",
-                        "estado": "string"
-                    },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "codigo": "string",
                         "estado": "string"
                     },
                     "select_asignaciones": {
@@ -348,6 +348,10 @@
                     {
                         "name": "id",
                         "value": "uuid|pk"
+                    },
+                    {
+                        "name": "info_deviceid",
+                        "value": "string"
                     },
                     {
                         "name": "info_brand",
@@ -414,6 +418,14 @@
                         "value": "number"
                     },
                     {
+                        "name": "config_photomin",
+                        "value": "number"
+                    },
+                    {
+                        "name": "config_photomax",
+                        "value": "number"
+                    },
+                    {
                         "name": "registred",
                         "value": "boolean"
                     },
@@ -472,6 +484,7 @@
                 "data": {
                     "select": {
                         "id": "uuid|pk",
+                        "info_deviceid": "string",
                         "info_brand": "string",
                         "info_device": "string",
                         "info_manufacturer": "string",
@@ -488,6 +501,8 @@
                         "config_servertrack": "string",
                         "config_trackcapture": "number",
                         "config_updatestatus": "number",
+                        "config_photomin": "number",
+                        "config_photomax": "number",
                         "registred": "boolean",
                         "registred_date": "date",
                         "last_connect": "date",
@@ -495,6 +510,7 @@
                     },
                     "create": {
                         "id": "uuid|pk",
+                        "info_deviceid": "string",
                         "info_brand": "string",
                         "info_device": "string",
                         "info_manufacturer": "string",
@@ -511,12 +527,15 @@
                         "config_servertrack": "string",
                         "config_trackcapture": "number",
                         "config_updatestatus": "number",
+                        "config_photomin": "number",
+                        "config_photomax": "number",
                         "registred": "boolean",
                         "registred_date": "date",
                         "last_connect": "date",
                         "first_connect": "date"
                     },
                     "insert": {
+                        "info_deviceid": "string",
                         "info_brand": "string",
                         "info_device": "string",
                         "info_manufacturer": "string",
@@ -533,6 +552,8 @@
                         "config_servertrack": "string",
                         "config_trackcapture": "number",
                         "config_updatestatus": "number",
+                        "config_photomin": "number",
+                        "config_photomax": "number",
                         "registred": "boolean",
                         "registred_date": "date",
                         "last_connect": "date",
@@ -584,30 +605,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "descargar2",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
-                    },
-                    {
-                        "method": "get",
                         "route": "descargar",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,nombre,min_split_mt,max_split_mt,distancia"
+                    },
+                    {
+                        "method": "get",
+                        "route": "descargar2",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,nombre,min_split_mt,max_split_mt,distancia,thumb"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "descargar",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_descargar"
-                    },
                     {
                         "method": "GET",
                         "route": "descargar2",
@@ -615,6 +628,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_descargar2"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "descargar",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_descargar"
                     },
                     {
                         "method": "GET",
@@ -719,6 +740,13 @@
                         "distancia": "number",
                         "puntos": "[[puntos|ruta_id|id]]"
                     },
+                    "custom_descargar": {
+                        "id": "uuid|pk",
+                        "nombre": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distancia": "number"
+                    },
                     "custom_descargar2": {
                         "id": "uuid|pk",
                         "nombre": "string",
@@ -726,13 +754,6 @@
                         "max_split_mt": "number",
                         "distancia": "number",
                         "thumb": "string"
-                    },
-                    "custom_descargar": {
-                        "id": "uuid|pk",
-                        "nombre": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distancia": "number"
                     },
                     "select_puntos": {
                         "id": "number|pk",
@@ -1066,8 +1087,25 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [],
+                "apicustom": [
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
+                    }
+                ],
                 "apis": [
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1142,6 +1180,9 @@
                         "inicio_lon": "number",
                         "fin_lat": "number",
                         "fin_lon": "number"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
                     }
                 }
             },
@@ -1277,8 +1318,25 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [],
+                "apicustom": [
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
+                    }
+                ],
                 "apis": [
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1344,6 +1402,9 @@
                         "lon": "number",
                         "sesion_id": "number",
                         "sesion": "[sesion|id|sesion_id]"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
                     }
                 }
             },
@@ -1502,6 +1563,18 @@
                         "value": "date"
                     },
                     {
+                        "name": "abandoned",
+                        "value": "boolean"
+                    },
+                    {
+                        "name": "comments",
+                        "value": "string"
+                    },
+                    {
+                        "name": "complete",
+                        "value": "number"
+                    },
+                    {
                         "name": "rutab64",
                         "value": "string"
                     },
@@ -1511,8 +1584,25 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [],
+                "apicustom": [
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
+                    }
+                ],
                 "apis": [
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -1558,6 +1648,9 @@
                         "sesion": "[sesion|id|sesion_id]",
                         "inicio": "date",
                         "fin": "date",
+                        "abandoned": "boolean",
+                        "comments": "string",
+                        "complete": "number",
                         "rutab64": "string",
                         "trackb64": "string"
                     },
@@ -1569,6 +1662,9 @@
                         "sesion": "[sesion|id|sesion_id]",
                         "inicio": "date",
                         "fin": "date",
+                        "abandoned": "boolean",
+                        "comments": "string",
+                        "complete": "number",
                         "rutab64": "string",
                         "trackb64": "string"
                     },
@@ -1579,8 +1675,14 @@
                         "sesion": "[sesion|id|sesion_id]",
                         "inicio": "date",
                         "fin": "date",
+                        "abandoned": "boolean",
+                        "comments": "string",
+                        "complete": "number",
                         "rutab64": "string",
                         "trackb64": "string"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
                     }
                 }
             }
