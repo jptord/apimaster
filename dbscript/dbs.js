@@ -505,9 +505,45 @@
                             "Jorge Tordoya",
                             "JT0021",
                             "uuid-images-1",
-                            "uuid-personal_types-1",
+                            "1",
                             "1719099774",
                             "1719099774"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-personal-2",
+                            "Jorge Paredes",
+                            "JP0051",
+                            "uuid-images-1",
+                            "1",
+                            "1719099774",
+                            "1719099774"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-personal-3",
+                            "Pablo Rojas",
+                            "PR0021",
+                            "uuid-images-1",
+                            "2",
+                            "1719099774",
+                            "1719039774"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "uuid-personal-4",
+                            "Abrahan Serrano",
+                            "AS0021",
+                            "uuid-images-1",
+                            "2",
+                            "1719099774",
+                            "1719599774"
                         ]
                     }
                 ],
@@ -714,7 +750,7 @@
                 "fields": [
                     {
                         "name": "id",
-                        "value": "uuid|number"
+                        "value": "number|pk"
                     },
                     {
                         "name": "name",
@@ -725,14 +761,14 @@
                     {
                         "data": "create",
                         "values": [
-                            "uuid-personal_types-1",
+                            "1",
                             "Operador"
                         ]
                     },
                     {
                         "data": "create",
                         "values": [
-                            "uuid-personal_types-2",
+                            "2",
                             "Supervisor"
                         ]
                     }
@@ -777,11 +813,11 @@
                 ],
                 "data": {
                     "select": {
-                        "id": "uuid|number",
+                        "id": "number|pk",
                         "name": "string"
                     },
                     "create": {
-                        "id": "uuid|number",
+                        "id": "number|pk",
                         "name": "string"
                     },
                     "insert": {

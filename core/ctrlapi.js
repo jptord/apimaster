@@ -122,30 +122,52 @@ class CtrlApi{
         return strArr.join(',');
     }
 
-    appendSubquerys(content,data_fields){
+    appendSubquerys(content,data_fields,req){
         let me = this;
         let relations = this.toRelations(data_fields);
         console.log("relations",relations);
         relations.forEach(r => {
             let idArr = [];
+
+            let findcondition = '';
             content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
             //console.log("idArr",idArr);
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
             console.log("relGroup,",relGroup,r.table);
             let f = me.toFields(relGroup.data['select']);          
             //console.log("relGroup.f ",f);
-            let res_temp = me.database.db.prepare(`select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) `).all();
+            console.log("---r:",r);
+            console.log("---req.query:",req.query);
+            let req_query_rel = req.query[r.name];
+            console.log("---req_query_rel:",req_query_rel);
+            findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel);
+            let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
+            console.log("----relQuery: " , relQuery);
+            let res_temp = me.database.db.prepare(relQuery).all();
             console.log("res_temp ",res_temp);
+            console.log("---content ",content);
+            
             content.forEach(cc => {                
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
 				console.log("cc[r.name] ",cc[r.name]);
 				console.log("r.array ",r.array);
-                me.appendSubquerys(cc[r.name],f);
-                if (!r.array)
-                    cc[r.name] = cc[r.name].length>0?cc[r.name][0]:null;
+                let subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel);
+                console.log("subcontent:", subcontent);
+                if (subcontent == null  ){
+                    content = undefined;
+                    return;
+                }
+                if (!r.array){         
+                    cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;
+                    
+                }
+            });
 
+            content.forEach(cc => {                
+                if ( cc[r.name] ==  null) {content.splice(content.indexOf(cc),1);};
             });
             
+
             //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
         });
         
@@ -435,6 +457,100 @@ class CtrlApi{
         else
             return `WHERE ${findcondition} ${sql_conditions}`;
     }
+    buildQueryApiFilter(findcondition, group, fields, req_query){
+        if (req_query == null) return  findcondition;
+        var me = this;        
+        let fields_array = fields.split(",");;
+        let sql_conditions = '';
+        let where_and_conditions = [];
+        Object.keys(req_query).forEach( (fieldQuery) => {
+            
+            let fieldFilter = req_query[fieldQuery];
+            console.log('buildQueryApiFilter.fields_array:',fields_array);
+            console.log('buildQueryApiFilter.fieldQuery:',fieldQuery);
+            
+            console.log('buildQueryApiFilter.fieldFilter:',fieldFilter);
+            
+
+            fields_array.forEach( query => {            
+                let where_or_like = []; 
+                let where_or_equal = []; 
+                let where_or_between = []; 
+                let where_or_like_sql = ''; 
+                let where_or_equal_sql = ''; 
+                let where_or_between_sql = ''; 
+                    if (fieldQuery == query){
+                        let fieldInfo = group['fields'].find(f=>f.name==fieldQuery);
+                        console.log('------fieldInfo : ',fieldInfo );
+
+                        console.log('------query:',query);
+                        let value_like = fieldFilter['like'];
+                        let value_equal = fieldFilter['equal'];
+                        let value_betweeen = fieldFilter['between'];
+                        console.log('------value_like:',value_like);
+                        console.log('------value_equal:',value_equal);
+                        console.log('------value_betweeen:',value_betweeen);
+                        console.log('------value_like.type:',me.getTypeParam(value_like));
+                        console.log('------value_equal.type:',me.getTypeParam(value_equal));
+                        console.log('------value_betweeen.type:',me.getTypeParam(value_betweeen));
+                        if (me.getTypeParam(value_like)=='array'){
+                            value_like.forEach(v=>{
+                                where_or_like.push(`(${query} like '%${v}%')`);
+                            });                        
+                        }else{
+                            if (value_like!==undefined)
+                                where_or_like.push(`(${query} like '%${value_like}%')`);
+                        }
+                        if (me.getTypeParam(value_equal)=='array'){
+                            value_equal.forEach(v=>{
+                                where_or_equal.push(`(${query} = '${v}')`);
+                            });                        
+                        }else{
+                            if (value_equal!==undefined)
+                                where_or_equal.push(`(${query} = '${value_equal}')`);
+                        }
+                        if (me.getTypeParam(value_betweeen)=='object'){
+                            if (value_betweeen['from']!=undefined && value_betweeen['to']!=undefined ){
+                                //strftime('%Y-%m-%d %H:%M:%S',datetime(create_date,'unixepoch','localtime'))
+                                if (fieldInfo.value=='date')
+                                    where_or_between.push(`(strftime('%Y-%m-%d %H:%M:%S',datetime(${query},'unixepoch','localtime')) between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
+                                else
+                                    where_or_between.push(`(${query} between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
+                            };
+                        }else{
+                        }
+                    }
+                    
+                where_or_like_sql = where_or_like.join(" OR ");
+            //    console.log("where_or_like_sql", where_or_like_sql);
+                where_or_equal_sql = where_or_equal.join(" OR ");
+            //    console.log("where_or_equal_sql", where_or_equal_sql);
+                where_or_between_sql = where_or_between.join(" OR ");
+            //    console.log("where_or_between_sql", where_or_between_sql);
+                if (where_or_like.length>0) where_and_conditions.push(`(${where_or_like_sql})`);
+                if (where_or_equal.length>0) where_and_conditions.push(`(${where_or_equal_sql})`);
+                if (where_or_between.length>0) where_and_conditions.push(`(${where_or_between_sql})`);
+            });
+        });
+        //console.log("buildQueryApi.findcondition", findcondition);
+        sql_conditions = where_and_conditions.join(' AND ');
+        console.log("where_and_conditions : ", where_and_conditions.join(' AND '));
+		if (sql_conditions == "") return `${findcondition} `;
+        if (findcondition.includes("WHERE"))
+            return `${findcondition} ${sql_conditions}`;
+        else
+            return `WHERE ${findcondition} ${sql_conditions}`;
+    }
+    getTypeParam(queryParam){
+        if (((typeof queryParam == 'string')?queryParam == '' :false)) return 'empty';
+        if (Array.isArray(queryParam) ) return 'array';
+        if ( ((typeof queryParam === 'object' ) && !Array.isArray(queryParam)) ) return 'object';
+        if ( ((typeof queryParam === 'object') || Array.isArray(queryParam))?false:!isNaN(queryParam) ) return 'number';
+        if ( ((isNaN(queryParam)) && !isNaN( Date.parse(queryParam)) ) ) return 'date';
+        if ( (((typeof queryParam === 'object') || Array.isArray(queryParam))?false:isNaN(queryParam) ) ) return 'string';
+        return undefined;
+    }
+
     autoApiGen(group){
         var me = this;        
         const router = this.router;
@@ -451,9 +567,16 @@ class CtrlApi{
                     let respuesta = {content: [],
                         pagination: { pages : 0, rowsNumber: 0 }
                     };
-                    let f = me.toFields(group.data[api.out]);                        
+                    let f = me.toFields(group.data[api.out]);
 
+                    console.log("-query",req.query);
+                    console.log("-Object.keys(req.query)", Object.keys(req.query));
+                    let filterCondition = '';
+                    let conditionsSql = [];
                     let findcondition = '';
+
+                    findcondition = me.buildQueryApiFilter(findcondition,group,f,req.query);
+
                     //console.log("getParamApi",getParamApi);
                     console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
@@ -480,7 +603,7 @@ class CtrlApi{
                         console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -495,7 +618,7 @@ class CtrlApi{
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
 						console.log(" ----- HERE -----");
-                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req);
 						console.log(" ----- HERE -----",respuesta.content);
                     }
                     me.contentACamelCase(respuesta);
@@ -548,7 +671,7 @@ class CtrlApi{
                     }else{
                         console.log("GET query", `select ${f} from ${rel.table} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req);
                     }                        
 
 

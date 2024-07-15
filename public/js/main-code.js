@@ -448,10 +448,10 @@ function saveDBs(data){
 
 function generarPlant(valor){
     $.ajax({ 
-        url:"http://192.168.100.7:9797/plant",  data: {texto:valor}, method: 'POST' })
+        url:"http://localhost:9797/plant",  data: {texto:valor}, method: 'POST' })
             .done(function (data) {
                 console.log("generarPlant",data);
-                $(".diagramImg").attr("src","http://192.168.100.7:9797/"+data);
+                $(".diagramImg").attr("src","http://localhost:9797/"+data);
 
             }
     );
