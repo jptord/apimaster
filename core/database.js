@@ -3,7 +3,7 @@ const sqlite3 = require("better-sqlite3");
 
 class Database{
     constructor(name_db='local'){
-        this.db = new sqlite3(`../databases/${name_db}.db`);
+        this.db = new sqlite3(`databases/${name_db}.db`);
         //console.log("dbbbbbb");
         //this.db = new sqlite3(`../databases/${name_db}.db`);
     }
