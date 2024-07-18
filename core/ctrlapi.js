@@ -201,6 +201,37 @@ class CtrlApi{
             console.log("db_name",this.dbData.db);
             console.log("groups", this.dbData.groups.length);
             this.database = new Database(this.dbData.db);
+
+			/* ADD RELATIONS FOREIGN */	
+			
+			let testX = "";
+			let clase = [];
+			this.dbData.groups.forEach(group => {
+				let relations = [];
+				let data_create = group.data.select;
+				let campos = [];
+				data_create = group.data.select;
+				Object.keys(data_create).forEach( d =>{
+					let rel = me.esRelacion(data_create,d);
+					if (rel == null )
+						campos.push(`\t${data_create[d]} ${d}`);
+					else if (rel.array==false)
+						relations.push(`FOREIGN KEY (${rel.ownfield}) REFERENCES ${rel.name}(${rel.field})`);
+				});
+				group['foreignRelations'] = relations;
+				group['foreignRelationsCount'] = relations.length;
+				console.log(group.name+"['foreignRelations']:" , group['foreignRelations']);
+				//testX += campos.join("\n");
+				//testX += `\n}\n`; 
+			});
+			
+			/*
+			relations.forEach(r => {
+				let tTest = `FOREIGN KEY (${r.ownfield}) REFERENCES ${r.reltable}(${r.field})`
+				testX += `${tTest}\n`;
+			});
+			console.log("FOREIGN KEY GEN:" + testX);
+			*/
             //console.log("this.database.getTables: ",this.database.getTables());
             this.dbData.groups.forEach(group => {
                 
@@ -239,6 +270,8 @@ class CtrlApi{
                         me.database.db.prepare(`INSERT INTO  ${group.name} (${f}) values (${f_data})`).run();      
                     });
                        
+			
+
                 }else{
                     let fields = this.database.getFields(group.name);
                     let dataCreate =  Object.keys(group.data.create);
@@ -268,8 +301,11 @@ class CtrlApi{
                         });
                         let fieldStr = fieldsArr.join(",");
                         console.log("fieldStr:",fieldStr);
-                        console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                        console.log(`-CREATE TABLE ${group.name} ( ${fieldStr} ); `);
                         this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+
+
+
 
                         if (haveUuid) me.createTriggerUuid(this.database, group, uuid);
                     }
@@ -277,6 +313,8 @@ class CtrlApi{
                         
                         let tot = me.database.db.prepare(`select count (*) as total from ${group.name} `).all();
                         let rowsNumber = tot[0]['total'];
+
+
                         if (rowsNumber < group.seeder.length ){
                             //this.database.writeSQL(`DELETE  ${group.name}`);
                             me.database.db.prepare(`DELETE FROM ${group.name}`).run();
@@ -301,6 +339,19 @@ class CtrlApi{
             console.log("db_name",null);
         }
     }
+	
+	esRelacion(campos,d){
+		if (campos[d].includes("[[")){
+			let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
+			return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };;
+		}
+		if (campos[d].includes("[")){
+			let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
+			return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };;
+		}
+		return null;
+	}
+
     searchInside(e,regx){
         console.log("searchInside.e:",e);
         if (e==null) return false;
