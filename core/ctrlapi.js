@@ -191,6 +191,14 @@ class CtrlApi{
 //console.log("trigger",trigger);
         database.writeSQL(trigger);
     }
+	weightCalc = function(group, gps){
+//		console.log("groups",groups);
+			group['foreignRelations'].forEach(fr => {
+			let groupParent = gps.find( g=> g.name== fr.rel.name);
+			group['foreignRelationsWeight'] += this.weightCalc(groupParent,gps);
+		});
+		return group['foreignRelationsWeight'];
+	}
     constructor(dbData,dbData_global=null){
         this.dbData = dbData;
         this.dbData_global = dbData_global;
@@ -216,13 +224,37 @@ class CtrlApi{
 					if (rel == null )
 						campos.push(`\t${data_create[d]} ${d}`);
 					else if (rel.array==false)
-						relations.push(`FOREIGN KEY (${rel.ownfield}) REFERENCES ${rel.name}(${rel.field})`);
+						relations.push({field: `FOREIGN KEY (${rel.ownfield}) REFERENCES ${rel.name}(${rel.field})`,rel:rel});
 				});
 				group['foreignRelations'] = relations;
 				group['foreignRelationsCount'] = relations.length;
-				console.log(group.name+"['foreignRelations']:" , group['foreignRelations']);
+				group['foreignRelationsWeight'] = relations.length;
+				//console.log(group.name+"['foreignRelations']:" , group['foreignRelations']);
+				//console.log(group.name+"['foreignRelationsCount']:" , group['foreignRelationsCount']);
 				//testX += campos.join("\n");
 				//testX += `\n}\n`; 
+			});
+			//foreign weight Calc
+			this.dbData.groups = this.dbData.groups.sort( (a,b) => {
+				if (a.foreignRelationsWeight > b.foreignRelationsWeight) return -1;
+				else if (a.foreignRelationsWeight < b.foreignRelationsWeight) return 1;
+				return 0;
+			});
+			this.dbData.groups.forEach(group => {
+				console.log("group['foreignRelations']",group['foreignRelations']);
+			});
+			this.dbData.groups.forEach(group => {
+				let gps = this.dbData.groups;				
+				group['foreignRelationsWeight'] += me.weightCalc(group,gps);
+			});
+			
+			this.dbData.groups = this.dbData.groups.sort( (a,b) => {
+				if (a.foreignRelationsWeight < b.foreignRelationsWeight) return -1;
+				else if (a.foreignRelationsWeight > b.foreignRelationsWeight) return 1;
+				return 0;
+			});
+			this.dbData.groups.forEach(group => {
+				console.log(group.name+"['foreignRelationsWeight']",group['foreignRelationsWeight']);
 			});
 			
 			/*
@@ -252,10 +284,13 @@ class CtrlApi{
                         }
                         fieldsArr.push(colInsert);
                     });
+					group.foreignRelations.map(f=>f.field).forEach(fr => {
+						fieldsArr.push(fr);
+					});
                     let fieldStr = fieldsArr.join(",");
                     console.log("fieldStr:",fieldStr);
                     console.log(`CREATE TABLE ${group.name} ( ${fieldStr} ); `);
-                    this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr} ); `);
+                    this.database.writeSQL(` CREATE TABLE ${group.name} ( ${fieldStr}  ); `);
 
                     if (haveUuid) me.createTriggerUuid(this.database, group, uuid);
                     
