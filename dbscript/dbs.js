@@ -550,30 +550,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
-                    },
-                    {
-                        "method": "get",
                         "route": "applogin",
                         "query": "code",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
+                    },
+                    {
+                        "method": "get",
+                        "route": "sync",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "applogin",
-                        "query": "code",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_applogin"
-                    },
                     {
                         "method": "GET",
                         "route": "sync",
@@ -581,6 +573,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "applogin",
+                        "query": "code",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_applogin"
                     },
                     {
                         "method": "GET",
@@ -694,20 +694,20 @@
                         "update_date": "date",
                         "assignments": "[[assignments|personal_id|id]]"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
                     "custom_applogin": {
                         "id": "uuid|pk",
                         "name": "string",
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
                         "create_date": "date",
                         "update_date": "date"
                     },
@@ -1117,7 +1117,7 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
                         "in": "",
                         "type": "custom",
@@ -1125,7 +1125,7 @@
                     },
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
                         "in": "",
                         "type": "custom",
@@ -1135,19 +1135,19 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "syncfull",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_syncfull"
-                    },
-                    {
-                        "method": "GET",
                         "route": "sync",
                         "query": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "syncfull",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_syncfull"
                     },
                     {
                         "method": "GET",
@@ -1221,6 +1221,46 @@
                         "route": ":route_id/points/:id",
                         "in": null,
                         "rel": "[[points|route_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":route_id/supervisors",
+                        "in": null,
+                        "rel": "[[supervisors|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_supervisors"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":route_id/supervisors/:id",
+                        "in": null,
+                        "rel": "[[supervisors|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_supervisors"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":route_id/supervisors",
+                        "in": "insert_supervisors",
+                        "rel": "[[supervisors|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_supervisors"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":route_id/supervisors/:id",
+                        "in": "insert_supervisors",
+                        "rel": "[[supervisors|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_supervisors"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":route_id/supervisors/:id",
+                        "in": null,
+                        "rel": "[[supervisors|route_id|id]]",
                         "type": "rel",
                         "out": null
                     }
@@ -1273,7 +1313,7 @@
                         "points": "[[points|route_id|id]]",
                         "supervisors": "[[supervisors|route_id|id]]"
                     },
-                    "custom_sync": {
+                    "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -1283,7 +1323,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_syncfull": {
+                    "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -1322,6 +1362,127 @@
                         "section": "number",
                         "lat": "number",
                         "lon": "number"
+                    },
+                    "select_supervisors": {
+                        "id": "number|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "ruute": "[routes|id|route_id]"
+                    },
+                    "create_supervisors": {
+                        "id": "number|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "ruute": "[routes|id|route_id]"
+                    },
+                    "insert_supervisors": {
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "ruute": "[routes|id|route_id]"
+                    }
+                }
+            },
+            {
+                "name": "supervisors",
+                "alias": "supervisors",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "personal_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "personal",
+                        "value": "[personal|id|personal_id]",
+                        "rel": {
+                            "index": "personal",
+                            "name": "personal",
+                            "field": "id",
+                            "ownfield": "personal_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "route_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "ruute",
+                        "value": "[routes|id|route_id]",
+                        "rel": {
+                            "index": "ruute",
+                            "name": "routes",
+                            "field": "id",
+                            "ownfield": "route_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "ruute": "[routes|id|route_id]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "ruute": "[routes|id|route_id]"
+                    },
+                    "insert": {
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "ruute": "[routes|id|route_id]"
                     }
                 }
             },

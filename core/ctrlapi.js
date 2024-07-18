@@ -139,6 +139,7 @@ class CtrlApi{
             console.log("---r:",r);
             console.log("---req.query:",req.query);
             let req_query_rel = req.query[r.name];
+			
             console.log("---req_query_rel:",req_query_rel);
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
@@ -150,7 +151,7 @@ class CtrlApi{
             content.forEach(cc => {                
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
 				console.log("cc[r.name] ",cc[r.name]);
-				console.log("r.array ",r.array);
+				console.log("r.array ",r.array);				
                 let subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel);
                 console.log("subcontent:", subcontent);
                 if (subcontent == null  ){
@@ -162,9 +163,9 @@ class CtrlApi{
                     
                 }
             });
-
+			//if (req_query_rel == undefined) return;
             content.forEach(cc => {                
-                if ( cc[r.name] ==  null) {content.splice(content.indexOf(cc),1);};
+                if ( cc[r.name] ==  null && req_query_rel != undefined) {content.splice(content.indexOf(cc),1);};
             });
             
 
