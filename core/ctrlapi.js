@@ -44,9 +44,9 @@ class CtrlApi{
         let strArr = [];
         Object.keys(data).forEach( c => {
             if (!data[c].includes('[[') && !data[c].includes('[') ) 
-                if (req[c]==null)
+                if (req[c]==null || req[c]=='null')
                     strArr.push("null");
-                else
+                else				
                     strArr.push("'"+req[c]+"'");
         });
         return strArr.join(",");
@@ -56,7 +56,10 @@ class CtrlApi{
         let strArr = [];
         Object.keys(data).forEach( c => {
             if (!data[c].includes('[[') && !data[c].includes('[') ) 
-                strArr.push(`${c} = '${req[c]}'`);
+				if (req[c]==null || req[c]=='null')
+					strArr.push(`${c} = null`);
+				else
+                	strArr.push(`${c} = '${req[c]}'`);
         });
         return strArr.join(",");
     }
@@ -853,7 +856,9 @@ class CtrlApi{
                     let f = me.toFields(group.data[api.in]);
                     let v = me.toValuesUpd(group.data[api.in],req.body);
                     let id = req.params.id;
-                    me.database.db.prepare(`UPDATE ${rel.table} SET ${v} WHERE id = '${id}'`).run();
+					let sqlUpdate = `UPDATE ${rel.table} SET ${v} WHERE id = '${id}'`;
+					console.log("sqlUpdate: ", sqlUpdate);
+                    me.database.db.prepare(sqlUpdate).run();
                     respuesta.content = req.body;
                     res.end(JSON.stringify(respuesta));
                 });
@@ -879,7 +884,9 @@ class CtrlApi{
                         pagination: { pages : 0, rowsNumber: 0 }
                     };
                     let id = req.params.id;
-                    me.database.db.prepare(`DELETE FROM ${rel.table} WHERE id = '${id}'`).run();
+					let sqlDelete = `DELETE FROM ${rel.table} WHERE id = '${id}'`;
+					console.log("sqlDelete",sqlDelete);
+                    me.database.db.prepare(sqlDelete).run();
                     respuesta.content = {message:"deleted"};
                     res.end(JSON.stringify(respuesta));
                 });
