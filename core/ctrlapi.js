@@ -21,6 +21,7 @@ class CtrlApi{
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `${column} INTEGER PRIMARY KEY AUTOINCREMENT`;
         if (name == "uuid" && pk==true) return `${column} UUID PRIMARY KEY`;
+		if (name == "string" && pk==true) return `${column} STRING PRIMARY KEY`;
         if (name == "number" || "integer" ) return `${column} INTEGER`;
         if (name == "float" ) return `${column} FLOAT`;
         if (name == "double" ) return `${column} FLOAT`;
@@ -229,10 +230,6 @@ class CtrlApi{
 				group['foreignRelations'] = relations;
 				group['foreignRelationsCount'] = relations.length;
 				group['foreignRelationsWeight'] = relations.length;
-				//console.log(group.name+"['foreignRelations']:" , group['foreignRelations']);
-				//console.log(group.name+"['foreignRelationsCount']:" , group['foreignRelationsCount']);
-				//testX += campos.join("\n");
-				//testX += `\n}\n`; 
 			});
 			//foreign weight Calc
 			this.dbData.groups = this.dbData.groups.sort( (a,b) => {
