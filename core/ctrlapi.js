@@ -134,6 +134,7 @@ class CtrlApi{
             let idArr = [];
 
             let findcondition = '';
+
             content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
             //console.log("idArr",idArr);
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
@@ -152,28 +153,37 @@ class CtrlApi{
             console.log("res_temp ",res_temp);
             console.log("---content ",content);
             
-            content.forEach(cc => {                
+            for (let i = 0; i< content.length; i++){  
+                if (Object.keys(content[i]).length == 0 ) continue;
+                let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
 				console.log("cc[r.name] ",cc[r.name]);
 				console.log("r.array ",r.array);				
                 let subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel);
+                cc[r.name] = subcontent;
                 console.log("subcontent:", subcontent);
-                if (subcontent == null  ){
-                    content = undefined;
-                    return;
+                if (!r.array){
+                    cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;                    
                 }
-                if (!r.array){         
-                    cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;
-                    
+                if ((subcontent.length ==0 ) && req_query_rel != undefined ){
+                    console.log("no valid req_query_rel",req_query_rel);
+                    content[i] = {};                     
                 }
-            });
-			//if (req_query_rel == undefined) return;
-            content.forEach(cc => {                
-                if ( cc[r.name] ==  null && req_query_rel != undefined) {content.splice(content.indexOf(cc),1);};
-            });
-            
+            };
+			//if (req_query_rel == undefined) return;                        
 
             //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+        });
+        //for (let i = 0; i< content.length; i++){
+        let tempContent = [...content];
+        content.splice(0,content.length);
+        tempContent.forEach(cc =>{
+            if (Object.keys(cc).length > 0 ) 
+                content.push(cc);
+                //content.splice(content.indexOf(cc),1);
+                //content[i] = undefined;
+                //content.splice(content.indexOf(content[i]),1);
+            console.log("----content",content);
         });
         
         //let contentTemp = me.contentACamelCaseContent(content);
