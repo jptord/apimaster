@@ -415,9 +415,15 @@ class CtrlApi{
             res.write(JSON.stringify(swaggerDocument));
             res.end();
         });
-
-        this.dbData.groups.forEach(group => {            
-            me.autoApiGen(group);
+           
+			
+		router.get(`/`, async function (req, res){
+			res.setHeader('Content-Type', 'application/json');
+			let respuesta = {"response":"ok"};
+			res.end(JSON.stringify(respuesta));
+		});
+        this.dbData.groups.forEach(group => { 
+            me.autoApiGen(group);			
         });
         /*router.all('/',cors(corsOptions),async function (req, res){
             //res.setHeader('Content-Type', 'application/json');
