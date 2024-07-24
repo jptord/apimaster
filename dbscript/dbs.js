@@ -302,10 +302,6 @@
                     {
                         "name": "id",
                         "value": "number|pk"
-                    },
-                    {
-                        "name": "name",
-                        "value": "string"
                     }
                 ],
                 "seeder": [
@@ -364,16 +360,12 @@
                 ],
                 "data": {
                     "select": {
-                        "id": "number|pk",
-                        "name": "string"
+                        "id": "number|pk"
                     },
                     "create": {
-                        "id": "number|pk",
-                        "name": "string"
+                        "id": "number|pk"
                     },
-                    "insert": {
-                        "name": "string"
-                    }
+                    "insert": {}
                 }
             },
             {
@@ -610,6 +602,168 @@
                     {
                         "name": "color",
                         "value": "string"
+                    },
+                    {
+                        "name": "points",
+                        "value": "[[district_points|district_id|id]]",
+                        "rel": {
+                            "index": "points",
+                            "name": "district_points",
+                            "field": "district_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":district_id/district_points",
+                        "in": null,
+                        "rel": "[[district_points|district_id|id]]",
+                        "type": "rel",
+                        "out": "select_district_points"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":district_id/district_points/:id",
+                        "in": null,
+                        "rel": "[[district_points|district_id|id]]",
+                        "type": "rel",
+                        "out": "select_district_points"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":district_id/district_points",
+                        "in": "insert_district_points",
+                        "rel": "[[district_points|district_id|id]]",
+                        "type": "rel",
+                        "out": "select_district_points"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":district_id/district_points/:id",
+                        "in": "insert_district_points",
+                        "rel": "[[district_points|district_id|id]]",
+                        "type": "rel",
+                        "out": "select_district_points"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":district_id/district_points/:id",
+                        "in": null,
+                        "rel": "[[district_points|district_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "color": "string",
+                        "points": "[[district_points|district_id|id]]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "color": "string",
+                        "points": "[[district_points|district_id|id]]"
+                    },
+                    "insert": {
+                        "name": "string",
+                        "color": "string",
+                        "points": "[[district_points|district_id|id]]"
+                    },
+                    "select_district_points": {
+                        "id": "number|pk",
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "create_district_points": {
+                        "id": "number|pk",
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "insert_district_points": {
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "lat": "number",
+                        "lon": "number"
+                    }
+                }
+            },
+            {
+                "name": "district_points",
+                "alias": "district_points",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "district_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "district",
+                        "value": "[district|id|district_id]",
+                        "rel": {
+                            "index": "district",
+                            "name": "district",
+                            "field": "id",
+                            "ownfield": "district_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "lat",
+                        "value": "number"
+                    },
+                    {
+                        "name": "lon",
+                        "value": "number"
                     }
                 ],
                 "seeder": [],
@@ -654,17 +808,23 @@
                 "data": {
                     "select": {
                         "id": "number|pk",
-                        "name": "string",
-                        "color": "string"
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "lat": "number",
+                        "lon": "number"
                     },
                     "create": {
                         "id": "number|pk",
-                        "name": "string",
-                        "color": "string"
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "lat": "number",
+                        "lon": "number"
                     },
                     "insert": {
-                        "name": "string",
-                        "color": "string"
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "lat": "number",
+                        "lon": "number"
                     }
                 }
             },
@@ -1780,7 +1940,6 @@
                             "ownfield": "id",
                             "array": true
                         }
-<<<<<<< HEAD
                     },
                     {
                         "name": "sessions",
@@ -1792,8 +1951,6 @@
                             "ownfield": "id",
                             "array": true
                         }
-=======
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     }
                 ],
                 "seeder": [
@@ -1849,30 +2006,22 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
-                        "query": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
-                    },
-                    {
-                        "method": "get",
                         "route": "applogin",
                         "query": "code",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
+                    },
+                    {
+                        "method": "get",
+                        "route": "sync",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     }
                 ],
                 "apis": [
-                    {
-                        "method": "GET",
-                        "route": "applogin",
-                        "query": "code",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_applogin"
-                    },
                     {
                         "method": "GET",
                         "route": "sync",
@@ -1883,6 +2032,14 @@
                     },
                     {
                         "method": "GET",
+                        "route": "applogin",
+                        "query": "code",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_applogin"
+                    },
+                    {
+                        "method": "GET",
                         "route": "",
                         "in": null,
                         "type": "auto",
@@ -1955,7 +2112,6 @@
                         "rel": "[[assignments|personal_id|id]]",
                         "type": "rel",
                         "out": null
-<<<<<<< HEAD
                     },
                     {
                         "method": "GET",
@@ -1996,8 +2152,6 @@
                         "rel": "[[session|personal_id|id]]",
                         "type": "rel",
                         "out": null
-=======
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     }
                 ],
                 "data": {
@@ -2011,12 +2165,8 @@
                         "personal_type": "[personal_types|id|personal_type_id]",
                         "create_date": "date",
                         "update_date": "date",
-<<<<<<< HEAD
                         "assignments": "[[assignments|personal_id|id]]",
                         "sessions": "[[session|personal_id|id]]"
-=======
-                        "assignments": "[[assignments|personal_id|id]]"
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -2028,12 +2178,8 @@
                         "personal_type": "[personal_types|id|personal_type_id]",
                         "create_date": "date",
                         "update_date": "date",
-<<<<<<< HEAD
                         "assignments": "[[assignments|personal_id|id]]",
                         "sessions": "[[session|personal_id|id]]"
-=======
-                        "assignments": "[[assignments|personal_id|id]]"
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     },
                     "insert": {
                         "name": "string",
@@ -2044,20 +2190,8 @@
                         "personal_type": "[personal_types|id|personal_type_id]",
                         "create_date": "date",
                         "update_date": "date",
-<<<<<<< HEAD
                         "assignments": "[[assignments|personal_id|id]]",
                         "sessions": "[[session|personal_id|id]]"
-=======
-                        "assignments": "[[assignments|personal_id|id]]"
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
                     },
                     "custom_applogin": {
                         "id": "uuid|pk",
@@ -2065,6 +2199,14 @@
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
                         "create_date": "date",
                         "update_date": "date"
                     },
@@ -2098,7 +2240,6 @@
                         "id": "uuid|pk",
                         "personal_id": "number",
                         "route_id": "number"
-<<<<<<< HEAD
                     },
                     "select_session": {
                         "id": "uuid|pk",
@@ -2140,8 +2281,6 @@
                     },
                     "custom_sync_session": {
                         "id": "uuid|pk"
-=======
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     }
                 }
             },
@@ -2227,7 +2366,7 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
                         "in": "",
                         "type": "custom",
@@ -2235,7 +2374,7 @@
                     },
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
                         "in": "",
                         "type": "custom",
@@ -2245,19 +2384,19 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "syncfull",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_syncfull"
-                    },
-                    {
-                        "method": "GET",
                         "route": "sync",
                         "query": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "syncfull",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_syncfull"
                     },
                     {
                         "method": "GET",
@@ -2380,7 +2519,7 @@
                         "district": "[district|id|district_id]",
                         "points": "[[points|route_id|id]]"
                     },
-                    "custom_sync": {
+                    "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -2390,7 +2529,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_syncfull": {
+                    "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -3025,7 +3164,6 @@
             {
                 "name": "assignments",
                 "alias": "assignments",
-<<<<<<< HEAD
                 "fields": [
                     {
                         "name": "id",
@@ -3543,490 +3681,6 @@
             {
                 "name": "emergency_images",
                 "alias": "emergency_images",
-=======
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "uuid|pk"
-                    },
-                    {
-                        "name": "personal_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "personal",
-                        "value": "[personal|id|personal_id]",
-                        "rel": {
-                            "index": "personal",
-                            "name": "personal",
-                            "field": "id",
-                            "ownfield": "personal_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "route_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "route",
-                        "value": "[routes|id|route_id]",
-                        "rel": {
-                            "index": "route",
-                            "name": "routes",
-                            "field": "id",
-                            "ownfield": "route_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "schedule_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "schedule",
-                        "value": "[schedule|id|schedule_id]",
-                        "rel": {
-                            "index": "schedule",
-                            "name": "schedule",
-                            "field": "id",
-                            "ownfield": "schedule_id",
-                            "array": false
-                        }
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "get",
-                        "route": "bypersonal",
-                        "query": "personal_id",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,personal_id,route_id"
-                    }
-                ],
-                "apis": [
-                    {
-                        "method": "GET",
-                        "route": "bypersonal",
-                        "query": "personal_id",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_bypersonal"
-                    },
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "uuid|pk",
-                        "personal_id": "number",
-                        "personal": "[personal|id|personal_id]",
-                        "route_id": "number",
-                        "route": "[routes|id|route_id]",
-                        "schedule_id": "number",
-                        "schedule": "[schedule|id|schedule_id]"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "personal_id": "number",
-                        "personal": "[personal|id|personal_id]",
-                        "route_id": "number",
-                        "route": "[routes|id|route_id]",
-                        "schedule_id": "number",
-                        "schedule": "[schedule|id|schedule_id]"
-                    },
-                    "insert": {
-                        "personal_id": "number",
-                        "personal": "[personal|id|personal_id]",
-                        "route_id": "number",
-                        "route": "[routes|id|route_id]",
-                        "schedule_id": "number",
-                        "schedule": "[schedule|id|schedule_id]"
-                    },
-                    "custom_bypersonal": {
-                        "id": "uuid|pk",
-                        "personal_id": "number",
-                        "route_id": "number"
-                    }
-                }
-            },
-            {
-                "name": "emergency_states_record",
-                "alias": "emergency_states_record",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "uuid|pk"
-                    },
-                    {
-                        "name": "create_date",
-                        "value": "date"
-                    },
-                    {
-                        "name": "user_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "user",
-                        "value": "[users|id|user_id]",
-                        "rel": {
-                            "index": "user",
-                            "name": "users",
-                            "field": "id",
-                            "ownfield": "user_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "emergency_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "emergency",
-                        "value": "[emergencys|id|emergency_id]",
-                        "rel": {
-                            "index": "emergency",
-                            "name": "emergencys",
-                            "field": "id",
-                            "ownfield": "emergency_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "emergency_state_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "emergency_state",
-                        "value": "[emergency_states|id|emergency_state_id]",
-                        "rel": {
-                            "index": "emergency_state",
-                            "name": "emergency_states",
-                            "field": "id",
-                            "ownfield": "emergency_state_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "comments",
-                        "value": "string"
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [],
-                "apis": [
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "uuid|pk",
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]",
-                        "emergency_state_id": "number",
-                        "emergency_state": "[emergency_states|id|emergency_state_id]",
-                        "comments": "string"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]",
-                        "emergency_state_id": "number",
-                        "emergency_state": "[emergency_states|id|emergency_state_id]",
-                        "comments": "string"
-                    },
-                    "insert": {
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]",
-                        "emergency_state_id": "number",
-                        "emergency_state": "[emergency_states|id|emergency_state_id]",
-                        "comments": "string"
-                    }
-                }
-            },
-            {
-                "name": "claim_states_record",
-                "alias": "claim_states_record",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "uuid|pk"
-                    },
-                    {
-                        "name": "create_date",
-                        "value": "date"
-                    },
-                    {
-<<<<<<< HEAD
-                        "name": "emergency_id",
-=======
-                        "name": "user_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "user",
-                        "value": "[users|id|user_id]",
-                        "rel": {
-                            "index": "user",
-                            "name": "users",
-                            "field": "id",
-                            "ownfield": "user_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "claim_id",
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
-                        "value": "number"
-                    },
-                    {
-                        "name": "emergency",
-                        "value": "[emergencys|id|emergency_id]",
-                        "rel": {
-                            "index": "emergency",
-                            "name": "emergencys",
-                            "field": "id",
-                            "ownfield": "emergency_id",
-                            "array": false
-                        }
-<<<<<<< HEAD
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
-                "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-=======
-                    },
-                    {
-                        "name": "claim_state_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "claim_state",
-                        "value": "[claim_states|id|claim_state_id]",
-                        "rel": {
-                            "index": "claim_state",
-                            "name": "claim_states",
-                            "field": "id",
-                            "ownfield": "claim_state_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "comments",
-                        "value": "string"
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [],
-                "apis": [
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
-                        "method": "GET",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "uuid|pk",
-<<<<<<< HEAD
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]"
-                    },
-                    "insert": {
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-=======
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "claim_id": "number",
-                        "claim": "[claims|id|claim_id]",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]",
-                        "comments": "string"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "claim_id": "number",
-                        "claim": "[claims|id|claim_id]",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]",
-                        "comments": "string"
-                    },
-                    "insert": {
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "claim_id": "number",
-                        "claim": "[claims|id|claim_id]",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]",
-                        "comments": "string"
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
-                    }
-                }
-            },
-            {
-                "name": "session_identified",
-                "alias": "session_identified",
                 "fields": [
                     {
                         "name": "id",
@@ -4048,17 +3702,25 @@
                         }
                     },
                     {
-                        "name": "session_id",
+                        "name": "create_date",
+                        "value": "date"
+                    },
+                    {
+                        "name": "update_date",
+                        "value": "date"
+                    },
+                    {
+                        "name": "emergency_id",
                         "value": "number"
                     },
                     {
-                        "name": "session",
-                        "value": "[session|id|session_id]",
+                        "name": "emergency",
+                        "value": "[emergencys|id|emergency_id]",
                         "rel": {
-                            "index": "session",
-                            "name": "session",
+                            "index": "emergency",
+                            "name": "emergencys",
                             "field": "id",
-                            "ownfield": "session_id",
+                            "ownfield": "emergency_id",
                             "array": false
                         }
                     }
@@ -4124,30 +3786,165 @@
                         "id": "uuid|pk",
                         "image_id": "number",
                         "image": "[images|id|image_id]",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]"
+                        "create_date": "date",
+                        "update_date": "date",
+                        "emergency_id": "number",
+                        "emergency": "[emergencys|id|emergency_id]"
                     },
                     "create": {
                         "id": "uuid|pk",
                         "image_id": "number",
                         "image": "[images|id|image_id]",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]"
+                        "create_date": "date",
+                        "update_date": "date",
+                        "emergency_id": "number",
+                        "emergency": "[emergencys|id|emergency_id]"
                     },
                     "insert": {
                         "image_id": "number",
                         "image": "[images|id|image_id]",
-<<<<<<< HEAD
+                        "create_date": "date",
+                        "update_date": "date",
+                        "emergency_id": "number",
+                        "emergency": "[emergencys|id|emergency_id]"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    }
+                }
+            },
+            {
+                "name": "suggestions_images",
+                "alias": "suggestions_images",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "suggestion_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "image_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "image",
+                        "value": "[images|id|image_id]",
+                        "rel": {
+                            "index": "image",
+                            "name": "images",
+                            "field": "id",
+                            "ownfield": "image_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "create_date",
+                        "value": "date"
+                    },
+                    {
+                        "name": "update_date",
+                        "value": "date"
+                    },
+                    {
+                        "name": "suggestion",
+                        "value": "[suggestions|id|suggestion_id]",
+                        "rel": {
+                            "index": "suggestion",
+                            "name": "suggestions",
+                            "field": "id",
+                            "ownfield": "suggestion_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
+                    }
+                ],
+                "apis": [
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "suggestion_id": "number",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]",
+                        "create_date": "date",
+                        "update_date": "date",
+                        "suggestion": "[suggestions|id|suggestion_id]"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "suggestion_id": "number",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]",
+                        "create_date": "date",
+                        "update_date": "date",
+                        "suggestion": "[suggestions|id|suggestion_id]"
+                    },
+                    "insert": {
+                        "suggestion_id": "number",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]",
                         "create_date": "date",
                         "update_date": "date",
                         "suggestion": "[suggestions|id|suggestion_id]"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
-=======
-                        "session_id": "number",
-                        "session": "[session|id|session_id]"
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     }
                 }
             },
@@ -4343,239 +4140,6 @@
                 }
             },
             {
-<<<<<<< HEAD
-=======
-                "name": "emergency_images",
-                "alias": "emergency_images",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "uuid|pk"
-                    },
-                    {
-                        "name": "image_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "image",
-                        "value": "[images|id|image_id]",
-                        "rel": {
-                            "index": "image",
-                            "name": "images",
-                            "field": "id",
-                            "ownfield": "image_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "create_date",
-                        "value": "date"
-                    },
-                    {
-                        "name": "update_date",
-                        "value": "date"
-                    },
-                    {
-                        "name": "emergency_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "emergency",
-                        "value": "[emergencys|id|emergency_id]",
-                        "rel": {
-                            "index": "emergency",
-                            "name": "emergencys",
-                            "field": "id",
-                            "ownfield": "emergency_id",
-                            "array": false
-                        }
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [],
-                "apis": [
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "uuid|pk",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]"
-                    },
-                    "insert": {
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "emergency_id": "number",
-                        "emergency": "[emergencys|id|emergency_id]"
-                    }
-                }
-            },
-            {
-                "name": "suggestions_images",
-                "alias": "suggestions_images",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "uuid|pk"
-                    },
-                    {
-                        "name": "suggestion_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "image_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "image",
-                        "value": "[images|id|image_id]",
-                        "rel": {
-                            "index": "image",
-                            "name": "images",
-                            "field": "id",
-                            "ownfield": "image_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "create_date",
-                        "value": "date"
-                    },
-                    {
-                        "name": "update_date",
-                        "value": "date"
-                    },
-                    {
-                        "name": "suggestion",
-                        "value": "[suggestions|id|suggestion_id]",
-                        "rel": {
-                            "index": "suggestion",
-                            "name": "suggestions",
-                            "field": "id",
-                            "ownfield": "suggestion_id",
-                            "array": false
-                        }
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [],
-                "apis": [
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "uuid|pk",
-                        "suggestion_id": "number",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "suggestion": "[suggestions|id|suggestion_id]"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "suggestion_id": "number",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "suggestion": "[suggestions|id|suggestion_id]"
-                    },
-                    "insert": {
-                        "suggestion_id": "number",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "suggestion": "[suggestions|id|suggestion_id]"
-                    }
-                }
-            },
-            {
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                 "name": "claims_images",
                 "alias": "claims_images",
                 "fields": [
@@ -5037,7 +4601,6 @@
                         "update_date": "date",
                         "emergency_id": "number",
                         "emergency": "[emergencys|id|emergency_id]"
-<<<<<<< HEAD
                     },
                     "custom_sync_emergency_images": {
                         "id": "uuid|pk"
@@ -5259,8 +4822,6 @@
                     },
                     "custom_sync_suggestions_images": {
                         "id": "uuid|pk"
-=======
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
                     }
                 }
             },
@@ -5481,224 +5042,6 @@
                         "id": "uuid|pk"
                     }
                 }
-<<<<<<< HEAD
-=======
-            },
-            {
-                "name": "suggestions",
-                "alias": "suggestions",
-                "fields": [
-                    {
-                        "name": "id",
-                        "value": "uuid|pk"
-                    },
-                    {
-                        "name": "title",
-                        "value": "string"
-                    },
-                    {
-                        "name": "description",
-                        "value": "string"
-                    },
-                    {
-                        "name": "date_time",
-                        "value": "date"
-                    },
-                    {
-                        "name": "lat",
-                        "value": "number"
-                    },
-                    {
-                        "name": "lon",
-                        "value": "number"
-                    },
-                    {
-                        "name": "session_id",
-                        "value": "number"
-                    },
-                    {
-                        "name": "session",
-                        "value": "[session|id|session_id]",
-                        "rel": {
-                            "index": "session",
-                            "name": "session",
-                            "field": "id",
-                            "ownfield": "session_id",
-                            "array": false
-                        }
-                    },
-                    {
-                        "name": "images",
-                        "value": "[[suggestions_images|suggestion_id|id]]",
-                        "rel": {
-                            "index": "images",
-                            "name": "suggestions_images",
-                            "field": "suggestion_id",
-                            "ownfield": "id",
-                            "array": true
-                        }
-                    }
-                ],
-                "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
-                "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
-                        "method": "GET",
-                        "route": "",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":id",
-                        "in": "insert",
-                        "type": "auto",
-                        "out": "select"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":id",
-                        "in": null,
-                        "type": "auto",
-                        "out": null
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":suggestion_id/suggestions_images",
-                        "in": null,
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
-                        "type": "rel",
-                        "out": "select_suggestions_images"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":suggestion_id/suggestions_images/:id",
-                        "in": null,
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
-                        "type": "rel",
-                        "out": "select_suggestions_images"
-                    },
-                    {
-                        "method": "POST",
-                        "route": ":suggestion_id/suggestions_images",
-                        "in": "insert_suggestions_images",
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
-                        "type": "rel",
-                        "out": "select_suggestions_images"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":suggestion_id/suggestions_images/:id",
-                        "in": "insert_suggestions_images",
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
-                        "type": "rel",
-                        "out": "select_suggestions_images"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":suggestion_id/suggestions_images/:id",
-                        "in": null,
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
-                        "type": "rel",
-                        "out": null
-                    }
-                ],
-                "data": {
-                    "select": {
-                        "id": "uuid|pk",
-                        "title": "string",
-                        "description": "string",
-                        "date_time": "date",
-                        "lat": "number",
-                        "lon": "number",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]",
-                        "images": "[[suggestions_images|suggestion_id|id]]"
-                    },
-                    "create": {
-                        "id": "uuid|pk",
-                        "title": "string",
-                        "description": "string",
-                        "date_time": "date",
-                        "lat": "number",
-                        "lon": "number",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]",
-                        "images": "[[suggestions_images|suggestion_id|id]]"
-                    },
-                    "insert": {
-                        "title": "string",
-                        "description": "string",
-                        "date_time": "date",
-                        "lat": "number",
-                        "lon": "number",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]",
-                        "images": "[[suggestions_images|suggestion_id|id]]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    },
-                    "select_suggestions_images": {
-                        "id": "uuid|pk",
-                        "suggestion_id": "number",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "suggestion": "[suggestions|id|suggestion_id]"
-                    },
-                    "create_suggestions_images": {
-                        "id": "uuid|pk",
-                        "suggestion_id": "number",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "suggestion": "[suggestions|id|suggestion_id]"
-                    },
-                    "insert_suggestions_images": {
-                        "suggestion_id": "number",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date",
-                        "update_date": "date",
-                        "suggestion": "[suggestions|id|suggestion_id]"
-                    }
-                }
->>>>>>> ea52aeb51bd53eb580643a29088020d53c4dc8f9
             }
         ]
     }

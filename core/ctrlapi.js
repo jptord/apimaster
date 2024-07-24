@@ -39,6 +39,14 @@ class CtrlApi{
         });
         return strArr.join(",");
     }
+    //incluye relaciones y campos, solo para subquerys, como el out de api
+    toFieldsAll(data){
+        let strArr = [];
+        Object.keys(data).forEach( c => {
+                strArr.push(c);
+        });
+        return strArr.join(",");
+    }
     
     toValues(data,req){
         let strArr = [];
@@ -65,6 +73,7 @@ class CtrlApi{
     }
     toRelations(data){
         let strArr = [];
+        console.log("data", data);
         Object.keys(data).forEach( c => {
             //evitar las subconsultas
             if (data[c].includes("[[")) {
@@ -126,42 +135,54 @@ class CtrlApi{
         return strArr.join(',');
     }
 
-    appendSubquerys(content,data_fields,req){
+    appendSubquerys(content,data_fields,req,deep){
+      //  if (deep == undefined) deep = 0;    
+        console.log("-----appendSubquerys.req:",req?.query);    
+        console.log("-----appendSubquerys.deep:",deep);    
+        //if (deep<=1)  return content;
         let me = this;
+        
         let relations = this.toRelations(data_fields);
-        console.log("relations",relations);
+        console.log("appendSubquerys.data_fields",data_fields);
+        //console.log("appendSubquerys.relations",relations);
         relations.forEach(r => {
             let idArr = [];
 
+            console.log("---content:",content);
+            console.log("---r:",r);
             let findcondition = '';
 
             content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
             //console.log("idArr",idArr);
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
             console.log("relGroup,",relGroup,r.table);
-            let f = me.toFields(relGroup.data['select']);          
+            let f = me.toFields(relGroup.data['select']);  
+            let fr = relGroup.data['select'];
             //console.log("relGroup.f ",f);
-            console.log("---r:",r);
-            console.log("---req.query:",req.query);
-            let req_query_rel = req.query[r.name];
+            console.log("---fr:",fr);
+            //console.log("---r:",r);
+            console.log("---req.query:",req?.query);
+            let req_query_rel = typeof req?.query !='undefined' ? req.query[r.name]:{};
 			
             console.log("---req_query_rel:",req_query_rel);
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
             console.log("----relQuery: " , relQuery);
             let res_temp = me.database.db.prepare(relQuery).all();
-            console.log("res_temp ",res_temp);
-            console.log("---content ",content);
+           // console.log("res_temp ",res_temp);
+            //console.log("---content ",content);
             
             for (let i = 0; i< content.length; i++){  
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-				console.log("cc[r.name] ",cc[r.name]);
+				//console.log("cc[r.name] ",cc[r.name]);
 				console.log("r.array ",r.array);				
-                let subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel);
+                
+                let subcontent;
+                    subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
                 cc[r.name] = subcontent;
-                console.log("subcontent:", subcontent);
+                //console.log("subcontent:", subcontent);
                 if (!r.array){
                     cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;                    
                 }
@@ -183,7 +204,7 @@ class CtrlApi{
                 //content.splice(content.indexOf(cc),1);
                 //content[i] = undefined;
                 //content.splice(content.indexOf(content[i]),1);
-            console.log("----content",content);
+            //console.log("----content",content);
         });
         
         //let contentTemp = me.contentACamelCaseContent(content);
@@ -672,8 +693,8 @@ class CtrlApi{
                     };
                     let f = me.toFields(group.data[api.out]);
 
-                    console.log("-query",req.query);
-                    console.log("-Object.keys(req.query)", Object.keys(req.query));
+                    //console.log("-query",req.query);
+                    //console.log("-Object.keys(req.query)", Object.keys(req.query));
                     let filterCondition = '';
                     let conditionsSql = [];
                     let findcondition = '';
@@ -690,7 +711,7 @@ class CtrlApi{
                         
                         console.log("---- findcondition:", findcondition);
                         console.log("--req.query:",req.query );
-                        console.log("--api.query:",api.query );
+                        //console.log("--api.query:",api.query );
                     if (req.query.page != undefined && req.query.size != undefined &&
                         req.query.sortBy != undefined && req.query.descending != undefined ){
 
@@ -706,7 +727,8 @@ class CtrlApi{
                         console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req);
+                        let deep = req.query['deep'] != undefined ? req.query['deep']:0;
+                        me.appendSubquerys(respuesta.content, group.data[api.out], req,deep);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -721,7 +743,8 @@ class CtrlApi{
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
 						console.log(" ----- HERE -----");
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req);
+                        let deep = req.query['deep'] != undefined ? req.query['deep']:0;
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req,deep);
 						console.log(" ----- HERE -----",respuesta.content);
                     }
                     me.contentACamelCase(respuesta);
