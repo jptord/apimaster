@@ -26,7 +26,7 @@ class CtrlApi{
         if (name == "float" ) return `${column} FLOAT`;
         if (name == "double" ) return `${column} FLOAT`;
         if (name == "date" ) return `${column} DATE`;
-        if (name == "time" ) return `${column} TIME`;
+        if (name == "time" ) return `${column} DATETIME`;
         if (name == "boolean" ) return `${column} BOOLEAN DEFAULT false NOT NULL`;
         if (name == "string" ) return `${column} VARCHAR(255)`;
     }
@@ -185,7 +185,7 @@ class CtrlApi{
 				console.log("r.array ",r.array);				
                 
                 let subcontent;
-			    if (deep>0 && req_query_rel.query != undefined ) 
+			    if (deep>0 || req_query_rel.query != undefined ) 
                     subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,deep-1);
 				else
 					subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
