@@ -137,7 +137,7 @@ class CtrlApi{
 
     appendSubquerys(content,data_fields,req,deep){
       //  if (deep == undefined) deep = 0;    
-        console.log("-----appendSubquerys.req:",req?.query);    
+        console.log("-----appendSubquerys.req:",req);    
         console.log("-----appendSubquerys.deep:",deep);    
         //if (deep<=1)  return content;
         let me = this;
@@ -148,26 +148,31 @@ class CtrlApi{
         relations.forEach(r => {
             let idArr = [];
 
-            console.log("---content:",content);
+           // console.log("---content:",content);
             console.log("---r:",r);
             let findcondition = '';
 
             content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
             //console.log("idArr",idArr);
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
-            console.log("relGroup,",relGroup,r.table);
+            //console.log("relGroup,",relGroup,r.table);
             let f = me.toFields(relGroup.data['select']);  
             let fr = relGroup.data['select'];
             //console.log("relGroup.f ",f);
             console.log("---fr:",fr);
             //console.log("---r:",r);
-            console.log("---req.query:",req?.query);
-            let req_query_rel = typeof req?.query !='undefined' ? req.query[r.name]:{};
+            console.log("---req.query:",req.query);
+            let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
 			
+            console.log("---r.name:",r.name);
             console.log("---req_query_rel:",req_query_rel);
-            findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel);
+            findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
             console.log("----relQuery: " , relQuery);
+
+			if(idArr.length == 0)
+				return content;
+
             let res_temp = me.database.db.prepare(relQuery).all();
            // console.log("res_temp ",res_temp);
             //console.log("---content ",content);
@@ -176,17 +181,20 @@ class CtrlApi{
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-				//console.log("cc[r.name] ",cc[r.name]);
+				console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);				
                 
                 let subcontent;
-                    subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
+			    if (deep>0 && req_query_rel.query != undefined ) 
+                    subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,deep-1);
+				else
+					subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
                     cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;                    
                 }
-                if ((subcontent.length ==0 ) && req_query_rel != undefined ){
+                if ((subcontent.length ==0 ) && req_query_rel.query != undefined ){
                     console.log("no valid req_query_rel",req_query_rel);
                     content[i] = {};                     
                 }
@@ -199,13 +207,17 @@ class CtrlApi{
         let tempContent = [...content];
         content.splice(0,content.length);
         tempContent.forEach(cc =>{
-            if (Object.keys(cc).length > 0 ) 
-                content.push(cc);
+           if (Object.keys(cc).length > 0 ) 
+               content.push(cc);
                 //content.splice(content.indexOf(cc),1);
                 //content[i] = undefined;
                 //content.splice(content.indexOf(content[i]),1);
             //console.log("----content",content);
         });
+		/*console.log("----content.length",content.length);
+		if (content.length ==1){
+			console.log("content.length = 1 ",content);
+		}*/
         
         //let contentTemp = me.contentACamelCaseContent(content);
         //console.log("contentTemp",contentTemp);
