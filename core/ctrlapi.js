@@ -13,6 +13,9 @@ var corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 
+function nanoUuid(){
+	return (Math.round(Date.now())).toString(36);
+}
 class CtrlApi{
 
     toColumnName(column, value){
@@ -135,16 +138,13 @@ class CtrlApi{
         return strArr.join(',');
     }
 
-    appendSubquerys(content,data_fields,req,parent_data_name){
-      //  if (deep == undefined) deep = 0;    
+    appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
         console.log("-----appendSubquerys.req:",req);    
-       // console.log("-----appendSubquerys.deep:",deep);    
-        //if (deep<=1)  return content;
         let me = this;
         
         let relations = this.toRelations(data_fields);
         console.log("appendSubquerys.data_fields",data_fields);
-        //console.log("appendSubquerys.relations",relations);
+        console.log("relations.length",relations.length);
         relations.forEach(r => {
             let idArr = [];
 
@@ -180,8 +180,20 @@ class CtrlApi{
 			
             console.log("---r.name:",r.name);
             console.log("---req_query_rel:",req_query_rel);
+			let tableAlias = "r"+nanoUuid();
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
-            let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
+			let findconditionAlias = me.buildQueryApiFilter('',relGroup,f,req_query_rel.query,tableAlias);
+
+			//let tableAlias = "t"+nanoUuid();
+			//let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findcondition} group by ${tableAlias}.::parent_id::`;
+			let query_parent_build = query_parent.replaceAll("::parent_id::",r.ownfield);
+console.log("findconditionAlias",findconditionAlias);
+			let parent_rel_query = `select ${tableAlias}.::parent_id:: from ${relGroup.name} as ${tableAlias} where ${tableAlias}.${r.field} in (${query_parent_build}) ${findconditionAlias.replaceAll('WHERE',' AND ')} group by ${tableAlias}.::parent_id::`;
+			console.log ("parent_rel_query",parent_rel_query);
+            let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${query_parent_build}) ${findcondition.replaceAll('WHERE',' AND ')}`;
+
+
+
             console.log("----relQuery: " , relQuery);
 
 			if(idArr.length == 0)
@@ -204,10 +216,10 @@ class CtrlApi{
                 console.log("--req_query_rel ",req_query_rel);				
                 
                 let subcontent;
-			    if (chain_data && req_query_rel.query != undefined ) 
-                    subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name);
+			    if (chain_data || req_query_rel.query != undefined ) 
+                    subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query);
 				else
-					subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,parent_data_name);
+					subcontent = me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -229,97 +241,15 @@ class CtrlApi{
            if (Object.keys(cc).length > 0 ) 
                content.push(cc);
         });
+		console.log("--content.length",content.length);
         return content;
     }
-    
-    appendSubquerysTemp(content,data_fields,req,deep){
-        //  if (deep == undefined) deep = 0;    
-          console.log("-----appendSubquerys.req:",req);    
-          console.log("-----appendSubquerys.deep:",deep);    
-          //if (deep<=1)  return content;
-          let me = this;
-          
-          let relations = this.toRelations(data_fields);
-          console.log("appendSubquerys.data_fields",data_fields);
-          //console.log("appendSubquerys.relations",relations);
-          relations.forEach(r => {
-              let idArr = [];
+    noFieldRel(fr){
+		let noRelAr = {};
+		Object.keys(fr).forEach( k => { if (!fr[k].includes("[")) noRelAr[k]=fr[k] });
+		return noRelAr;
+	}
   
-             // console.log("---content:",content);
-              console.log("---r:",r);
-              let findcondition = '';
-  
-              content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
-              //console.log("idArr",idArr);
-              let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
-              //console.log("relGroup,",relGroup,r.table);
-              let f = me.toFields(relGroup.data['select']);  
-              let fr = relGroup.data['select'];
-              //console.log("relGroup.f ",f);
-              console.log("---fr:",fr);
-              //console.log("---r:",r);
-              console.log("---req.query:",req.query);
-              let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
-              
-              console.log("---r.name:",r.name);
-              console.log("---req_query_rel:",req_query_rel);
-              findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
-              let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
-              console.log("----relQuery: " , relQuery);
-  
-              if(idArr.length == 0)
-                  return content;
-  
-              let res_temp = me.database.db.prepare(relQuery).all();
-             // console.log("res_temp ",res_temp);
-              //console.log("---content ",content);
-              
-              for (let i = 0; i< content.length; i++){  
-                  if (Object.keys(content[i]).length == 0 ) continue;
-                  let cc = content[i];
-                  cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-                  console.log("cc[r.name] r.name:",r.name);
-                  console.log("r.array ",r.array);				
-                  
-                  let subcontent;
-                  if (deep>0 || req_query_rel.query != undefined ) 
-                      subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,deep-1);
-                  else
-                      subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
-                  cc[r.name] = subcontent;
-                  //console.log("subcontent:", subcontent);
-                  if (!r.array){
-                      cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;                    
-                  }
-                  if ((subcontent.length ==0 ) && req_query_rel.query != undefined ){
-                      console.log("no valid req_query_rel",req_query_rel);
-                      content[i] = {};                     
-                  }
-              };
-              //if (req_query_rel == undefined) return;                        
-  
-              //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
-          });
-          //for (let i = 0; i< content.length; i++){
-          let tempContent = [...content];
-          content.splice(0,content.length);
-          tempContent.forEach(cc =>{
-             if (Object.keys(cc).length > 0 ) 
-                 content.push(cc);
-                  //content.splice(content.indexOf(cc),1);
-                  //content[i] = undefined;
-                  //content.splice(content.indexOf(content[i]),1);
-              //console.log("----content",content);
-          });
-          /*console.log("----content.length",content.length);
-          if (content.length ==1){
-              console.log("content.length = 1 ",content);
-          }*/
-          
-          //let contentTemp = me.contentACamelCaseContent(content);
-          //console.log("contentTemp",contentTemp);
-          return content;
-      }
     createTriggerUuid(database, group, uuid){
         let trigger = `
         CREATE TRIGGER AutoGenerate_${group.name}_${uuid}
@@ -670,7 +600,8 @@ class CtrlApi{
         });            
         return data_obj_temp;
     }
-    buildQueryApi(findcondition, api_query, req_query){
+    buildQueryApi(findcondition, api_query, req_query,table_alias=''){
+		if (table_alias.length!='') table_alias=table_alias+".";
         //let regParam = /\:[a-zA-Z\_\-]+/g;
         //let getParamApi = api.route.match(regParam);
         if (api_query===undefined || req_query=="") return findcondition;
@@ -679,7 +610,7 @@ class CtrlApi{
         let where_array = []; 
         api_query_array.forEach( query => {
             if (req_query[query] !== undefined)
-                where_array.push(`${query} = '${req_query[query]}'`);
+                where_array.push(`${table_alias}${query} = '${req_query[query]}'`);
         });
         let sql_conditions = where_array.join(" AND ");
         console.log("sql_conditions", sql_conditions);
@@ -690,7 +621,8 @@ class CtrlApi{
         else
             return `WHERE ${findcondition} ${sql_conditions}`;
     }
-    buildQueryApiFilter(findcondition, group, fields, req_query){
+    buildQueryApiFilter(findcondition, group, fields, req_query, table_alias=''){
+		if (table_alias.length!='') table_alias=table_alias+".";
         if (req_query == null) return  findcondition;
         var me = this;        
         let fields_array = fields.split(",");;
@@ -728,27 +660,28 @@ class CtrlApi{
                         console.log('------value_betweeen.type:',me.getTypeParam(value_betweeen));
                         if (me.getTypeParam(value_like)=='array'){
                             value_like.forEach(v=>{
-                                where_or_like.push(`(${query} like '%${v}%')`);
+                                where_or_like.push(`(${table_alias}${query} like '%${v}%')`);
                             });                        
                         }else{
                             if (value_like!==undefined)
-                                where_or_like.push(`(${query} like '%${value_like}%')`);
+                                where_or_like.push(`(${table_alias}${query} like '%${value_like}%')`);
                         }
                         if (me.getTypeParam(value_equal)=='array'){
                             value_equal.forEach(v=>{
-                                where_or_equal.push(`(${query} = '${v}')`);
+                                where_or_equal.push(`(${table_alias}${query} = '${v}')`);
                             });                        
                         }else{
                             if (value_equal!==undefined)
-                                where_or_equal.push(`(${query} = '${value_equal}')`);
+                                where_or_equal.push(`(${table_alias}${query} = '${value_equal}')`);
                         }
                         if (me.getTypeParam(value_betweeen)=='object'){
                             if (value_betweeen['from']!=undefined && value_betweeen['to']!=undefined ){
                                 //strftime('%Y-%m-%d %H:%M:%S',datetime(create_date,'unixepoch','localtime'))
                                 if (fieldInfo.value=='date')
-                                    where_or_between.push(`(strftime('%Y-%m-%d %H:%M:%S',datetime(${query},'unixepoch','localtime')) between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
+									where_or_between.push(`(datetime(${table_alias}${query}/ 1000,'unixepoch','localtime') between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
+                                    //where_or_between.push(`(strftime('%Y-%m-%d %H:%M:%S',datetime(${query}/ 1000,'unixepoch','localtime')) between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
                                 else
-                                    where_or_between.push(`(${query} between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
+                                    where_or_between.push(`(${table_alias}${query} between '${value_betweeen['from']}' and '${value_betweeen['to']}')`);
                             };
                         }else{
                         }
@@ -807,16 +740,20 @@ class CtrlApi{
                     let filterCondition = '';
                     let conditionsSql = [];
                     let findcondition = '';
+                    let findconditionAlias = '';
+					let tableAlias = "t"+nanoUuid();
 
                     findcondition = me.buildQueryApiFilter(findcondition,group,f,req.query);
 
                     //console.log("getParamApi",getParamApi);
                     console.log("findcondition:", req.params[api.route.replace(":","")]);
-                    if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" )
+                    if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" ){
                         findcondition = ` WHERE ${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;                    
-                        
+						findconditionAias = ` WHERE ${tableAlias}.${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;
+					}
 
                         findcondition = me.buildQueryApi(findcondition, api.query, req.query);//` WHERE ${api.query.replace(":","")} = '${req.query[api.query]}'`;
+						findconditionAlias = me.buildQueryApi(findconditionAlias, api.query, req.query, tableAlias);//` WHERE ${api.query.replace(":","")} = '${req.query[api.query]}'`;
                         
                         console.log("---- findcondition:", findcondition);
                         console.log("--req.query:",req.query );
@@ -833,11 +770,13 @@ class CtrlApi{
                         let rowsNumber = tot[0]['total'];
                         respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
                         respuesta.pagination.rowsNumber = rowsNumber;                        
-                        console.log("sel", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
+                        console.log("--sel--", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
-                        respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        let deep = req.query['deep'] != undefined ? req.query['deep']:0;
-                        me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route);
+                        respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} `).all();
+                        
+						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending}`;
+
+                        me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -850,10 +789,11 @@ class CtrlApi{
                         console.log(" ----- NOT HERE -----");
                     }else{
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
-                        respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
+                        respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition}`).all();
+						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
 						console.log(" ----- HERE -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route);
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
 						console.log(" ----- HERE -----",respuesta.content);
                     }
                     me.contentACamelCase(respuesta);

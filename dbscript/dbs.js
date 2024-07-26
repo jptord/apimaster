@@ -2018,11 +2018,11 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
+                        "out": "*dashboard"
                     },
                     {
                         "method": "get",
@@ -2034,11 +2034,11 @@
                     },
                     {
                         "method": "get",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
                         "in": "",
                         "type": "custom",
-                        "out": "*dashboard"
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     }
                 ],
                 "datacustom": [
@@ -2048,6 +2048,7 @@
                             "id",
                             "name",
                             "code",
+                            "image_id",
                             "image",
                             "assignments"
                         ]
@@ -2056,11 +2057,11 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
                         "in": null,
                         "type": "custom",
-                        "out": "dashboard"
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2072,11 +2073,11 @@
                     },
                     {
                         "method": "GET",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_sync"
+                        "out": "dashboard"
                     },
                     {
                         "method": "GET",
@@ -2237,16 +2238,9 @@
                         "id": "uuid|pk",
                         "name": "string",
                         "code": "string",
+                        "image_id": "number",
                         "image": "[images|id|image_id]",
                         "assignments": "[[assignments|personal_id|id]]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
                     },
                     "custom_applogin": {
                         "id": "uuid|pk",
@@ -2254,6 +2248,14 @@
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
                         "create_date": "date",
                         "update_date": "date"
                     },
@@ -2288,8 +2290,11 @@
                     },
                     "dashboard_assignments": {
                         "id": "uuid|pk",
+                        "personal_id": "number",
                         "schedule_id": "number",
-                        "schedule": "[schedule|id|schedule_id]"
+                        "schedule": "[schedule|id|schedule_id]",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]"
                     },
                     "custom_bypersonal_assignments": {
                         "id": "uuid|pk",
@@ -2421,7 +2426,7 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
                         "in": "",
                         "type": "custom",
@@ -2429,23 +2434,27 @@
                     },
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
                     }
                 ],
-                "datacustom": [],
-                "apis": [
+                "datacustom": [
                     {
-                        "method": "GET",
-                        "route": "syncfull",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_syncfull"
-                    },
+                        "name": "dashboard",
+                        "fields": [
+                            "id",
+                            "name",
+                            "description",
+                            "distance",
+                            "district_id",
+                            "district"
+                        ]
+                    }
+                ],
+                "apis": [
                     {
                         "method": "GET",
                         "route": "sync",
@@ -2453,6 +2462,14 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "syncfull",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_syncfull"
                     },
                     {
                         "method": "GET",
@@ -2575,7 +2592,15 @@
                         "district": "[district|id|district_id]",
                         "points": "[[points|route_id|id]]"
                     },
-                    "custom_sync": {
+                    "dashboard": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "description": "string",
+                        "distance": "number",
+                        "district_id": "number",
+                        "district": "[district|id|district_id]"
+                    },
+                    "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -2585,7 +2610,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_syncfull": {
+                    "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -3302,8 +3327,11 @@
                         "name": "dashboard",
                         "fields": [
                             "id",
+                            "personal_id",
                             "schedule_id",
-                            "schedule"
+                            "schedule",
+                            "route_id",
+                            "route"
                         ]
                     }
                 ],
@@ -3424,8 +3452,11 @@
                     },
                     "dashboard": {
                         "id": "uuid|pk",
+                        "personal_id": "number",
                         "schedule_id": "number",
-                        "schedule": "[schedule|id|schedule_id]"
+                        "schedule": "[schedule|id|schedule_id]",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]"
                     },
                     "custom_bypersonal": {
                         "id": "uuid|pk",
