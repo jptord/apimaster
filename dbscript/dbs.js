@@ -126,6 +126,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -224,6 +225,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -321,6 +323,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -468,6 +471,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -617,6 +621,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -782,6 +787,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -951,6 +957,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1039,6 +1046,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1137,6 +1145,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1331,6 +1340,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1591,6 +1601,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1810,6 +1821,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2019,9 +2031,37 @@
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
+                    },
+                    {
+                        "method": "get",
+                        "route": "dashboard",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "*dashboard"
+                    }
+                ],
+                "datacustom": [
+                    {
+                        "name": "dashboard",
+                        "fields": [
+                            "id",
+                            "name",
+                            "code",
+                            "image",
+                            "assignments"
+                        ]
                     }
                 ],
                 "apis": [
+                    {
+                        "method": "GET",
+                        "route": "dashboard",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "dashboard"
+                    },
                     {
                         "method": "GET",
                         "route": "applogin",
@@ -2193,6 +2233,13 @@
                         "assignments": "[[assignments|personal_id|id]]",
                         "sessions": "[[session|personal_id|id]]"
                     },
+                    "dashboard": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "image": "[images|id|image_id]",
+                        "assignments": "[[assignments|personal_id|id]]"
+                    },
                     "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
@@ -2238,6 +2285,11 @@
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "dashboard_assignments": {
+                        "id": "uuid|pk",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]"
                     },
                     "custom_bypersonal_assignments": {
                         "id": "uuid|pk",
@@ -2384,6 +2436,7 @@
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2696,6 +2749,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2878,6 +2932,7 @@
                     }
                 ],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2985,6 +3040,7 @@
                         "out": "id,route_id,section,lat,lon"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3104,6 +3160,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3240,6 +3297,16 @@
                         "out": "id,personal_id,route_id"
                     }
                 ],
+                "datacustom": [
+                    {
+                        "name": "dashboard",
+                        "fields": [
+                            "id",
+                            "schedule_id",
+                            "schedule"
+                        ]
+                    }
+                ],
                 "apis": [
                     {
                         "method": "GET",
@@ -3354,6 +3421,11 @@
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "dashboard": {
+                        "id": "uuid|pk",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]"
                     },
                     "custom_bypersonal": {
                         "id": "uuid|pk",
@@ -3476,6 +3548,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3612,6 +3685,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3725,6 +3799,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3843,6 +3918,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -3978,6 +4054,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4148,6 +4225,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4304,6 +4382,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4455,6 +4534,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4585,6 +4665,7 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4780,6 +4861,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4998,6 +5080,7 @@
                         "out": "id"
                     }
                 ],
+                "datacustom": [],
                 "apis": [
                     {
                         "method": "POST",

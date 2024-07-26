@@ -135,10 +135,10 @@ class CtrlApi{
         return strArr.join(',');
     }
 
-    appendSubquerys(content,data_fields,req,deep){
+    appendSubquerys(content,data_fields,req,parent_data_name){
       //  if (deep == undefined) deep = 0;    
         console.log("-----appendSubquerys.req:",req);    
-        console.log("-----appendSubquerys.deep:",deep);    
+       // console.log("-----appendSubquerys.deep:",deep);    
         //if (deep<=1)  return content;
         let me = this;
         
@@ -156,8 +156,22 @@ class CtrlApi{
             //console.log("idArr",idArr);
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
             //console.log("relGroup,",relGroup,r.table);
-            let f = me.toFields(relGroup.data['select']);  
-            let fr = relGroup.data['select'];
+
+            let chain_data = false;
+            if ( relGroup.data.hasOwnProperty(parent_data_name)){
+                chain_data=true;
+            }
+            console.log("is_chain_",chain_data, data_fields);
+            let f, fr;
+            if (chain_data){
+                f = me.toFields(relGroup.data[parent_data_name]);
+                fr = relGroup.data[parent_data_name];
+            }else{
+                f = me.toFields(relGroup.data['select']);
+                fr = relGroup.data['select'];
+            }
+             
+
             //console.log("relGroup.f ",f);
             console.log("---fr:",fr);
             //console.log("---r:",r);
@@ -182,13 +196,18 @@ class CtrlApi{
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
 				console.log("cc[r.name] r.name:",r.name);
-				console.log("r.array ",r.array);				
+				console.log("r.array ",r.array);		
+				console.log("--f ",f);				
+                console.log("--fr ",fr);		
+                console.log("--chain_data ",chain_data);	
+                console.log("--data_fields ",data_fields);		
+                console.log("--req_query_rel ",req_query_rel);				
                 
                 let subcontent;
-			    if (deep>0 || req_query_rel.query != undefined ) 
-                    subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,deep-1);
+			    if (chain_data && req_query_rel.query != undefined ) 
+                    subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name);
 				else
-					subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
+					subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,parent_data_name);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -209,20 +228,98 @@ class CtrlApi{
         tempContent.forEach(cc =>{
            if (Object.keys(cc).length > 0 ) 
                content.push(cc);
-                //content.splice(content.indexOf(cc),1);
-                //content[i] = undefined;
-                //content.splice(content.indexOf(content[i]),1);
-            //console.log("----content",content);
         });
-		/*console.log("----content.length",content.length);
-		if (content.length ==1){
-			console.log("content.length = 1 ",content);
-		}*/
-        
-        //let contentTemp = me.contentACamelCaseContent(content);
-        //console.log("contentTemp",contentTemp);
         return content;
     }
+    
+    appendSubquerysTemp(content,data_fields,req,deep){
+        //  if (deep == undefined) deep = 0;    
+          console.log("-----appendSubquerys.req:",req);    
+          console.log("-----appendSubquerys.deep:",deep);    
+          //if (deep<=1)  return content;
+          let me = this;
+          
+          let relations = this.toRelations(data_fields);
+          console.log("appendSubquerys.data_fields",data_fields);
+          //console.log("appendSubquerys.relations",relations);
+          relations.forEach(r => {
+              let idArr = [];
+  
+             // console.log("---content:",content);
+              console.log("---r:",r);
+              let findcondition = '';
+  
+              content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
+              //console.log("idArr",idArr);
+              let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
+              //console.log("relGroup,",relGroup,r.table);
+              let f = me.toFields(relGroup.data['select']);  
+              let fr = relGroup.data['select'];
+              //console.log("relGroup.f ",f);
+              console.log("---fr:",fr);
+              //console.log("---r:",r);
+              console.log("---req.query:",req.query);
+              let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
+              
+              console.log("---r.name:",r.name);
+              console.log("---req_query_rel:",req_query_rel);
+              findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
+              let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${idArr.join(',')}) ${findcondition.replaceAll('WHERE',' AND ')}`;
+              console.log("----relQuery: " , relQuery);
+  
+              if(idArr.length == 0)
+                  return content;
+  
+              let res_temp = me.database.db.prepare(relQuery).all();
+             // console.log("res_temp ",res_temp);
+              //console.log("---content ",content);
+              
+              for (let i = 0; i< content.length; i++){  
+                  if (Object.keys(content[i]).length == 0 ) continue;
+                  let cc = content[i];
+                  cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
+                  console.log("cc[r.name] r.name:",r.name);
+                  console.log("r.array ",r.array);				
+                  
+                  let subcontent;
+                  if (deep>0 || req_query_rel.query != undefined ) 
+                      subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,deep-1);
+                  else
+                      subcontent = me.appendSubquerys(cc[r.name],f,req_query_rel,deep-1);
+                  cc[r.name] = subcontent;
+                  //console.log("subcontent:", subcontent);
+                  if (!r.array){
+                      cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;                    
+                  }
+                  if ((subcontent.length ==0 ) && req_query_rel.query != undefined ){
+                      console.log("no valid req_query_rel",req_query_rel);
+                      content[i] = {};                     
+                  }
+              };
+              //if (req_query_rel == undefined) return;                        
+  
+              //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+          });
+          //for (let i = 0; i< content.length; i++){
+          let tempContent = [...content];
+          content.splice(0,content.length);
+          tempContent.forEach(cc =>{
+             if (Object.keys(cc).length > 0 ) 
+                 content.push(cc);
+                  //content.splice(content.indexOf(cc),1);
+                  //content[i] = undefined;
+                  //content.splice(content.indexOf(content[i]),1);
+              //console.log("----content",content);
+          });
+          /*console.log("----content.length",content.length);
+          if (content.length ==1){
+              console.log("content.length = 1 ",content);
+          }*/
+          
+          //let contentTemp = me.contentACamelCaseContent(content);
+          //console.log("contentTemp",contentTemp);
+          return content;
+      }
     createTriggerUuid(database, group, uuid){
         let trigger = `
         CREATE TRIGGER AutoGenerate_${group.name}_${uuid}
@@ -740,7 +837,7 @@ class CtrlApi{
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
-                        me.appendSubquerys(respuesta.content, group.data[api.out], req,deep);
+                        me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -756,7 +853,7 @@ class CtrlApi{
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name}  ${findcondition}`).all();
 						console.log(" ----- HERE -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req,deep);
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route);
 						console.log(" ----- HERE -----",respuesta.content);
                     }
                     me.contentACamelCase(respuesta);

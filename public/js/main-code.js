@@ -670,7 +670,7 @@ function toJson(texto){
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[]};
+                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[]};
                 acDb.groups.push(acGroup);
                 return;
             }            
@@ -693,6 +693,10 @@ function toJson(texto){
                     acGroup.apicustom.push(apiCustomFormat(values[1].trim().toLowerCase()));
                     return;
                 }
+                if (values[0].trim().includes("[data]")){
+                    acGroup.datacustom.push(dataCustomFormat(values[1].trim().toLowerCase()));
+                    return;
+                }
                 
                 let field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
                 acGroup.fields.push(field);
@@ -700,6 +704,7 @@ function toJson(texto){
             }
         }
     });
+
 
     arDb.forEach( d => {
         d.groups.forEach( g => {            
@@ -745,7 +750,18 @@ function getAllApis(group,customApi){
     } );
     return apis;
 }
-
+function dataCustomFormat(value){
+    let options = value.split("|");
+    let objdata = {};
+    options.forEach(op => {
+        let values = op.trim().split("=");
+        if (values[0].trim()=="name") objdata['name'] = values[1].trim();
+        if (values[0].trim()=="fields") objdata['fields'] = values[1].trim().split(",");
+        //objapi[values[0].trim()] = values[1].trim();
+    });
+    
+    return objdata;
+}
 function apiCustomFormat( value){
     
     let apiCustom = [];
@@ -812,7 +828,16 @@ function formatearArray(groupNor){
             out : null,
           }
         ]
-      }
+      };
+      
+      if (groupNor.hasOwnProperty('datacustom'))
+      groupNor.datacustom.forEach(dc => {
+        group.data[`${dc.name}`]= {};
+        dc.fields.forEach( f => {
+            if ( group.data.select.hasOwnProperty(f) )
+                group.data[`${dc.name}`][f] = group.data.select[f];
+        });
+      });
     return group;
 }
 
@@ -873,8 +898,6 @@ function formatearArrayRel(groupNor,groups){
                 }
             }
     });
-
-
     return groupNor;
 }
 
@@ -988,7 +1011,22 @@ function toHuman(dbs){
             });
             testX += campos_extra.join("");
             */
-            testX += apis_custom.join("");            
+            testX += apis_custom.join("");          
+            
+            
+            let data_custom = [];
+            if (group.datacustom!=undefined){
+                let data_data = group.datacustom;
+                data_data.forEach(data => {
+                    let custom_data_array = [];
+                    custom_data_array.push(`name=${data.name}`);
+                    custom_data_array.push(`fields=${data.fields.join(",")}`);
+                    data_custom.push(`\n\t\t\t[data]:${custom_data_array.join("|")}`);
+                });
+                testX += data_custom.join(""); 
+            }
+
+
             testX += `\n\n`;             
         });
     });
@@ -999,8 +1037,15 @@ function searchData(group, key, apiValue){
     //let regOut = /(?<=out=)\w+/g;
     //let valueOut = apiValue.match(regOut); 
     
-    if (key != "out") return apiValue;
+    if (key != "out") return apiValue;    
+    
     let selectData = Object.keys(group.data).filter( k=> k == apiValue );
+
+    let apiCustom =  group.apicustom.filter(ac => ac.route == apiValue)[0]; 
+    console.log('---apiCustom',apiCustom,apiValue);
+    if (apiCustom!=undefined)
+        if (apiCustom.out == "*"+apiValue) return apiCustom.out;
+    
     let fieldNames = [];
     console.log("apiValue",apiValue);
     
@@ -1016,13 +1061,18 @@ function searchData(group, key, apiValue){
     return fieldNames.join(',');
 }
 function searchDataInverse(group, api, api_out){
-    let data_name = `custom_${api.route}`;
-    group.data[data_name] = {}
-    api_out.split(",").forEach(field_custom => {
-        let field_type = group.data.select[field_custom];
-        console.log("field_type",field_type);
-        group.data[data_name][field_custom] = field_type;
-    })
+    let data_name;
+    if(api_out.includes("*")){
+        data_name = api_out.trim().replaceAll("*","").trim();
+    }else{
+        data_name = `custom_${api.route}`;
+        group.data[data_name] = {}
+        api_out.split(",").forEach(field_custom => {
+            let field_type = group.data.select[field_custom];
+            console.log("field_type",field_type);
+            group.data[data_name][field_custom] = field_type;
+        })
+    }
     //group.data[data_name] = 
 
     return data_name;
