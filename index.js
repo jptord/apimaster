@@ -16,7 +16,7 @@ const JSZip = require ("jszip");
 const database = new Database();
 const ctrlApi = new CtrlApi();
 database.iniciar();
-const port = 9988;
+const port = 9987;
 var public = path.join(__dirname, "public");
 
 app.use(cors());
@@ -52,7 +52,7 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   console.log(db_array);
 
-  let apiDoc = new ApiDoc('192.168.100.7','9988');
+  let apiDoc = new ApiDoc('192.168.100.7','9987');
   //let apiDoc = new ApiDoc('172.20.50.67','9988');
 
 

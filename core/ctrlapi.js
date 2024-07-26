@@ -2,6 +2,9 @@ const express = require('express')
 const util = require('util')
 
 
+const fs = require('node:fs');
+const decompress = require('decompress');
+
 var uuids = {};
 const { Database } = require('../core/database.js');
 const { ApiDoc } = require('../core/apidoc.js');
@@ -32,6 +35,8 @@ class CtrlApi{
         if (name == "time" ) return `${column} DATETIME`;
         if (name == "boolean" ) return `${column} BOOLEAN DEFAULT false NOT NULL`;
         if (name == "string" ) return `${column} VARCHAR(255)`;
+        if (name == "b64" ) return `${column} TEXT`;
+        if (name == "b64zip" ) return `${column} TEXT`;
     }
     toFields(data){
         let strArr = [];
@@ -96,6 +101,7 @@ class CtrlApi{
     }
     toRelation(name,str){
             //evitar las subconsultas
+            console.log("name,str",name,str);
         if (str.includes("[[")) {
             let subArr = str.replace("[[","").replace("]]","").trim().split("|");
             return {name:name,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:true};
@@ -137,14 +143,51 @@ class CtrlApi{
         console.log("strArr",strArr);
         return strArr.join(',');
     }
-
+    getB64zip(data_fields){
+        let fields = [];
+        Object.keys(data_fields).forEach( k=> {
+            if (data_fields[k] == 'b64zip')
+                fields.push(k);
+        });
+        return fields;        
+    }
+    getB64zip(b64){
+        contenido  = [];
+        decompress(b64, 'dist').then(files => {
+            let content = "";
+            files.forEach(f => {
+                const rowString = Buffer.from(f.data);
+                me.tracks = [];
+                let lines = rowString.toString().split('\n');
+                lines.forEach( line => {
+                    let [t,lat,lon,b,acc] = line.split('\t');
+                    me.addTrack(new Track({
+                        t:t,
+                        lat:lat,
+                        lon:lon,
+                        bat:b,
+                        acc:acc
+                    }));
+                });
+                me.trackUpdated = true;
+            })
+        });
+        return contenido;
+    }
     appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
         console.log("-----appendSubquerys.req:",req);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
+        //let special_b64zip = this.getB64zip(data_fields);
+
         console.log("appendSubquerys.data_fields",data_fields);
         console.log("relations.length",relations.length);
+     /*   content.forEach( c=>{
+            special_b64zip.forEach( sk =>{
+                c[sk] = b64zipToText(c[sk]);
+            } );
+        } );*/
         relations.forEach(r => {
             let idArr = [];
 
@@ -723,6 +766,7 @@ console.log("findconditionAlias",findconditionAlias);
 
         group.apis.forEach(api => {
             let rel;
+            console.log("api",api);
             if (api.type == "rel") rel = me.toRelation('',api.rel);
             if (api.method == "GET" && (api.type == "auto" || api.type == "custom" )){
                 console.log(`route ${api.type} GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
@@ -749,7 +793,7 @@ console.log("findconditionAlias",findconditionAlias);
                     console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[api.route.replace(":","")] !== undefined && req.params[api.route.replace(":","")] != "" ){
                         findcondition = ` WHERE ${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;                    
-						findconditionAias = ` WHERE ${tableAlias}.${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;
+						findconditionAlias = ` WHERE ${tableAlias}.${api.route.replace(":","")} = '${req.params[api.route.replace(":","")]}'`;
 					}
 
                         findcondition = me.buildQueryApi(findcondition, api.query, req.query);//` WHERE ${api.query.replace(":","")} = '${req.query[api.query]}'`;
@@ -778,6 +822,7 @@ console.log("findconditionAlias",findconditionAlias);
 
                         me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
 
+                        
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
                                 let regx = new RegExp("^.*"+req.query.keyword.toLowerCase()+".*$");
@@ -804,6 +849,7 @@ console.log("findconditionAlias",findconditionAlias);
                 console.log(`route ${api.type} GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
                 router.get(`/${group.alias===undefined?group.name:group.alias}/${api.route}`, async function (req, res){
 
+					let tableAlias = "t"+nanoUuid();
                     
                     res.setHeader('Content-Type', 'application/json');
                     let respuesta = {content: [],
@@ -812,9 +858,12 @@ console.log("findconditionAlias",findconditionAlias);
                     let f = me.toFields(group.data[api.out]);                        
 
                     let findcondition = '';
+                    let findconditionAlias = '';
+
                     //console.log("findcondition:", req.params[api.route.replace(":","")]);
                     if (req.params[ rel.field ] !== undefined && req.params[ rel.field ] != "" ){
                         findcondition = ` WHERE ${rel.field} = '${req.params[ rel.field ]}'`;
+                        findconditionAlias = ` WHERE ${tableAlias}.${rel.field} = '${req.params[ rel.field ]}'`;
                     }
 
                     if (req.query.page != undefined && req.query.size != undefined &&
@@ -831,8 +880,12 @@ console.log("findconditionAlias",findconditionAlias);
                         respuesta.pagination.rowsNumber = rowsNumber;
                         console.log("sel", `select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
+
+                        let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending}`;
+
+
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out]);
+                        me.appendSubquerys(respuesta.content,group.data[api.out], api.route, query_parent);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -845,8 +898,11 @@ console.log("findconditionAlias",findconditionAlias);
                         
                     }else{
                         console.log("GET query", `select ${f} from ${rel.table} ${findcondition}` );
+
+                        let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
+                        console.log("query_parent",query_parent);
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req);
+                        me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route, query_parent);
                     }                        
 
 
