@@ -154,35 +154,53 @@ class CtrlApi{
     }
 
 	
-	async unzip(b64) {
+	unzip(b64) {
 		return new Promise((resolve, reject) => {
 			const zip = JSZip();
-			zip.loadAsync(b64, { base64: true }).then(async (zipfile) => {
-				
-				 Object.keys(zipfile.files).forEach(async f => {
-					//console.log("---file", await zipfile.files[f].async("string"));
-					resolve(zipfile.files[f].async("string"));
-					return;
-					
+			try{
+				zip.loadAsync(b64, { base64: true }).then( (zipfile) => {
+					Object.keys(zipfile.files).forEach( f => {
+						resolve(zipfile.files[f].async("string"));
+					});
+				}, function (e) {
+					resolve("");
 				});
-			}, function (e) {
-				reject("");
-			});
+			}catch(e){
+				resolve("");
+			}
 		});
 	}
+	transformTxt (txt){
+		let lines = txt.split("\n");		
+		return lines.map(l=>{
+			let sp = l.split("\t");
+			return {t:Number(sp[0]),lat:Number(sp[1]),lon:Number(sp[2]),bat:Number(sp[3]),acc:Number(sp[5])}
+		});
+	}
+	
     async appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
         console.log("-----appendSubquerys.req:",req);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
-        let special_b64zip = this.getB64zip(data_fields);
+        const special_b64zip = this.getB64zip(data_fields);
 
         console.log("appendSubquerys.data_fields",data_fields);
         console.log("relations.length",relations.length);
-        await content.forEach(async c=>{
-            await special_b64zip.forEach( async sk =>{
+		content = await Promise.all( content.map( r => {
+			return new Promise( async (resolve,reject)=>{
+				for (let i = 0; i < special_b64zip.length; i++){
+					r[special_b64zip[i]] = await me.unzip(r[special_b64zip[i]]);
+					r[special_b64zip[i]] = me.transformTxt(r[special_b64zip[i]]);
+					r['coords'] = r[special_b64zip[i]].map(s=>[s.lon, s.lat]);
+				}
+				resolve(r);
+			} );
+		}));
+        content.forEach( c=>{
+            special_b64zip.forEach( async sk =>{
                 c[sk] = await this.unzip(c[sk]);
-				console.log(await c[sk]);
+				console.log( c[sk]);
             } );
         } );
         relations.forEach(async r => {
@@ -257,9 +275,9 @@ console.log("findconditionAlias",findconditionAlias);
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
-                    subcontent = me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query);
+                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query);
 				else
-					subcontent = me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query);
+					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -817,7 +835,7 @@ console.log("findconditionAlias",findconditionAlias);
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending}`;
 
-                        await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
 
                         
                         if (req.query.keyword != undefined){
@@ -835,7 +853,7 @@ console.log("findconditionAlias",findconditionAlias);
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
 						console.log(" ----- HERE -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
 						console.log(" ----- HERE -----",respuesta.content);
                     }
                     me.contentACamelCase(respuesta);
@@ -882,7 +900,7 @@ console.log("findconditionAlias",findconditionAlias);
 
 
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out], api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.route, query_parent);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -899,7 +917,7 @@ console.log("findconditionAlias",findconditionAlias);
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
                         console.log("query_parent",query_parent);
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route, query_parent);
                     }                        
 
 

@@ -231,6 +231,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -477,6 +478,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -2092,6 +2094,15 @@
                         "in": "",
                         "type": "custom",
                         "out": "*dashboard"
+                    },
+                    {
+                        "method": "get",
+                        "route": "assignmentssync",
+                        "query": "",
+                        "in": "",
+                        "rel": "assignments",
+                        "type": "customrel",
+                        "out": "*assignmentsyncselect"
                     }
                 ],
                 "datacustom": [
@@ -2105,13 +2116,31 @@
                             "image",
                             "assignments"
                         ]
+                    },
+                    {
+                        "name": "assignmentsyncselect",
+                        "fields": [
+                            "id",
+                            "personal_id",
+                            "route_id",
+                            "route"
+                        ]
                     }
                 ],
                 "apis": [
                     {
                         "method": "GET",
+                        "route": ":personal_id/assignmentssync",
+                        "rel": "[[assignments|personal_id|id]]",
+                        "in": null,
+                        "type": "rel",
+                        "out": "assignmentsyncselect"
+                    },
+                    {
+                        "method": "GET",
                         "route": "dashboard",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "dashboard"
@@ -2120,6 +2149,7 @@
                         "method": "GET",
                         "route": "applogin",
                         "query": "code",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_applogin"
@@ -2128,6 +2158,7 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -2295,6 +2326,12 @@
                         "image": "[images|id|image_id]",
                         "assignments": "[[assignments|personal_id|id]]"
                     },
+                    "assignmentsyncselect": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]"
+                    },
                     "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
@@ -2349,6 +2386,12 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]",
                         "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "assignmentsyncselect_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]"
                     },
                     "custom_bypersonal_assignments": {
                         "id": "uuid|pk",
@@ -2513,6 +2556,7 @@
                         "method": "GET",
                         "route": "syncfull",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_syncfull"
@@ -2521,6 +2565,7 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -3125,6 +3170,7 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -3388,6 +3434,15 @@
                             "route",
                             "tracks"
                         ]
+                    },
+                    {
+                        "name": "assignmentsyncselect",
+                        "fields": [
+                            "id",
+                            "personal_id",
+                            "route_id",
+                            "route"
+                        ]
                     }
                 ],
                 "apis": [
@@ -3395,6 +3450,7 @@
                         "method": "GET",
                         "route": "bypersonal",
                         "query": "personal_id",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_bypersonal"
@@ -3514,6 +3570,12 @@
                         "route": "[routes|id|route_id]",
                         "tracks": "[[tracks|assignment_id|id]]"
                     },
+                    "assignmentsyncselect": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]"
+                    },
                     "custom_bypersonal": {
                         "id": "uuid|pk",
                         "personal_id": "number",
@@ -3533,7 +3595,7 @@
                         "comments": "string",
                         "complete": "number",
                         "routeb64": "string",
-                        "trackb64": "string"
+                        "trackb64": "b64zip"
                     },
                     "create_tracks": {
                         "id": "uuid|pk",
@@ -3549,7 +3611,7 @@
                         "comments": "string",
                         "complete": "number",
                         "routeb64": "string",
-                        "trackb64": "string"
+                        "trackb64": "b64zip"
                     },
                     "insert_tracks": {
                         "assignment_id": "number",
@@ -3564,7 +3626,7 @@
                         "comments": "string",
                         "complete": "number",
                         "routeb64": "string",
-                        "trackb64": "string"
+                        "trackb64": "b64zip"
                     },
                     "dashboard_tracks": {
                         "id": "uuid|pk",
@@ -4019,6 +4081,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4155,6 +4218,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4306,7 +4370,7 @@
                     },
                     {
                         "name": "trackb64",
-                        "value": "string"
+                        "value": "b64zip"
                     }
                 ],
                 "seeder": [],
@@ -4338,6 +4402,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4503,6 +4568,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4655,6 +4721,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4982,6 +5049,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5201,6 +5269,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"

@@ -474,6 +474,19 @@ function cargarJson (){
     );
 }
 
+function aRelacion(campo){
+	if (campo==undefined) return campo;
+    if (campo.includes("[[")){
+        let val_clean = campo.replaceAll("[","").replaceAll("]","").split("|");
+        return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:true };
+    }
+    if (campos[d].includes("[")){
+        let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
+//        console.log(campos[d]);
+        return { name:val_clean[0].trim(),field:val_clean[1].trim(),ownfield:val_clean[2].trim(),array:false };
+    }
+    return null;
+}
 function esRelacion(campos,d){
     if (campos[d].includes("[[")){
         let val_clean = campos[d].replaceAll("[","").replaceAll("]","").split("|");
@@ -710,7 +723,7 @@ function toJson(texto){
         d.groups.forEach( g => {            
             let grouptemp = formatearArray( g );
             let customApi = g.apicustom ;
-            grouptemp.apis = getAllApis(grouptemp,customApi);
+            grouptemp.apis = getAllApis(grouptemp,customApi,d,g);
             
             g['apis'] = grouptemp.apis;
             g['data'] = grouptemp.data;            
@@ -732,21 +745,46 @@ function toJson(texto){
 }
 
 //[api]:method=get|route=|query=modulo_id|in=|out=|type=auto
-function getAllApis(group,customApi){    
+function getAllApis(group,customApi,database,grp){    
     let apis = group.apis;
-    console.log("--customApi--",customApi);
     if (customApi==null || customApi==undefined || customApi.length==0) return apis;
-    console.log("--group--",group);
-    console.log("--customapi--",customApi);
     customApi.forEach( (api) => {
-        apis.unshift({
-            method: api.method?api.method.toUpperCase():'GET',
-            route:  api.route?api.route:'',
-            query:  api.query,
-            in:     api.in?api.in:null,
-            type:   api.type?api.type:'custom',
-            out:    api.out?searchDataInverse(group,api, api.out):null,
-        });
+		let rel = this.aRelacion(group.data['select'][api.rel]);
+		if (api['type']=='customrel'){
+			console.log("rel",rel);
+			console.log("api",api);
+			console.log("group.data",group.data);
+			apis.unshift({
+				method: api.method?api.method.toUpperCase():'GET',
+				route:  `:${rel.field}/${api.route}`,
+				rel:  	group.data['select'][api.rel],
+				in:     api.in?api.in:null,
+				type:   'rel',
+				out:    api.out.replaceAll("*",""),
+			});
+			let api_out = api.out.replaceAll("*","");
+						
+			let tempRelGroup = database.groups.find( g => g.name == rel.name );
+			if (tempRelGroup){				
+				group.data[api_out]={};
+				let gcd = grp.datacustom.find(g=>g.name==api_out);
+				gcd.fields.forEach(f => {
+					let field = tempRelGroup.fields.find( fff=> fff.name == f);
+					group.data[api_out][f] = field.value;
+				});
+			}
+		}else{
+			apis.unshift({
+				method: api.method?api.method.toUpperCase():'GET',
+				route:  api.route?api.route:'',
+				query:  api.query,
+				rel:  	api.rel!=undefined?(group.data[api.rel]):'',
+				in:     api.in?api.in:null,
+				type:   api.type?(api.type=='customrel'?'rel':api.type):'custom',
+				out:    api.out?searchDataInverse(group,api, api.out):null,
+			});
+		}
+        
     } );
     return apis;
 }
@@ -831,13 +869,13 @@ function formatearArray(groupNor){
       };
       
       if (groupNor.hasOwnProperty('datacustom'))
-      groupNor.datacustom.forEach(dc => {
-        group.data[`${dc.name}`]= {};
-        dc.fields.forEach( f => {
-            if ( group.data.select.hasOwnProperty(f) )
-                group.data[`${dc.name}`][f] = group.data.select[f];
-        });
-      });
+      	groupNor.datacustom.forEach(dc => {
+			group.data[`${dc.name}`]= {};
+			dc.fields.forEach( f => {
+				if ( group.data.select.hasOwnProperty(f) )
+					group.data[`${dc.name}`][f] = group.data.select[f];
+			});
+		});
     return group;
 }
 
@@ -999,6 +1037,11 @@ function toHuman(dbs){
                     //console.log("custom_api_array[custom_api_array.length-1]",custom_api_array[custom_api_array.length-1]);
                     //custom_api_array[custom_api_array.length-1] = searchData(group,custom_api_array[custom_api_array.length-1]);
                     //console.log("@custom_api_array[custom_api_array.length-1]",custom_api_array[custom_api_array.length-1]);
+                    apis_custom.push(`\n\t\t\t[api]:${custom_api_array.join("|")}`);
+                }
+                if(api.type=="customrel"){
+                    let custom_api_array = [];
+                    Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':group,k,api[k]}` ));
                     apis_custom.push(`\n\t\t\t[api]:${custom_api_array.join("|")}`);
                 }
             });
