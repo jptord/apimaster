@@ -2,7 +2,7 @@ const express = require('express')
 const util = require('util')
 
 
-const fs = require('node:fs');
+const fs = require('fs');
 const decompress = require('decompress');
 
 var uuids = {};
