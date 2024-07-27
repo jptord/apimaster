@@ -1,6 +1,7 @@
 const express = require('express')
 const util = require('util')
 
+var JSZip = require("jszip");
 
 const fs = require('fs');
 const decompress = require('decompress');
@@ -10,7 +11,7 @@ const { Database } = require('../core/database.js');
 const { ApiDoc } = require('../core/apidoc.js');
 
 var cors = require('cors');
-const { forEach } = require('jszip');
+//const { forEach } = require('jszip');
 var corsOptions = {
     origin: ["http://localhost","http://172.20.50.60","http://172.20.50.60"],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -151,44 +152,40 @@ class CtrlApi{
         });
         return fields;        
     }
-    getB64zip(b64){
-        contenido  = [];
-        decompress(b64, 'dist').then(files => {
-            let content = "";
-            files.forEach(f => {
-                const rowString = Buffer.from(f.data);
-                me.tracks = [];
-                let lines = rowString.toString().split('\n');
-                lines.forEach( line => {
-                    let [t,lat,lon,b,acc] = line.split('\t');
-                    me.addTrack(new Track({
-                        t:t,
-                        lat:lat,
-                        lon:lon,
-                        bat:b,
-                        acc:acc
-                    }));
-                });
-                me.trackUpdated = true;
-            })
-        });
-        return contenido;
-    }
-    appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
+
+	
+	async unzip(b64) {
+		return new Promise((resolve, reject) => {
+			const zip = JSZip();
+			zip.loadAsync(b64, { base64: true }).then(async (zipfile) => {
+				
+				 Object.keys(zipfile.files).forEach(async f => {
+					//console.log("---file", await zipfile.files[f].async("string"));
+					resolve(zipfile.files[f].async("string"));
+					return;
+					
+				});
+			}, function (e) {
+				reject("");
+			});
+		});
+	}
+    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
         console.log("-----appendSubquerys.req:",req);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
-        //let special_b64zip = this.getB64zip(data_fields);
+        let special_b64zip = this.getB64zip(data_fields);
 
         console.log("appendSubquerys.data_fields",data_fields);
         console.log("relations.length",relations.length);
-     /*   content.forEach( c=>{
-            special_b64zip.forEach( sk =>{
-                c[sk] = b64zipToText(c[sk]);
+        await content.forEach(async c=>{
+            await special_b64zip.forEach( async sk =>{
+                c[sk] = await this.unzip(c[sk]);
+				console.log(await c[sk]);
             } );
-        } );*/
-        relations.forEach(r => {
+        } );
+        relations.forEach(async r => {
             let idArr = [];
 
            // console.log("---content:",content);
@@ -820,7 +817,7 @@ console.log("findconditionAlias",findconditionAlias);
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending}`;
 
-                        me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
+                        await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
 
                         
                         if (req.query.keyword != undefined){
