@@ -203,7 +203,9 @@ class CtrlApi{
 				console.log( c[sk]);
             } );
         } );
-        relations.forEach(async r => {
+		//relations.forEach(async r => {
+        for(let ij = 0; ij < relations.length; ij++){
+			let r = relations[ij];
             let idArr = [];
 
            // console.log("---content:",content);
@@ -291,7 +293,7 @@ console.log("findconditionAlias",findconditionAlias);
 			//if (req_query_rel == undefined) return;                        
 
             //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
-        });
+        }
         //for (let i = 0; i< content.length; i++){
         let tempContent = [...content];
         content.splice(0,content.length);
