@@ -220,7 +220,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -232,6 +231,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -467,7 +467,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -479,6 +478,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -2073,30 +2073,27 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "*dashboard"
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     },
                     {
                         "method": "get",
                         "route": "applogin",
                         "query": "code",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
+                        "out": "*dashboard"
                     },
                     {
                         "method": "get",
@@ -2115,8 +2112,6 @@
                             "id",
                             "name",
                             "code",
-                            "image_id",
-                            "image",
                             "assignments"
                         ]
                     },
@@ -2141,27 +2136,30 @@
                     },
                     {
                         "method": "GET",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_sync"
+                        "out": "dashboard"
                     },
                     {
                         "method": "GET",
                         "route": "applogin",
                         "query": "code",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_applogin"
                     },
                     {
                         "method": "GET",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "dashboard"
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2322,8 +2320,6 @@
                         "id": "uuid|pk",
                         "name": "string",
                         "code": "string",
-                        "image_id": "number",
-                        "image": "[images|id|image_id]",
                         "assignments": "[[assignments|personal_id|id]]"
                     },
                     "assignmentsyncselect": {
@@ -2332,20 +2328,20 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
                     "custom_applogin": {
                         "id": "uuid|pk",
                         "name": "string",
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
                         "create_date": "date",
                         "update_date": "date"
                     },
@@ -2523,18 +2519,16 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
@@ -2556,19 +2550,21 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "sync",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
-                        "method": "GET",
                         "route": "syncfull",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_syncfull"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2699,7 +2695,7 @@
                         "district_id": "number",
                         "district": "[district|id|district_id]"
                     },
-                    "custom_syncfull": {
+                    "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -2709,7 +2705,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_sync": {
+                    "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -3159,7 +3155,6 @@
                         "method": "get",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,route_id,section,lat,lon"
@@ -3171,6 +3166,7 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -3417,7 +3413,6 @@
                         "method": "get",
                         "route": "bypersonal",
                         "query": "personal_id",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,personal_id,route_id"
@@ -3451,6 +3446,7 @@
                         "method": "GET",
                         "route": "bypersonal",
                         "query": "personal_id",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_bypersonal"
@@ -3634,7 +3630,8 @@
                         "abandoned": "boolean",
                         "complete": "number",
                         "start_date": "date",
-                        "end_date": "date"
+                        "end_date": "date",
+                        "trackb64": "b64zip"
                     },
                     "custom_sync_tracks": {
                         "id": "uuid|pk"
@@ -4070,7 +4067,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4082,6 +4078,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4207,7 +4204,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4219,6 +4215,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4379,7 +4376,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4394,7 +4390,8 @@
                             "abandoned",
                             "complete",
                             "start_date",
-                            "end_date"
+                            "end_date",
+                            "trackb64"
                         ]
                     }
                 ],
@@ -4403,6 +4400,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4497,7 +4495,8 @@
                         "abandoned": "boolean",
                         "complete": "number",
                         "start_date": "date",
-                        "end_date": "date"
+                        "end_date": "date",
+                        "trackb64": "b64zip"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
@@ -4557,7 +4556,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4569,6 +4567,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4710,7 +4709,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4722,6 +4720,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5038,7 +5037,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -5050,6 +5048,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5258,7 +5257,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -5270,6 +5268,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"

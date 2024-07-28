@@ -1069,6 +1069,16 @@ function toHuman(dbs){
                 testX += data_custom.join(""); 
             }
 
+            
+            let api_custom_rel = [];
+            if (group.apicustom!=undefined){
+                let data_apidata = group.apicustom.filter(aa=>aa.type=='customrel');				
+                data_apidata.forEach(data => {
+                    api_custom_rel.push(`\n\t\t\t[api]:${Object.keys(data).map(dkey=>`${dkey}=${data[dkey]}`).join("|")}`);
+                });
+            }
+
+			testX += api_custom_rel.join(""); 
 
             testX += `\n\n`;             
         });
