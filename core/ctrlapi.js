@@ -197,12 +197,12 @@ class CtrlApi{
 				resolve(r);
 			} );
 		}));
-        content.forEach( c=>{
+      /*  content.forEach( c=>{
             special_b64zip.forEach( async sk =>{
                 c[sk] = await this.unzip(c[sk]);
 				//console.log( c[sk]);
             } );
-        } );
+        } );*/
 		//relations.forEach(async r => {
         for(let ij = 0; ij < relations.length; ij++){
 			let r = relations[ij];
@@ -368,7 +368,7 @@ class CtrlApi{
 				group['foreignRelationsWeight'] = relations.length;
 			});
 			//foreign weight Calc
-
+/*
 			this.dbData.groups = this.dbData.groups.sort( (a,b) => {
 				if (a.foreignRelationsWeight > b.foreignRelationsWeight) return -1;
 				else if (a.foreignRelationsWeight < b.foreignRelationsWeight) return 1;
@@ -383,7 +383,7 @@ class CtrlApi{
 				if (a.foreignRelationsWeight < b.foreignRelationsWeight) return -1;
 				else if (a.foreignRelationsWeight > b.foreignRelationsWeight) return 1;
 				return 0;
-			});
+			});*/
       
             this.dbData.groups.forEach(group => {
                 
@@ -819,7 +819,7 @@ class CtrlApi{
                         let offset = (page ) * size;
                         let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
                         let rowsNumber = tot[0]['total'];
-                        respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
+                        respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size ) ;
                         respuesta.pagination.rowsNumber = rowsNumber;                        
                         console.log("--sel--", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            

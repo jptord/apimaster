@@ -503,7 +503,8 @@ function esRelacion(campos,d){
 btnGuardar.click((e)=>{
     data_db = toJson(editorX.getValue());
     console.log("btnGuardar.toJson.data_db",data_db);
-    saveDBs(data_db);
+    throw "ok";
+    //grabar  saveDBs(data_db);
 });
 
 btnSeeder.click((e)=>{
@@ -646,6 +647,7 @@ function toJson(texto){
     let arDb = [];
     let acDb = null;
     let acGroup = null;
+    let acLink = null;
     lines.forEach(l => {
 //        console.log();
         if (l.trim()=="") return;
@@ -655,7 +657,7 @@ function toJson(texto){
         if (modo == "db"){
             if (cTabs == 1){
                 modo="group";
-                acDb = {db: Tabs[1].trim() , groups:[]};
+                acDb = {db: Tabs[1].trim() , groups:[], links:[]};
                 arDb.push(acDb);
                 return;
             }            
@@ -663,28 +665,36 @@ function toJson(texto){
         if (modo == "group"){
             if (cTabs == 1){
                 modo="group";
-                acDb = {db: Tabs[1].trim() , groups:[]};
+                acDb = {db: Tabs[1].trim() , groups:[], links:[]};
                 arDb.push(acDb);
                 return;
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[]};
-                acDb.groups.push(acGroup);
+                if ( Tabs[2].trim().includes("[") ){
+                    acLink = {name: Tabs[2].trim(),attributes:[]};
+                    acDb.links.push(acLink);
+                }else{
+                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[]};
+                    acDb.groups.push(acGroup);}
                 return;
             }            
         }
         if (modo == "field"){
             if (cTabs == 1){
                 modo="group";
-                acDb = {db: Tabs[1].trim() , groups:[]};
+                acDb = {db: Tabs[1].trim() , groups:[], links:[]};
                 arDb.push(acDb);
                 return;
             }
             if (cTabs == 2){
                 modo="field";
-                acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[]};
-                acDb.groups.push(acGroup);
+                if ( Tabs[2].trim().includes("[") ){
+                    acLink = {name: Tabs[2].trim().replaceAll("[","").replaceAll("]",""),attributes:[]};
+                    acDb.links.push(acLink);
+                }else{
+                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[]};
+                    acDb.groups.push(acGroup);}                    
                 return;
             }            
             if (cTabs == 3){
@@ -708,6 +718,11 @@ function toJson(texto){
                 }
                 if (values[0].trim().includes("[data]")){
                     acGroup.datacustom.push(dataCustomFormat(values[1].trim().toLowerCase()));
+                    return;
+                }
+                if (values[0].trim().includes("url")){
+                    console.log("acLink",acLink);
+                    acLink.attributes.push(Tabs[3].replaceAll(values[0].trim()+":",""));
                     return;
                 }
                 
