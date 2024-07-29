@@ -1,6 +1,7 @@
 const { Database } = require("./core/database.js");
 const { CtrlApi } = require("./core/ctrlapi.js");
 const { ApiDoc } = require('./core/apidoc.js');
+const { ImporterPG } = require('./core/importer.js');
 const bodyParser = require("body-parser");
 const express = require("express");
 const swaggerUi = require('swagger-ui-express');
@@ -86,6 +87,13 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(db_array));
   });
+  
+app.get("/import_pg", (req,res)=>{
+	let importerpg = new ImporterPG(db_array,req,res);
+	let result = importerpg.start();
+    res.setHeader("Content-Type", "application/json");
+	res.end(JSON.stringify("ok"));
+})
 
   app.post("/save_all", (req, res) => {
     res.setHeader("Content-Type", "application/json");

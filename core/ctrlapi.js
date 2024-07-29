@@ -26,18 +26,18 @@ class CtrlApi{
         let values = value.split("|");
         let name = values[0];
         let pk = values.includes("pk");
-        if (name == "number" && pk==true) return `${column} INTEGER PRIMARY KEY AUTOINCREMENT`;
-        if (name == "uuid" && pk==true) return `${column} UUID PRIMARY KEY`;
-		if (name == "string" && pk==true) return `${column} STRING PRIMARY KEY`;
-        if (name == "number" || "integer" ) return `${column} INTEGER`;
-        if (name == "float" ) return `${column} FLOAT`;
-        if (name == "double" ) return `${column} FLOAT`;
-        if (name == "date" ) return `${column} DATE`;
-        if (name == "time" ) return `${column} DATETIME`;
-        if (name == "boolean" ) return `${column} BOOLEAN DEFAULT false NOT NULL`;
-        if (name == "string" ) return `${column} VARCHAR(255)`;
-        if (name == "b64" ) return `${column} TEXT`;
-        if (name == "b64zip" ) return `${column} TEXT`;
+        if (name == "number" && pk==true) return `'${column}' INTEGER PRIMARY KEY AUTOINCREMENT`;
+        if (name == "uuid" && pk==true) return `'${column}' UUID PRIMARY KEY`;
+		if (name == "string" && pk==true) return `'${column}' STRING PRIMARY KEY`;
+        if (name == "number" || "integer" ) return `'${column}' INTEGER`;
+        if (name == "float" ) return `'${column}' FLOAT`;
+        if (name == "double" ) return `'${column}' FLOAT`;
+        if (name == "date" ) return `'${column}' DATE`;
+        if (name == "time" ) return `'${column}' DATETIME`;
+        if (name == "boolean" ) return `'${column}' BOOLEAN DEFAULT false NOT NULL`;
+        if (name == "string" ) return `'${column}' VARCHAR(255)`;
+        if (name == "b64" ) return `'${column}' TEXT`;
+        if (name == "b64zip" ) return `'${column}' TEXT`;
     }
     toFields(data){
         let strArr = [];
@@ -329,7 +329,8 @@ console.log("findconditionAlias",findconditionAlias);
 //		console.log("groups",groups);
 			group['foreignRelations'].forEach(fr => {
 			let groupParent = gps.find( g=> g.name== fr.rel.name);
-			group['foreignRelationsWeight'] += this.weightCalc(groupParent,gps);
+			if (group.name != groupParent.name) 
+				group['foreignRelationsWeight'] += this.weightCalc(groupParent,gps);
 		});
 		return group['foreignRelationsWeight'];
 	}
