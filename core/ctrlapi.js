@@ -82,18 +82,18 @@ class CtrlApi{
     }
     toRelations(data){
         let strArr = [];
-        console.log("data", data);
+        //console.log("data", data);
         Object.keys(data).forEach( c => {
             //evitar las subconsultas
             if (data[c].includes("[[")) {
                 let subArr = data[c].replace("[[","").replace("]]","").trim().split("|");
-                console.log("data[c]",data[c]);
+                //console.log("data[c]",data[c]);
                 strArr.push({name:c,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:true});
                 return;
             }
             if (data[c].includes("[")) {
                 let subArr = data[c].replace("[","").replace("]","").trim().split("|");
-                console.log("data[c]",data[c]);
+                //console.log("data[c]",data[c]);
                 strArr.push({name:c,table:subArr[0].trim(),field:subArr[1].trim(),ownfield:subArr[2].trim(),array:false});
                 return;
             }
@@ -179,14 +179,14 @@ class CtrlApi{
 	}
 	
     async appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
-        console.log("-----appendSubquerys.req:",req);    
+        //console.log("-----appendSubquerys.req:",req);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
         const special_b64zip = this.getB64zip(data_fields);
 
-        console.log("appendSubquerys.data_fields",data_fields);
-        console.log("relations.length",relations.length);
+        //console.log("appendSubquerys.data_fields",data_fields);
+        //console.log("relations.length",relations.length);
 		content = await Promise.all( content.map( r => {
 			return new Promise( async (resolve,reject)=>{
 				for (let i = 0; i < special_b64zip.length; i++){
@@ -200,7 +200,7 @@ class CtrlApi{
         content.forEach( c=>{
             special_b64zip.forEach( async sk =>{
                 c[sk] = await this.unzip(c[sk]);
-				console.log( c[sk]);
+				//console.log( c[sk]);
             } );
         } );
 		//relations.forEach(async r => {
@@ -209,7 +209,7 @@ class CtrlApi{
             let idArr = [];
 
            // console.log("---content:",content);
-            console.log("---r:",r);
+            //console.log("---r:",r);
             let findcondition = '';
 
             content.forEach(c => idArr.push(`'${c[r.ownfield]}'`));
@@ -221,7 +221,7 @@ class CtrlApi{
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
                 chain_data=true;
             }
-            console.log("is_chain_",chain_data, data_fields);
+            //console.log("is_chain_",chain_data, data_fields);
             let f, fr;
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
@@ -233,13 +233,13 @@ class CtrlApi{
              
 
             //console.log("relGroup.f ",f);
-            console.log("---fr:",fr);
+            //console.log("---fr:",fr);
             //console.log("---r:",r);
-            console.log("---req.query:",req.query);
+            //console.log("---req.query:",req.query);
             let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
 			
-            console.log("---r.name:",r.name);
-            console.log("---req_query_rel:",req_query_rel);
+            //console.log("---r.name:",r.name);
+            //console.log("---req_query_rel:",req_query_rel);
 			let tableAlias = "r"+nanoUuid();
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
 			let findconditionAlias = me.buildQueryApiFilter('',relGroup,f,req_query_rel.query,tableAlias);
@@ -247,15 +247,13 @@ class CtrlApi{
 			//let tableAlias = "t"+nanoUuid();
 			//let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findcondition} group by ${tableAlias}.::parent_id::`;
 			let query_parent_build = query_parent.replaceAll("::parent_id::",r.ownfield);
-console.log("findconditionAlias",findconditionAlias);
+            //console.log("findconditionAlias",findconditionAlias);
 			let parent_rel_query = `select ${tableAlias}.::parent_id:: from ${relGroup.name} as ${tableAlias} where ${tableAlias}.${r.field} in (${query_parent_build}) ${findconditionAlias.replaceAll('WHERE',' AND ')} group by ${tableAlias}.::parent_id::`;
-			console.log ("parent_rel_query",parent_rel_query);
+//			console.log ("parent_rel_query",parent_rel_query);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${query_parent_build}) ${findcondition.replaceAll('WHERE',' AND ')}`;
 
-
-
             console.log("----relQuery: " , relQuery);
-
+           // throw console.log("here");
 			if(idArr.length == 0)
 				return content;
 
@@ -267,13 +265,13 @@ console.log("findconditionAlias",findconditionAlias);
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-				console.log("cc[r.name] r.name:",r.name);
+			/*	console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);		
 				console.log("--f ",f);				
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
-                console.log("--req_query_rel ",req_query_rel);				
+                console.log("--req_query_rel ",req_query_rel);			*/	
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
@@ -286,7 +284,7 @@ console.log("findconditionAlias",findconditionAlias);
                     cc[r.name] = cc[r.name].length>0?cc[r.name][0]:undefined;                    
                 }
                 if ((subcontent.length ==0 ) && req_query_rel.query != undefined ){
-                    console.log("no valid req_query_rel",req_query_rel);
+                    //console.log("no valid req_query_rel",req_query_rel);
                     content[i] = {};                     
                 }
             };
@@ -301,7 +299,7 @@ console.log("findconditionAlias",findconditionAlias);
            if (Object.keys(cc).length > 0 ) 
                content.push(cc);
         });
-		console.log("--content.length",content.length);
+		//console.log("--content.length",content.length);
         return content;
     }
     noFieldRel(fr){
@@ -325,15 +323,19 @@ console.log("findconditionAlias",findconditionAlias);
 //console.log("trigger",trigger);
         database.writeSQL(trigger);
     }
+
 	weightCalc = function(group, gps){
 //		console.log("groups",groups);
-			group['foreignRelations'].forEach(fr => {
-			let groupParent = gps.find( g=> g.name== fr.rel.name);
-			if (group.name != groupParent.name) 
-				group['foreignRelationsWeight'] += this.weightCalc(groupParent,gps);
-		});
+        group['foreignRelations'].forEach(fr => {
+            let groupParent = gps.find( g=> g.name== fr.rel.name);
+            console.log("groupParent.name=",groupParent.name);
+            if (group.name != groupParent.name)
+                group['foreignRelationsWeight'] += this.weightCalc(groupParent,gps)  ;
+        });
+        console.log("group.name:",group.name, " ", group['foreignRelationsWeight']);
 		return group['foreignRelationsWeight'];
 	}
+    
     constructor(dbData,dbData_global=null){
         this.dbData = dbData;
         this.dbData_global = dbData_global;
@@ -366,36 +368,23 @@ console.log("findconditionAlias",findconditionAlias);
 				group['foreignRelationsWeight'] = relations.length;
 			});
 			//foreign weight Calc
+/*
 			this.dbData.groups = this.dbData.groups.sort( (a,b) => {
 				if (a.foreignRelationsWeight > b.foreignRelationsWeight) return -1;
 				else if (a.foreignRelationsWeight < b.foreignRelationsWeight) return 1;
 				return 0;
 			});
 			this.dbData.groups.forEach(group => {
-				console.log("group['foreignRelations']",group['foreignRelations']);
-			});
-			this.dbData.groups.forEach(group => {
 				let gps = this.dbData.groups;				
 				group['foreignRelationsWeight'] += me.weightCalc(group,gps);
 			});
-			
+           // throw console.log("end");           
 			this.dbData.groups = this.dbData.groups.sort( (a,b) => {
 				if (a.foreignRelationsWeight < b.foreignRelationsWeight) return -1;
 				else if (a.foreignRelationsWeight > b.foreignRelationsWeight) return 1;
 				return 0;
-			});
-			this.dbData.groups.forEach(group => {
-				console.log(group.name+"['foreignRelationsWeight']",group['foreignRelationsWeight']);
-			});
-			
-			/*
-			relations.forEach(r => {
-				let tTest = `FOREIGN KEY (${r.ownfield}) REFERENCES ${r.reltable}(${r.field})`
-				testX += `${tTest}\n`;
-			});
-			console.log("FOREIGN KEY GEN:" + testX);
-			*/
-            //console.log("this.database.getTables: ",this.database.getTables());
+			});*/
+      
             this.dbData.groups.forEach(group => {
                 
                 if (!this.database.existTable(group.name)){
@@ -836,10 +825,9 @@ console.log("findconditionAlias",findconditionAlias);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} `).all();
                         
-						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending}`;
+						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
 
                         respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
-
                         
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -851,13 +839,14 @@ console.log("findconditionAlias",findconditionAlias);
                         if (size > 0) respuesta.content = respuesta.content.slice(offset,offset+size);
                         console.log(" ----- NOT HERE -----");
                     }else{
+                        //throw console.log("herex");
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition}`).all();
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
-						console.log(" ----- HERE -----");
+						console.log(" ----- GET ALL -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
                         respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
-						console.log(" ----- HERE -----",respuesta.content);
+						console.log(" ----- GET ALL END -----");
                     }
                     me.contentACamelCase(respuesta);
                     res.end(JSON.stringify(respuesta));
@@ -899,7 +888,7 @@ console.log("findconditionAlias",findconditionAlias);
                         console.log("sel", `select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();
 
-                        let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending}`;
+                        let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending} LIMIT ${offset},${size}`;
 
 
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();

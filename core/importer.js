@@ -7,7 +7,7 @@ const dbConfig = {
 	password: 'postgres',
 	host: 'localhost',
 	port: '5432',
-	database: 'trebol_personal',
+	database: 'reg_personal',
 };
 
 // Create a new PostgreSQL client
@@ -42,7 +42,7 @@ class ImporterPG {
 		let me = this;
 		//let db = me.database.db.prepare(relQuery).all();
 		//this.dbData.groups.forEach(group => {
-		let fromTable = "user_role";
+		let fromTable = "questions";
 		let sw = false;
 		client.connect(async (err) => {
 			for (let i = 0; i < this.dbData.groups.length; i++) {
@@ -53,16 +53,14 @@ class ImporterPG {
 				let fs_nc = f.replaceAll("'","").split(',');
 				if (err )
 					console.log("err", err);
-				//client.query('SELECT * from public.persons', [], (err, res) => {
-				//console.log("res.rows", res.rows);
-
-
-				//const res = await client.query('', []);
-				//console.log(res.rows[0].message)
 				/*if ((fromTable != group.name)&& !sw) continue;
 				else sw = true;*/
-				//let query_sel = `SELECT ${f_nc} from public.${group.name}`;
-				let query_sel = `SELECT * from public.${group.name}`;				
+				
+				let pk_field = group.fields.find(fld => fld.value.includes("pk"));
+				let orderby = "";
+				if (pk_field != null)
+					orderby = ` ORDER BY ${pk_field.name}`;
+				let query_sel = `SELECT * from public.${group.name} ${orderby}`;				
 				console.log('query_sel', query_sel);
 				const res = await client.query(query_sel);	
 				
@@ -71,8 +69,6 @@ class ImporterPG {
 				for (let j = 0; j < res.rows.length; j++) {
 					let row=res.rows[j];
 					let f_data = res.fields.map(col => `${me.formatValue(row[col.name])}`);
-					//console.log("fs",fs_nc);
-					//console.log("row",row);
 					let query_insert = `INSERT INTO  ${group.name} (${fr}) values (${f_data.join(',')})`;
 					console.log(query_insert);
 
