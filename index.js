@@ -106,6 +106,11 @@ fs.readdirSync(dbscript).forEach((file) => {
     res.end(JSON.stringify("ok"));
   });
 
+  app.get("/postman", (req, res) => {    
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify("ok"));
+  });
+
   app.post("/save_all", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 

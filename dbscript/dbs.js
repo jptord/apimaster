@@ -230,7 +230,17 @@
                         "out": "id"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "bas64",
+                            "path",
+                            "create_date"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -297,6 +307,11 @@
                         "path": "string",
                         "create_date": "date",
                         "update_date": "date"
+                    },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "path": "string",
+                        "create_date": "date"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
@@ -1925,6 +1940,13 @@
                             "id",
                             "name"
                         ]
+                    },
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "name"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -1993,6 +2015,10 @@
                         "user_type": "[user_type|id|user_type_id]"
                     },
                     "claimlist": {
+                        "id": "uuid|pk",
+                        "name": "string"
+                    },
+                    "suggestionlist": {
                         "id": "uuid|pk",
                         "name": "string"
                     }
@@ -2495,6 +2521,15 @@
                         "start_lon": "number",
                         "end_lat": "number",
                         "end_lon": "number"
+                    },
+                    "suggestionlist_session": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "device": "[devices|id|device_id]",
+                        "device_id": "number",
+                        "start_lat": "number",
+                        "start_lon": "number"
                     },
                     "custom_sync_session": {
                         "id": "uuid|pk"
@@ -4257,8 +4292,8 @@
                 }
             },
             {
-                "name": "suggestions_images",
-                "alias": "suggestions_images",
+                "name": "suggestion_images",
+                "alias": "suggestion_images",
                 "fields": [
                     {
                         "name": "id",
@@ -4315,7 +4350,17 @@
                         "out": "id"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "suggestion_id",
+                            "image_id",
+                            "image"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -4388,6 +4433,12 @@
                         "create_date": "date",
                         "update_date": "date",
                         "suggestion": "[suggestions|id|suggestion_id]"
+                    },
+                    "suggestionlist": {
+                        "id": "uuid|pk",
+                        "suggestion_id": "number",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
@@ -4767,6 +4818,526 @@
                 }
             },
             {
+                "name": "suggestion_states",
+                "alias": "suggestion_states",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "name",
+                        "value": "string"
+                    },
+                    {
+                        "name": "description",
+                        "value": "string"
+                    },
+                    {
+                        "name": "color",
+                        "value": "string"
+                    },
+                    {
+                        "name": "duration",
+                        "value": "number"
+                    },
+                    {
+                        "name": "state_type_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "state_type",
+                        "value": "[state_types|id|state_type_id]",
+                        "rel": {
+                            "index": "state_type",
+                            "name": "state_types",
+                            "field": "id",
+                            "ownfield": "state_type_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "next_states",
+                        "value": "[[suggestion_next_states|suggestion_state_id|id]]",
+                        "rel": {
+                            "index": "next_states",
+                            "name": "suggestion_next_states",
+                            "field": "suggestion_state_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
+                    }
+                ],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "1",
+                            "Sin leer",
+                            "Se recibió una sugerencia",
+                            "#00ff00",
+                            "0",
+                            "1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "2",
+                            "Leido",
+                            "Se recibió un sugerencia",
+                            "#00ff00",
+                            "0",
+                            "2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "3",
+                            "Archivada",
+                            "Se recibió un sugerencia",
+                            "#00ff00",
+                            "0",
+                            "2"
+                        ]
+                    }
+                ],
+                "apicustom": [],
+                "datacustom": [
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "name",
+                            "description",
+                            "color",
+                            "state_type_id",
+                            "state_type"
+                        ]
+                    }
+                ],
+                "apilink": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":suggestion_state_id/suggestion_next_states",
+                        "in": null,
+                        "rel": "[[suggestion_next_states|suggestion_state_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_next_states"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":suggestion_state_id/suggestion_next_states/:id",
+                        "in": null,
+                        "rel": "[[suggestion_next_states|suggestion_state_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_next_states"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":suggestion_state_id/suggestion_next_states",
+                        "in": "insert_suggestion_next_states",
+                        "rel": "[[suggestion_next_states|suggestion_state_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_next_states"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":suggestion_state_id/suggestion_next_states/:id",
+                        "in": "insert_suggestion_next_states",
+                        "rel": "[[suggestion_next_states|suggestion_state_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_next_states"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":suggestion_state_id/suggestion_next_states/:id",
+                        "in": null,
+                        "rel": "[[suggestion_next_states|suggestion_state_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "description": "string",
+                        "color": "string",
+                        "duration": "number",
+                        "state_type_id": "number",
+                        "state_type": "[state_types|id|state_type_id]",
+                        "next_states": "[[suggestion_next_states|suggestion_state_id|id]]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "description": "string",
+                        "color": "string",
+                        "duration": "number",
+                        "state_type_id": "number",
+                        "state_type": "[state_types|id|state_type_id]",
+                        "next_states": "[[suggestion_next_states|suggestion_state_id|id]]"
+                    },
+                    "insert": {
+                        "name": "string",
+                        "description": "string",
+                        "color": "string",
+                        "duration": "number",
+                        "state_type_id": "number",
+                        "state_type": "[state_types|id|state_type_id]",
+                        "next_states": "[[suggestion_next_states|suggestion_state_id|id]]"
+                    },
+                    "suggestionlist": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "description": "string",
+                        "color": "string",
+                        "state_type_id": "number",
+                        "state_type": "[state_types|id|state_type_id]"
+                    },
+                    "select_suggestion_next_states": {
+                        "id": "number|pk",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "suggestion_next_state_id": "number",
+                        "suggestion_next_state": "[suggestion_states|id|suggestion_state_id]"
+                    },
+                    "create_suggestion_next_states": {
+                        "id": "number|pk",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "suggestion_next_state_id": "number",
+                        "suggestion_next_state": "[suggestion_states|id|suggestion_state_id]"
+                    },
+                    "insert_suggestion_next_states": {
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "suggestion_next_state_id": "number",
+                        "suggestion_next_state": "[suggestion_states|id|suggestion_state_id]"
+                    }
+                }
+            },
+            {
+                "name": "suggestion_next_states",
+                "alias": "suggestion_next_states",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "number|pk"
+                    },
+                    {
+                        "name": "suggestion_state_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "suggestion_state",
+                        "value": "[suggestion_states|id|suggestion_state_id]",
+                        "rel": {
+                            "index": "suggestion_state",
+                            "name": "suggestion_states",
+                            "field": "id",
+                            "ownfield": "suggestion_state_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "suggestion_next_state_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "suggestion_next_state",
+                        "value": "[suggestion_states|id|suggestion_state_id]",
+                        "rel": {
+                            "index": "suggestion_next_state",
+                            "name": "suggestion_states",
+                            "field": "id",
+                            "ownfield": "suggestion_state_id",
+                            "array": false
+                        }
+                    }
+                ],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "1",
+                            "1",
+                            "2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "2",
+                            "2",
+                            "3"
+                        ]
+                    }
+                ],
+                "apicustom": [],
+                "datacustom": [],
+                "apilink": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "number|pk",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "suggestion_next_state_id": "number",
+                        "suggestion_next_state": "[suggestion_states|id|suggestion_state_id]"
+                    },
+                    "create": {
+                        "id": "number|pk",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "suggestion_next_state_id": "number",
+                        "suggestion_next_state": "[suggestion_states|id|suggestion_state_id]"
+                    },
+                    "insert": {
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "suggestion_next_state_id": "number",
+                        "suggestion_next_state": "[suggestion_states|id|suggestion_state_id]"
+                    }
+                }
+            },
+            {
+                "name": "suggestion_states_record",
+                "alias": "suggestion_states_record",
+                "fields": [
+                    {
+                        "name": "id",
+                        "value": "uuid|pk"
+                    },
+                    {
+                        "name": "create_date",
+                        "value": "date"
+                    },
+                    {
+                        "name": "user_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "user",
+                        "value": "[users|id|user_id]",
+                        "rel": {
+                            "index": "user",
+                            "name": "users",
+                            "field": "id",
+                            "ownfield": "user_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "suggestion_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "suggestion",
+                        "value": "[suggestions|id|suggestion_id]",
+                        "rel": {
+                            "index": "suggestion",
+                            "name": "suggestions",
+                            "field": "id",
+                            "ownfield": "suggestion_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "suggestion_state_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "suggestion_state",
+                        "value": "[suggestion_states|id|suggestion_state_id]",
+                        "rel": {
+                            "index": "suggestion_state",
+                            "name": "suggestion_states",
+                            "field": "id",
+                            "ownfield": "suggestion_state_id",
+                            "array": false
+                        }
+                    },
+                    {
+                        "name": "comments",
+                        "value": "string"
+                    }
+                ],
+                "seeder": [],
+                "apicustom": [],
+                "datacustom": [
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "create_date",
+                            "suggestion_id",
+                            "user_id",
+                            "user",
+                            "comments",
+                            "suggestion_state_id",
+                            "suggestion_state"
+                        ]
+                    }
+                ],
+                "apilink": [],
+                "apis": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":id",
+                        "in": "insert",
+                        "type": "auto",
+                        "out": "select"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":id",
+                        "in": null,
+                        "type": "auto",
+                        "out": null
+                    }
+                ],
+                "data": {
+                    "select": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "suggestion_id": "number",
+                        "suggestion": "[suggestions|id|suggestion_id]",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "comments": "string"
+                    },
+                    "create": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "suggestion_id": "number",
+                        "suggestion": "[suggestions|id|suggestion_id]",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "comments": "string"
+                    },
+                    "insert": {
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "suggestion_id": "number",
+                        "suggestion": "[suggestions|id|suggestion_id]",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "comments": "string"
+                    },
+                    "suggestionlist": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "suggestion_id": "number",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "comments": "string",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]"
+                    }
+                }
+            },
+            {
                 "name": "session",
                 "alias": "session",
                 "fields": [
@@ -4841,7 +5412,21 @@
                         "out": "id"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "personal_id",
+                            "personal",
+                            "device",
+                            "device_id",
+                            "logind_date",
+                            "start_lat",
+                            "start_lon"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -4926,6 +5511,15 @@
                         "start_lon": "number",
                         "end_lat": "number",
                         "end_lon": "number"
+                    },
+                    "suggestionlist": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "device": "[devices|id|device_id]",
+                        "device_id": "number",
+                        "start_lat": "number",
+                        "start_lon": "number"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
@@ -5149,10 +5743,21 @@
                     },
                     {
                         "name": "images",
-                        "value": "[[suggestions_images|suggestion_id|id]]",
+                        "value": "[[suggestion_images|suggestion_id|id]]",
                         "rel": {
                             "index": "images",
-                            "name": "suggestions_images",
+                            "name": "suggestion_images",
+                            "field": "suggestion_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
+                    },
+                    {
+                        "name": "records",
+                        "value": "[[suggestion_states_record|suggestion_id|id]]",
+                        "rel": {
+                            "index": "records",
+                            "name": "suggestion_states_record",
                             "field": "suggestion_id",
                             "ownfield": "id",
                             "array": true
@@ -5169,11 +5774,42 @@
                         "in": "select",
                         "type": "custom",
                         "out": "id"
+                    },
+                    {
+                        "method": "get",
+                        "route": "suggestionlist",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,title,description,lat,lon,records,images,date_time"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "title",
+                            "description",
+                            "lat",
+                            "lon",
+                            "records",
+                            "images",
+                            "date_time"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
+                    {
+                        "method": "GET",
+                        "route": "suggestionlist",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_suggestionlist"
+                    },
                     {
                         "method": "POST",
                         "route": "sync",
@@ -5219,41 +5855,81 @@
                     },
                     {
                         "method": "GET",
-                        "route": ":suggestion_id/suggestions_images",
+                        "route": ":suggestion_id/suggestion_images",
                         "in": null,
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
+                        "rel": "[[suggestion_images|suggestion_id|id]]",
                         "type": "rel",
-                        "out": "select_suggestions_images"
+                        "out": "select_suggestion_images"
                     },
                     {
                         "method": "GET",
-                        "route": ":suggestion_id/suggestions_images/:id",
+                        "route": ":suggestion_id/suggestion_images/:id",
                         "in": null,
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
+                        "rel": "[[suggestion_images|suggestion_id|id]]",
                         "type": "rel",
-                        "out": "select_suggestions_images"
+                        "out": "select_suggestion_images"
                     },
                     {
                         "method": "POST",
-                        "route": ":suggestion_id/suggestions_images",
-                        "in": "insert_suggestions_images",
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
+                        "route": ":suggestion_id/suggestion_images",
+                        "in": "insert_suggestion_images",
+                        "rel": "[[suggestion_images|suggestion_id|id]]",
                         "type": "rel",
-                        "out": "select_suggestions_images"
+                        "out": "select_suggestion_images"
                     },
                     {
                         "method": "PUT",
-                        "route": ":suggestion_id/suggestions_images/:id",
-                        "in": "insert_suggestions_images",
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
+                        "route": ":suggestion_id/suggestion_images/:id",
+                        "in": "insert_suggestion_images",
+                        "rel": "[[suggestion_images|suggestion_id|id]]",
                         "type": "rel",
-                        "out": "select_suggestions_images"
+                        "out": "select_suggestion_images"
                     },
                     {
                         "method": "DELETE",
-                        "route": ":suggestion_id/suggestions_images/:id",
+                        "route": ":suggestion_id/suggestion_images/:id",
                         "in": null,
-                        "rel": "[[suggestions_images|suggestion_id|id]]",
+                        "rel": "[[suggestion_images|suggestion_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":suggestion_id/suggestion_states_record",
+                        "in": null,
+                        "rel": "[[suggestion_states_record|suggestion_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_states_record"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":suggestion_id/suggestion_states_record/:id",
+                        "in": null,
+                        "rel": "[[suggestion_states_record|suggestion_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_states_record"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":suggestion_id/suggestion_states_record",
+                        "in": "insert_suggestion_states_record",
+                        "rel": "[[suggestion_states_record|suggestion_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_states_record"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":suggestion_id/suggestion_states_record/:id",
+                        "in": "insert_suggestion_states_record",
+                        "rel": "[[suggestion_states_record|suggestion_id|id]]",
+                        "type": "rel",
+                        "out": "select_suggestion_states_record"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":suggestion_id/suggestion_states_record/:id",
+                        "in": null,
+                        "rel": "[[suggestion_states_record|suggestion_id|id]]",
                         "type": "rel",
                         "out": null
                     }
@@ -5268,7 +5944,8 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[suggestions_images|suggestion_id|id]]"
+                        "images": "[[suggestion_images|suggestion_id|id]]",
+                        "records": "[[suggestion_states_record|suggestion_id|id]]"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -5279,7 +5956,8 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[suggestions_images|suggestion_id|id]]"
+                        "images": "[[suggestion_images|suggestion_id|id]]",
+                        "records": "[[suggestion_states_record|suggestion_id|id]]"
                     },
                     "insert": {
                         "title": "string",
@@ -5289,12 +5967,33 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[suggestions_images|suggestion_id|id]]"
+                        "images": "[[suggestion_images|suggestion_id|id]]",
+                        "records": "[[suggestion_states_record|suggestion_id|id]]"
+                    },
+                    "suggestionlist": {
+                        "id": "uuid|pk",
+                        "title": "string",
+                        "description": "string",
+                        "lat": "number",
+                        "lon": "number",
+                        "records": "[[suggestion_states_record|suggestion_id|id]]",
+                        "images": "[[suggestion_images|suggestion_id|id]]",
+                        "date_time": "date"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
                     },
-                    "select_suggestions_images": {
+                    "custom_suggestionlist": {
+                        "id": "uuid|pk",
+                        "title": "string",
+                        "description": "string",
+                        "lat": "number",
+                        "lon": "number",
+                        "records": "[[suggestion_states_record|suggestion_id|id]]",
+                        "images": "[[suggestion_images|suggestion_id|id]]",
+                        "date_time": "date"
+                    },
+                    "select_suggestion_images": {
                         "id": "uuid|pk",
                         "suggestion_id": "number",
                         "image_id": "number",
@@ -5303,7 +6002,7 @@
                         "update_date": "date",
                         "suggestion": "[suggestions|id|suggestion_id]"
                     },
-                    "create_suggestions_images": {
+                    "create_suggestion_images": {
                         "id": "uuid|pk",
                         "suggestion_id": "number",
                         "image_id": "number",
@@ -5312,7 +6011,7 @@
                         "update_date": "date",
                         "suggestion": "[suggestions|id|suggestion_id]"
                     },
-                    "insert_suggestions_images": {
+                    "insert_suggestion_images": {
                         "suggestion_id": "number",
                         "image_id": "number",
                         "image": "[images|id|image_id]",
@@ -5320,8 +6019,56 @@
                         "update_date": "date",
                         "suggestion": "[suggestions|id|suggestion_id]"
                     },
-                    "custom_sync_suggestions_images": {
+                    "suggestionlist_suggestion_images": {
+                        "id": "uuid|pk",
+                        "suggestion_id": "number",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]"
+                    },
+                    "custom_sync_suggestion_images": {
                         "id": "uuid|pk"
+                    },
+                    "select_suggestion_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "suggestion_id": "number",
+                        "suggestion": "[suggestions|id|suggestion_id]",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "comments": "string"
+                    },
+                    "create_suggestion_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "suggestion_id": "number",
+                        "suggestion": "[suggestions|id|suggestion_id]",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "comments": "string"
+                    },
+                    "insert_suggestion_states_record": {
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "suggestion_id": "number",
+                        "suggestion": "[suggestions|id|suggestion_id]",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]",
+                        "comments": "string"
+                    },
+                    "suggestionlist_suggestion_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "suggestion_id": "number",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "comments": "string",
+                        "suggestion_state_id": "number",
+                        "suggestion_state": "[suggestion_states|id|suggestion_state_id]"
                     }
                 }
             },
