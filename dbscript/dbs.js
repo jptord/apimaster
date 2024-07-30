@@ -1918,7 +1918,15 @@
                     }
                 ],
                 "apicustom": [],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "name"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -1983,6 +1991,10 @@
                         "state": "[user_states|id|state_id]",
                         "user_type_id": "number",
                         "user_type": "[user_type|id|user_type_id]"
+                    },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "name": "string"
                     }
                 }
             },
