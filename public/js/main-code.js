@@ -1100,6 +1100,7 @@ function toHuman(dbs){
 
             let apis_custom = [];
             data_apis = group.apis;
+            let api_customrel_data = [];
             data_apis.forEach(api => {
                 if(api.type=="custom"){
                     let custom_api_array = [];
@@ -1110,12 +1111,28 @@ function toHuman(dbs){
                     apis_custom.push(`\n\t\t\t[api]:${custom_api_array.join("|")}`);
                 }
                 if(api.type=="customrel"){
+                    
+                    console.log("---api_customrel_data.api",api);
+                    //throw "err";
                     let custom_api_array = [];
                     Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':group,k,api[k]}` ));
                     apis_custom.push(`\n\t\t\t[api]:${custom_api_array.join("|")}`);
                 }
             });
+            testX += apis_custom.join("");
             
+            let data_apicustom = group.apicustom;            
+            /*data_apicustom.forEach( api =>{              
+                if(api.type=="customrel"){  
+                    if (api.out!=null)
+                        if (api.out.includes("*"))
+                            api_customrel_data.push(api.out);                
+                    if (api.in!=null)
+                        if (api.in.includes("*"))
+                            api_customrel_data.push(api.in);
+                }
+            });*/
+
             /*  PENDIENTE PARA AGREGAR DATOS CUSTOM
             let data_custom = Object.keys(group.data).filter( k => !(['select','create','insert'].includes(k)));            
             let campos_extra = [];
@@ -1124,28 +1141,32 @@ function toHuman(dbs){
             });
             testX += campos_extra.join("");
             */
-            testX += apis_custom.join("");
-            
+            if (api_customrel_data.length >0)
+                console.log("---api_customrel_data",api_customrel_data);
             let data_custom = [];
             if (group.datacustom!=undefined){
                 let data_data = group.datacustom;
                 data_data.forEach(data => {
                     let custom_data_array = [];
-                    custom_data_array.push(`name=${data.name}`);
+                    if (api_customrel_data.includes(`*${data.name}`))
+                        custom_data_array.push(`name=*${data.name}`);
+                    else
+                        custom_data_array.push(`name=${data.name}`);                        
                     custom_data_array.push(`fields=${data.fields.join(",")}`);
                     data_custom.push(`\n\t\t\t[data]:${custom_data_array.join("|")}`);
+                    
                 });
                 testX += data_custom.join(""); 
             }
             
 			/* format [apilink]:method=GET|conn=tre_personal_persons|filter=code,ci|filterin=code,carnet|addfield=link|type=add */
-            let data_apilink = [];
+            let data_apilink_ar = [];
             if (group.apilink!=undefined){
                 let data_apilink = group.apilink;
                 data_apilink.forEach(data => {
-					data_apilink.push(`\n\t\t\t[apilink]:${Object.keys(data).map(dkey=>`${dkey}=${data[dkey]}`).join("|")}`);
+					data_apilink_ar.push(`\n\t\t\t[apilink]:${Object.keys(data).map(dkey=>`${dkey}=${data[dkey]}`).join("|")}`);
                 });
-                testX += data_apilink.join(""); 
+                testX += data_apilink_ar.join(""); 
             }
 
             let api_custom_rel = [];

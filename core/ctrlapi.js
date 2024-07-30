@@ -217,11 +217,13 @@ class CtrlApi{
             let relGroup = me.dbData.groups.filter( g => g.name == r.table)[0];
             //console.log("relGroup,",relGroup,r.table);
 
+            
             let chain_data = false;
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
                 chain_data=true;
             }
-            //console.log("is_chain_",chain_data, data_fields);
+            
+            //console.log("is_chain_",chain_data, data_fields,parent_data_name);
             let f, fr;
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
@@ -265,13 +267,13 @@ class CtrlApi{
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-			/*	console.log("cc[r.name] r.name:",r.name);
+				/*console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);		
 				console.log("--f ",f);				
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
-                console.log("--req_query_rel ",req_query_rel);			*/	
+                console.log("--req_query_rel ",req_query_rel);		*/	
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
@@ -827,6 +829,7 @@ class CtrlApi{
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
 
+
                         respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
                         
                         if (req.query.keyword != undefined){
@@ -840,6 +843,7 @@ class CtrlApi{
                         console.log(" ----- NOT HERE -----");
                     }else{
                         //throw console.log("herex");
+                        //console.log("----> group.apicustom=" , group.apicustom.find( a => a.route==api.route ));
                         console.log("GET query", `select ${f} from ${group.name} ${findcondition}` );
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition}`).all();
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;

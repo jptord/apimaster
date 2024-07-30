@@ -224,7 +224,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -237,6 +236,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -481,7 +481,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -494,6 +493,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -1677,7 +1677,19 @@
                     }
                 ],
                 "apicustom": [],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "name",
+                            "description",
+                            "color",
+                            "state_type_id",
+                            "state_type"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -1785,6 +1797,14 @@
                         "state_type_id": "number",
                         "state_type": "[state_types|id|state_type_id]",
                         "next_states": "[[claim_next_states|claim_state_id|id]]"
+                    },
+                    "claimlist": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "description": "string",
+                        "color": "string",
+                        "state_type_id": "number",
+                        "state_type": "[state_types|id|state_type_id]"
                     },
                     "select_claim_next_states": {
                         "id": "number|pk",
@@ -2096,30 +2116,27 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "*dashboard"
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     },
                     {
                         "method": "get",
                         "route": "applogin",
                         "query": "code",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
+                        "out": "*dashboard"
                     },
                     {
                         "method": "get",
@@ -2171,27 +2188,30 @@
                     },
                     {
                         "method": "GET",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_sync"
+                        "out": "dashboard"
                     },
                     {
                         "method": "GET",
                         "route": "applogin",
                         "query": "code",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_applogin"
                     },
                     {
                         "method": "GET",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "dashboard"
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2360,20 +2380,20 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
                     "custom_applogin": {
                         "id": "uuid|pk",
                         "name": "string",
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
                         "create_date": "date",
                         "update_date": "date"
                     },
@@ -2555,18 +2575,16 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
@@ -2589,19 +2607,21 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "sync",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
-                        "method": "GET",
                         "route": "syncfull",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_syncfull"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2735,7 +2755,7 @@
                         "district_id": "number",
                         "district": "[district|id|district_id]"
                     },
-                    "custom_syncfull": {
+                    "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -2745,7 +2765,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_sync": {
+                    "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -3197,7 +3217,6 @@
                         "method": "get",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,route_id,section,lat,lon"
@@ -3210,6 +3229,7 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -3457,7 +3477,6 @@
                         "method": "get",
                         "route": "bypersonal",
                         "query": "personal_id",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,personal_id,route_id"
@@ -3492,6 +3511,7 @@
                         "method": "GET",
                         "route": "bypersonal",
                         "query": "personal_id",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_bypersonal"
@@ -3885,7 +3905,21 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "create_date",
+                            "claim_id",
+                            "user_id",
+                            "user",
+                            "comments",
+                            "claim_state_id",
+                            "claim_state"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -3956,6 +3990,16 @@
                         "claim_state_id": "number",
                         "claim_state": "[claim_states|id|claim_state_id]",
                         "comments": "string"
+                    },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "claim_id": "number",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "comments": "string",
+                        "claim_state_id": "number",
+                        "claim_state": "[claim_states|id|claim_state_id]"
                     }
                 }
             },
@@ -4115,7 +4159,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4128,6 +4171,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4253,7 +4297,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4266,6 +4309,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4426,7 +4470,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4452,6 +4495,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4607,19 +4651,29 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "image_id",
+                            "image",
+                            "create_date"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4686,6 +4740,12 @@
                         "update_date": "date",
                         "claim_id": "number",
                         "claim": "[claims|id|claim_id]"
+                    },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]",
+                        "create_date": "date"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
@@ -4761,7 +4821,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4774,6 +4833,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5091,7 +5151,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -5104,6 +5163,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5320,25 +5380,54 @@
                 "seeder": [],
                 "apicustom": [
                     {
+                        "method": "get",
+                        "route": "claimlist",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,title,description,lat,lon,records"
+                    },
+                    {
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "title",
+                            "description",
+                            "lat",
+                            "lon",
+                            "records"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "claimlist",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_claimlist"
                     },
                     {
                         "method": "GET",
@@ -5492,6 +5581,22 @@
                         "images": "[[claims_images|claim_id|id]]",
                         "records": "[[claim_states_record|claim_id|id]]"
                     },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "title": "string",
+                        "description": "string",
+                        "lat": "number",
+                        "lon": "number",
+                        "records": "[[claim_states_record|claim_id|id]]"
+                    },
+                    "custom_claimlist": {
+                        "id": "uuid|pk",
+                        "title": "string",
+                        "description": "string",
+                        "lat": "number",
+                        "lon": "number",
+                        "records": "[[claim_states_record|claim_id|id]]"
+                    },
                     "custom_sync": {
                         "id": "uuid|pk"
                     },
@@ -5520,6 +5625,12 @@
                         "update_date": "date",
                         "claim_id": "number",
                         "claim": "[claims|id|claim_id]"
+                    },
+                    "claimlist_claims_images": {
+                        "id": "uuid|pk",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]",
+                        "create_date": "date"
                     },
                     "custom_sync_claims_images": {
                         "id": "uuid|pk"
@@ -5555,6 +5666,16 @@
                         "claim_state_id": "number",
                         "claim_state": "[claim_states|id|claim_state_id]",
                         "comments": "string"
+                    },
+                    "claimlist_claim_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "claim_id": "number",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "comments": "string",
+                        "claim_state_id": "number",
+                        "claim_state": "[claim_states|id|claim_state_id]"
                     }
                 }
             }
