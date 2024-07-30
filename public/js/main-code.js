@@ -503,8 +503,8 @@ function esRelacion(campos,d){
 btnGuardar.click((e)=>{
     data_db = toJson(editorX.getValue());
     console.log("btnGuardar.toJson.data_db",data_db);
-    throw "ok";
-    //grabar  saveDBs(data_db);
+    //throw "ok";
+    saveDBs(data_db);
 });
 
 btnSeeder.click((e)=>{
@@ -657,7 +657,7 @@ function toJson(texto){
         if (modo == "db"){
             if (cTabs == 1){
                 modo="group";
-                acDb = {db: Tabs[1].trim() , groups:[], links:[]};
+                acDb = {db: Tabs[1].trim() , groups:[], apiconn:[]};
                 arDb.push(acDb);
                 return;
             }            
@@ -665,25 +665,7 @@ function toJson(texto){
         if (modo == "group"){
             if (cTabs == 1){
                 modo="group";
-                acDb = {db: Tabs[1].trim() , groups:[], links:[]};
-                arDb.push(acDb);
-                return;
-            }
-            if (cTabs == 2){
-                modo="field";
-                if ( Tabs[2].trim().includes("[") ){
-                    acLink = {name: Tabs[2].trim(),attributes:[]};
-                    acDb.links.push(acLink);
-                }else{
-                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[]};
-                    acDb.groups.push(acGroup);}
-                return;
-            }            
-        }
-        if (modo == "field"){
-            if (cTabs == 1){
-                modo="group";
-                acDb = {db: Tabs[1].trim() , groups:[], links:[]};
+                acDb = {db: Tabs[1].trim() , groups:[], apiconn:[]};
                 arDb.push(acDb);
                 return;
             }
@@ -691,9 +673,27 @@ function toJson(texto){
                 modo="field";
                 if ( Tabs[2].trim().includes("[") ){
                     acLink = {name: Tabs[2].trim().replaceAll("[","").replaceAll("]",""),attributes:[]};
-                    acDb.links.push(acLink);
+                    acDb.apiconn.push(acLink);
                 }else{
-                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[]};
+                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[],apilink:[]};
+                    acDb.groups.push(acGroup);}
+                return;
+            }            
+        }
+        if (modo == "field"){
+            if (cTabs == 1){
+                modo="group";
+                acDb = {db: Tabs[1].trim() , groups:[], apiconn:[]};
+                arDb.push(acDb);
+                return;
+            }
+            if (cTabs == 2){
+                modo="field";
+                if ( Tabs[2].trim().includes("[") ){
+                    acLink = {name: Tabs[2].trim().replaceAll("[","").replaceAll("]",""),attributes:[]};
+                    acDb.apiconn.push(acLink);
+                }else{
+                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[],apilink:[]};
                     acDb.groups.push(acGroup);}                    
                 return;
             }            
@@ -704,25 +704,29 @@ function toJson(texto){
                 console.log("Tabs",Tabs);
                 console.log("values",values,l);           
                 //field = {name: values[0].trim(), value:values[1].trim(), rel:relacional(values[1].trim(),values[0].trim())};
-                if (values[0].trim().includes("[seeder]")){
+                if (values[0].trim() == "[seeder]"){
                     acGroup.seeder.push({data:"create",values:values[1].trim().split('|')});
                     return;
                 }
-                if (values[0].trim().includes("[seeder-insert]")){
+                if (values[0].trim() == "[seeder-insert]"){
                     acGroup.seeder.push({data:"insert",values:values[1].trim().split('|')});
                     return;
                 }
-                if (values[0].trim().includes("[api]")){
+                if (values[0].trim() == "[apilink]"){
+                    acGroup.apilink.push(apiLinkFormat(values[1].trim().toLowerCase()));
+                    return;
+                }
+                if (values[0].trim() == "[api]"){
                     acGroup.apicustom.push(apiCustomFormat(values[1].trim().toLowerCase()));
                     return;
                 }
-                if (values[0].trim().includes("[data]")){
+                if (values[0].trim() == "[data]"){
                     acGroup.datacustom.push(dataCustomFormat(values[1].trim().toLowerCase()));
                     return;
                 }
-                if (values[0].trim().includes("url")){
-                    console.log("acLink",acLink);
-                    acLink.attributes.push(Tabs[3].replaceAll(values[0].trim()+":",""));
+                if (values[0].trim() == "[url]"){
+                    //console.log("acLink",acLink);
+                    acLink.attributes["url"]=Tabs[3].replaceAll(values[0].trim()+":","");
                     return;
                 }
                 
@@ -733,23 +737,28 @@ function toJson(texto){
         }
     });
 
+    console.log(`arDb: `, arDb);
 
     arDb.forEach( d => {
+		d.apiconn   = formatLink(d.apiconn);
+	});
+    arDb.forEach( d => {
         d.groups.forEach( g => {            
-            let grouptemp = formatearArray( g );
-            let customApi = g.apicustom ;
-            grouptemp.apis = getAllApis(grouptemp,customApi,d,g);
-            
-            g['apis'] = grouptemp.apis;
-            g['data'] = grouptemp.data;            
+            let grouptemp  = formatearArray( g );
+            let customApi  = g.apicustom;
+            grouptemp.apis = getAllApis(grouptemp,customApi,d,g);            
+            g['apis'] = grouptemp.apis;   
+            g['data'] = grouptemp.data;
         });
     });
     /* add relations */
     arDb.forEach( d => {
         d.groups.forEach( g => {
+            let apilink  = getAllApislinks(g.apilink);
             let grouptemp = formatearArrayRel( g, d.groups );
             g['apis'] = grouptemp.apis;
-            g['data'] = grouptemp.data;            
+            g['data'] = grouptemp.data;    
+			g['apilink'] = apilink;        
         });
     });
 
@@ -758,8 +767,33 @@ function toJson(texto){
     console.log(`arDb: `, arDb);
     return arDb;
 }
-
+function formatLink(apiconn){
+	let apiconsFormatter = {};
+	apiconn.forEach( apicon =>{
+		apiconsFormatter[apicon.name] = {};
+		Object.keys(apicon.attributes).forEach( a=>{
+			apiconsFormatter[apicon.name][a] = apicon.attributes[a];
+		});
+	});
+	return apiconsFormatter;
+}
 //[api]:method=get|route=|query=modulo_id|in=|out=|type=auto
+
+function getAllApislinks(apiLinks){    
+    let apis = [];
+    if (apiLinks==null || apiLinks==undefined || apiLinks.length==0) return apis;
+    apiLinks.forEach( (api) => {		
+		apis.unshift({
+			method: api.method?api.method.toUpperCase():'GET',
+			conn:   api.con,
+			filter:  api.filter,
+			filterin:  api.filterin,
+			addfield:  api.addfield,
+			type:  api.type,
+		});
+    } );
+    return apis;
+}
 function getAllApis(group,customApi,database,grp){    
     let apis = group.apis;
     if (customApi==null || customApi==undefined || customApi.length==0) return apis;
@@ -780,11 +814,14 @@ function getAllApis(group,customApi,database,grp){
 			let api_out = api.out.replaceAll("*","");
 						
 			let tempRelGroup = database.groups.find( g => g.name == rel.name );
+			console.log("tempRelGroup",tempRelGroup);
 			if (tempRelGroup){				
 				group.data[api_out]={};
 				let gcd = grp.datacustom.find(g=>g.name==api_out);
+				console.log("gcd",gcd);
 				gcd.fields.forEach(f => {
 					let field = tempRelGroup.fields.find( fff=> fff.name == f);
+					console.log("field",field);
 					group.data[api_out][f] = field.value;
 				});
 			}
@@ -814,6 +851,15 @@ function dataCustomFormat(value){
     });
     
     return objdata;
+}
+function apiLinkFormat(value){
+	let objlink = [];
+    let options = value.split("|");	
+    options.forEach(op => {
+        let values = op.trim().split("=");
+        objlink[values[0].trim()] = values[1].trim();
+	});
+	return objlink;
 }
 function apiCustomFormat( value){
     
@@ -1021,6 +1067,15 @@ function toHuman(dbs){
         let relations = [];
         testX += `\t${db.db}\n`;
 
+		if (db['apiconn'] !=undefined){
+			Object.keys(db.apiconn).forEach(apicon_name => {				
+				testX += `\t\t[${apicon_name}]\n`;
+				Object.keys(db.apiconn[apicon_name]).forEach( apicon_attr =>{						
+					testX += `\t\t\t[${apicon_attr}]:${db.apiconn[apicon_name][apicon_attr]}\n\n`;					
+				});
+			});
+		}
+
         db.groups.forEach(group => {
             testX += `\t\t${group.name}\n`;
             data_create = group.data.select;
@@ -1069,8 +1124,7 @@ function toHuman(dbs){
             });
             testX += campos_extra.join("");
             */
-            testX += apis_custom.join("");          
-            
+            testX += apis_custom.join("");
             
             let data_custom = [];
             if (group.datacustom!=undefined){
@@ -1083,8 +1137,17 @@ function toHuman(dbs){
                 });
                 testX += data_custom.join(""); 
             }
-
             
+			/* format [apilink]:method=GET|conn=tre_personal_persons|filter=code,ci|filterin=code,carnet|addfield=link|type=add */
+            let data_apilink = [];
+            if (group.apilink!=undefined){
+                let data_apilink = group.apilink;
+                data_apilink.forEach(data => {
+					data_apilink.push(`\n\t\t\t[apilink]:${Object.keys(data).map(dkey=>`${dkey}=${data[dkey]}`).join("|")}`);
+                });
+                testX += data_apilink.join(""); 
+            }
+
             let api_custom_rel = [];
             if (group.apicustom!=undefined){
                 let data_apidata = group.apicustom.filter(aa=>aa.type=='customrel');				

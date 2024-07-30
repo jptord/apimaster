@@ -38,6 +38,9 @@
                         ]
                     }
                 ],
+                "apicustom": [],
+                "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -127,6 +130,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -226,6 +230,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -325,6 +330,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -473,6 +479,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -633,6 +640,7 @@
                         ]
                     }
                 ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -813,6 +821,7 @@
                         ]
                     }
                 ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -995,6 +1004,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1084,6 +1094,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1194,6 +1205,7 @@
                         ]
                     }
                 ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1396,6 +1408,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1657,6 +1670,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1877,6 +1891,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2123,6 +2138,15 @@
                             "route_id",
                             "route"
                         ]
+                    }
+                ],
+                "apilink": [
+                    {
+                        "method": "GET",
+                        "filter": "code",
+                        "filterin": "code",
+                        "addfield": "link",
+                        "type": "add"
                     }
                 ],
                 "apis": [
@@ -2547,6 +2571,7 @@
                         ]
                     }
                 ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2870,6 +2895,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3053,6 +3079,7 @@
                 ],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3161,6 +3188,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3282,6 +3310,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3441,6 +3470,7 @@
                         ]
                     }
                 ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3703,6 +3733,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3840,6 +3871,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3954,6 +3986,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4073,6 +4106,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4210,6 +4244,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4395,6 +4430,7 @@
                         ]
                     }
                 ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4562,6 +4598,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4715,6 +4752,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -4847,6 +4885,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5043,6 +5082,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -5263,6 +5303,7 @@
                     }
                 ],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "POST",
@@ -5416,6 +5457,11 @@
                     }
                 }
             }
-        ]
+        ],
+        "apiconn": {
+            "tre_personal_persons": {
+                "url": "http://172.20.50.67:9987/tre_personal/persons?code[equal]=$code"
+            }
+        }
     }
 ]
