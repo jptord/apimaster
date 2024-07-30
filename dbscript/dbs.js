@@ -2650,6 +2650,22 @@
                             "district_id",
                             "district"
                         ]
+                    },
+                    {
+                        "name": "assignmentsyncselect",
+                        "fields": [
+                            "id",
+                            "name",
+                            "description",
+                            "image_id",
+                            "image",
+                            "min_split_mt",
+                            "max_split_mt",
+                            "distance",
+                            "create_date",
+                            "update_date",
+                            "points"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -2802,6 +2818,19 @@
                         "district_id": "number",
                         "district": "[district|id|district_id]"
                     },
+                    "assignmentsyncselect": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "description": "string",
+                        "image_id": "number",
+                        "image": "[images|id|image_id]",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distance": "number",
+                        "create_date": "date",
+                        "update_date": "date",
+                        "points": "[[points|route_id|id]]"
+                    },
                     "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
@@ -2841,6 +2870,13 @@
                     "insert_points": {
                         "route_id": "number",
                         "ruute": "[routes|id|route_id]",
+                        "section": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "assignmentsyncselect_points": {
+                        "id": "number|pk",
+                        "route_id": "number",
                         "section": "number",
                         "lat": "number",
                         "lon": "number"
@@ -3270,7 +3306,18 @@
                         "out": "id,route_id,section,lat,lon"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "assignmentsyncselect",
+                        "fields": [
+                            "id",
+                            "route_id",
+                            "section",
+                            "lat",
+                            "lon"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -3337,6 +3384,13 @@
                     "insert": {
                         "route_id": "number",
                         "ruute": "[routes|id|route_id]",
+                        "section": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    },
+                    "assignmentsyncselect": {
+                        "id": "number|pk",
+                        "route_id": "number",
                         "section": "number",
                         "lat": "number",
                         "lon": "number"

@@ -180,6 +180,7 @@ class CtrlApi{
 	
     async appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
         //console.log("-----appendSubquerys.req:",req);    
+        console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
@@ -223,7 +224,8 @@ class CtrlApi{
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
                 chain_data=true;
             }
-            //console.log("is_chain_",chain_data, data_fields);
+            console.log("is_chain_",chain_data, data_fields);
+            console.log("parent_data_name",parent_data_name);
             let f, fr;
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
@@ -234,14 +236,14 @@ class CtrlApi{
             }
              
 
-            //console.log("relGroup.f ",f);
-            //console.log("---fr:",fr);
-            //console.log("---r:",r);
-            //console.log("---req.query:",req.query);
+            console.log("relGroup.f ",f);
+            console.log("---fr:",fr);
+            console.log("---r:",r);
+            console.log("---req.query:",req.query);
             let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
 			
-            //console.log("---r.name:",r.name);
-            //console.log("---req_query_rel:",req_query_rel);
+            console.log("---r.name:",r.name);
+            console.log("---req_query_rel:",req_query_rel);
 			let tableAlias = "r"+nanoUuid();
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
 			let findconditionAlias = me.buildQueryApiFilter('',relGroup,f,req_query_rel.query,tableAlias);
@@ -267,13 +269,13 @@ class CtrlApi{
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-			/*	console.log("cc[r.name] r.name:",r.name);
+				console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);		
 				console.log("--f ",f);				
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
-                console.log("--req_query_rel ",req_query_rel);			*/	
+                console.log("--req_query_rel ",req_query_rel);			
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
@@ -894,7 +896,7 @@ class CtrlApi{
 
 
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -911,7 +913,7 @@ class CtrlApi{
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
                         console.log("query_parent",query_parent);
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent);
                     }                        
 
 
