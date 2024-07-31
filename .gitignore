@@ -48,3 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+public/_images/*.jpg
+public/_images/*.jpeg
+public/_images/*.png

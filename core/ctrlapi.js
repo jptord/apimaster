@@ -38,6 +38,7 @@ class CtrlApi{
         if (name == "string" ) return `'${column}' VARCHAR(255)`;
         if (name == "b64" ) return `'${column}' TEXT`;
         if (name == "b64zip" ) return `'${column}' TEXT`;
+        if (name == "b64img" ) return `'${column}' TEXT`;
     }
     toFields(data){
         let strArr = [];
@@ -153,6 +154,29 @@ class CtrlApi{
         return fields;        
     }
 
+    getB64img(data_fields){
+        let fields = [];
+        Object.keys(data_fields).forEach( k=> {
+            if (data_fields[k] == 'b64img')
+                fields.push(k);
+        });
+        return fields;        
+    }
+	b64ToImage(id, b64){	
+		try{
+			let buff = Buffer.from(b64, 'base64');
+			let interal_path = `public/_images/${id}.jpg`;
+			let external_path = `/_images/${id}.jpg`;
+			if (!fs.existsSync(interal_path)) {
+				fs.writeFileSync(interal_path, buff);
+			}
+			return external_path;
+		}
+		catch {
+			return "";
+		}
+		//resolve(path);
+	}
 	
 	unzip(b64) {
 		return new Promise((resolve, reject) => {
@@ -185,6 +209,7 @@ class CtrlApi{
         
         let relations = this.toRelations(data_fields);
         const special_b64zip = this.getB64zip(data_fields);
+        const special_b64img = this.getB64img(data_fields);
 
         //console.log("appendSubquerys.data_fields",data_fields);
         //console.log("relations.length",relations.length);
@@ -194,6 +219,17 @@ class CtrlApi{
 					r[special_b64zip[i]] = await me.unzip(r[special_b64zip[i]]);
 					r[special_b64zip[i]] = me.transformTxt(r[special_b64zip[i]]);
 					r['coords'] = r[special_b64zip[i]].map(s=>[s.lon, s.lat]);
+				}
+				resolve(r);
+			} );
+		}));
+		content = await Promise.all( content.map( r => {
+			return new Promise( async (resolve,reject)=>{
+				for (let i = 0; i < special_b64img.length; i++){
+					//console.log("special_b64img[i]",special_b64img[i]);
+					r['path'] = await me.b64ToImage(r.id, r[special_b64img[i]]);
+					r[special_b64img[i]] = ''
+					
 				}
 				resolve(r);
 			} );
