@@ -814,6 +814,22 @@ class CtrlApi{
         group.apis.forEach(api => {
             let rel;
             console.log("api",api);
+
+			/* GENERATE _IMAGES SOURCE */
+			router.get(`/_images/:file`,function (req, res){
+				if (fs.existsSync(`public/_images/${req.params.file}`)) {
+					var fileStream = fs.createReadStream(`public/_images/${req.params.file}`);
+					fileStream.on('open', function () {
+						fileStream.pipe(res);
+					});
+				}
+				else{
+					res.write(`<html>NOT FOUND</html>`);
+					res.end();
+				}
+				
+			});
+
             if (api.type == "rel") rel = me.toRelation('',api.rel);
             if (api.method == "GET" && (api.type == "auto" || api.type == "custom" )){
                 console.log(`route ${api.type} GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
