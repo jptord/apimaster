@@ -2233,6 +2233,7 @@
                             "code",
                             "personal_type_id",
                             "image_id",
+                            "image",
                             "personal_type"
                         ]
                     }
@@ -2455,6 +2456,7 @@
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
+                        "image": "[images|id|image_id]",
                         "personal_type": "[personal_types|id|personal_type_id]"
                     },
                     "custom_sync": {
