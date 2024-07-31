@@ -512,6 +512,17 @@
                             "info_model",
                             "info_product"
                         ]
+                    },
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "info_brand",
+                            "info_device",
+                            "info_manufacturer",
+                            "info_model",
+                            "info_product"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -631,6 +642,14 @@
                         "first_connect": "date"
                     },
                     "suggestionlist": {
+                        "id": "string|pk",
+                        "info_brand": "string",
+                        "info_device": "string",
+                        "info_manufacturer": "string",
+                        "info_model": "string",
+                        "info_product": "string"
+                    },
+                    "claimlist": {
                         "id": "string|pk",
                         "info_brand": "string",
                         "info_device": "string",
@@ -1967,6 +1986,13 @@
                             "id",
                             "name"
                         ]
+                    },
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "name"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -2236,6 +2262,14 @@
                             "image",
                             "personal_type"
                         ]
+                    },
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "personal_type_id",
+                            "personal_type"
+                        ]
                     }
                 ],
                 "apilink": [
@@ -2459,6 +2493,11 @@
                         "image": "[images|id|image_id]",
                         "personal_type": "[personal_types|id|personal_type_id]"
                     },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "personal_type_id": "number",
+                        "personal_type": "[personal_types|id|personal_type_id]"
+                    },
                     "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
@@ -2569,6 +2608,14 @@
                         "personal": "[personal|id|personal_id]",
                         "device_id": "number",
                         "device": "[devices|id|device_id]",
+                        "login_date": "date",
+                        "start_lat": "number",
+                        "start_lon": "number"
+                    },
+                    "claimlist_session": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
                         "login_date": "date",
                         "start_lat": "number",
                         "start_lon": "number"
@@ -4805,16 +4852,7 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [
-                    {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    }
-                ],
+                "apicustom": [],
                 "datacustom": [
                     {
                         "name": "claimlist",
@@ -4822,22 +4860,12 @@
                             "id",
                             "claim_id",
                             "image_id",
-                            "image",
-                            "create_date"
+                            "image"
                         ]
                     }
                 ],
                 "apilink": [],
                 "apis": [
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -4905,11 +4933,7 @@
                         "id": "uuid|pk",
                         "claim_id": "number",
                         "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
+                        "image": "[images|id|image_id]"
                     }
                 }
             },
@@ -5520,6 +5544,17 @@
                             "start_lat",
                             "start_lon"
                         ]
+                    },
+                    {
+                        "name": "claimlist",
+                        "fields": [
+                            "id",
+                            "personal_id",
+                            "personal",
+                            "login_date",
+                            "start_lat",
+                            "start_lon"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -5614,6 +5649,14 @@
                         "personal": "[personal|id|personal_id]",
                         "device_id": "number",
                         "device": "[devices|id|device_id]",
+                        "login_date": "date",
+                        "start_lat": "number",
+                        "start_lon": "number"
+                    },
+                    "claimlist": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
                         "login_date": "date",
                         "start_lat": "number",
                         "start_lon": "number"
@@ -6228,17 +6271,6 @@
                             "ownfield": "id",
                             "array": true
                         }
-                    },
-                    {
-                        "name": "records",
-                        "value": "[[claim_states_record|claim_id|id]]",
-                        "rel": {
-                            "index": "records",
-                            "name": "claim_states_record",
-                            "field": "claim_id",
-                            "ownfield": "id",
-                            "array": true
-                        }
                     }
                 ],
                 "seeder": [],
@@ -6247,9 +6279,10 @@
                         "method": "get",
                         "route": "claimlist",
                         "query": "",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,title,description,lat,lon,records,images"
+                        "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
                     },
                     {
                         "method": "post",
@@ -6270,7 +6303,10 @@
                             "lat",
                             "lon",
                             "records",
-                            "images"
+                            "images",
+                            "date_time",
+                            "session",
+                            "session_id"
                         ]
                     }
                 ],
@@ -6289,7 +6325,6 @@
                         "method": "GET",
                         "route": "claimlist",
                         "query": "",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_claimlist"
@@ -6368,46 +6403,6 @@
                         "rel": "[[claims_images|claim_id|id]]",
                         "type": "rel",
                         "out": null
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":claim_id/claim_states_record",
-                        "in": null,
-                        "rel": "[[claim_states_record|claim_id|id]]",
-                        "type": "rel",
-                        "out": "select_claim_states_record"
-                    },
-                    {
-                        "method": "GET",
-                        "route": ":claim_id/claim_states_record/:id",
-                        "in": null,
-                        "rel": "[[claim_states_record|claim_id|id]]",
-                        "type": "rel",
-                        "out": "select_claim_states_record"
-                    },
-                    {
-                        "method": "POST",
-                        "route": ":claim_id/claim_states_record",
-                        "in": "insert_claim_states_record",
-                        "rel": "[[claim_states_record|claim_id|id]]",
-                        "type": "rel",
-                        "out": "select_claim_states_record"
-                    },
-                    {
-                        "method": "PUT",
-                        "route": ":claim_id/claim_states_record/:id",
-                        "in": "insert_claim_states_record",
-                        "rel": "[[claim_states_record|claim_id|id]]",
-                        "type": "rel",
-                        "out": "select_claim_states_record"
-                    },
-                    {
-                        "method": "DELETE",
-                        "route": ":claim_id/claim_states_record/:id",
-                        "in": null,
-                        "rel": "[[claim_states_record|claim_id|id]]",
-                        "type": "rel",
-                        "out": null
                     }
                 ],
                 "data": {
@@ -6420,8 +6415,7 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[claims_images|claim_id|id]]",
-                        "records": "[[claim_states_record|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -6432,8 +6426,7 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[claims_images|claim_id|id]]",
-                        "records": "[[claim_states_record|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]"
                     },
                     "insert": {
                         "title": "string",
@@ -6443,8 +6436,7 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[claims_images|claim_id|id]]",
-                        "records": "[[claim_states_record|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]"
                     },
                     "claimlist": {
                         "id": "uuid|pk",
@@ -6452,8 +6444,10 @@
                         "description": "string",
                         "lat": "number",
                         "lon": "number",
-                        "records": "[[claim_states_record|claim_id|id]]",
-                        "images": "[[claims_images|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]",
+                        "date_time": "date",
+                        "session": "[session|id|session_id]",
+                        "session_id": "number"
                     },
                     "custom_claimlist": {
                         "id": "uuid|pk",
@@ -6461,8 +6455,10 @@
                         "description": "string",
                         "lat": "number",
                         "lon": "number",
-                        "records": "[[claim_states_record|claim_id|id]]",
-                        "images": "[[claims_images|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]",
+                        "date_time": "date",
+                        "session_id": "number",
+                        "session": "[session|id|session_id]"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
@@ -6497,53 +6493,7 @@
                         "id": "uuid|pk",
                         "claim_id": "number",
                         "image_id": "number",
-                        "image": "[images|id|image_id]",
-                        "create_date": "date"
-                    },
-                    "custom_sync_claims_images": {
-                        "id": "uuid|pk"
-                    },
-                    "select_claim_states_record": {
-                        "id": "uuid|pk",
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "claim_id": "number",
-                        "claim": "[claims|id|claim_id]",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]",
-                        "comments": "string"
-                    },
-                    "create_claim_states_record": {
-                        "id": "uuid|pk",
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "claim_id": "number",
-                        "claim": "[claims|id|claim_id]",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]",
-                        "comments": "string"
-                    },
-                    "insert_claim_states_record": {
-                        "create_date": "date",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "claim_id": "number",
-                        "claim": "[claims|id|claim_id]",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]",
-                        "comments": "string"
-                    },
-                    "claimlist_claim_states_record": {
-                        "id": "uuid|pk",
-                        "create_date": "date",
-                        "claim_id": "number",
-                        "user_id": "number",
-                        "user": "[users|id|user_id]",
-                        "comments": "string",
-                        "claim_state_id": "number",
-                        "claim_state": "[claim_states|id|claim_state_id]"
+                        "image": "[images|id|image_id]"
                     }
                 }
             }

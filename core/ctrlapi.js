@@ -164,11 +164,17 @@ class CtrlApi{
     }
 	b64ToImage(id, b64){	
 		try{
-			let buff = Buffer.from(b64, 'base64');
+            
 			let interal_path = `public/_images/${id}.jpg`;
 			let external_path = `/_images/${id}.jpg`;
 			if (!fs.existsSync(interal_path)) {
+                if (b64 == "") return "";    
+                let b64x = b64.replace(/^data:image\/png;base64,/,"");
+                b64x = b64x.replace(/^data:image\/jpg;base64,/,"");
+                b64x = b64x.replace(/^data:image\/jpeg;base64,/,"");                
+                let buff = Buffer.from(b64x, 'base64');
 				fs.writeFileSync(interal_path, buff);
+                
 			}
 			return external_path;
 		}
