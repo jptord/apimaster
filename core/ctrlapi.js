@@ -518,7 +518,9 @@ class CtrlApi{
 
                         if (rowsNumber < group.seeder.length ){
                             //this.database.writeSQL(`DELETE  ${group.name}`);
-                            me.database.db.prepare(`DELETE FROM ${group.name}`).run();
+                            let query_del =`DELETE FROM ${group.name}`;
+                            console.log("query_del", query_del);
+                            me.database.db.prepare(query_del).run();
 
                             group.seeder.forEach( (seed)=> {                        
                                 let f = me.toFields(group.data[seed.data]);
