@@ -24,18 +24,20 @@ class CtrlApi{
 
     toColumnName(column, value){
         let values = value.split("|");
-        let name = values[0];
+        let name = value.trim();
+        if (values.length>1)
+            name = values[0].trim();
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `'${column}' INTEGER PRIMARY KEY AUTOINCREMENT`;
         if (name == "uuid" && pk==true) return `'${column}' UUID PRIMARY KEY`;
 		if (name == "string" && pk==true) return `'${column}' STRING PRIMARY KEY`;
-        if (name == "number" || "integer" ) return `'${column}' INTEGER`;
+        if (name == "number" || name == "integer" ) return `'${column}' INTEGER`;
         if (name == "float" ) return `'${column}' FLOAT`;
         if (name == "double" ) return `'${column}' FLOAT`;
         if (name == "date" ) return `'${column}' DATE`;
         if (name == "time" ) return `'${column}' DATETIME`;
         if (name == "boolean" ) return `'${column}' BOOLEAN DEFAULT false NOT NULL`;
-        if (name == "string" ) return `'${column}' VARCHAR(255)`;
+        if (name == "string" ) return `'${column}' TEXT`;
         if (name == "b64" ) return `'${column}' TEXT`;
         if (name == "b64zip" ) return `'${column}' TEXT`;
         if (name == "b64img" ) return `'${column}' TEXT`;
@@ -262,9 +264,11 @@ class CtrlApi{
 
             let chain_data = false;
             console.log("r.table",r.table);
-            console.log("relGroup",relGroup);
+            //console.log("relGroup",relGroup);
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
-                chain_data=true;
+                let isCustomrel = relGroup.apicustom.find(aaa=> aaa.out.includes("parent_data_name"));
+                if (isCustomrel==null)
+                    chain_data=true;
             }
             console.log("is_chain_",chain_data, data_fields);
             console.log("parent_data_name",parent_data_name);
@@ -954,7 +958,7 @@ class CtrlApi{
 
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending} LIMIT ${offset},${size}`;
 
-
+                        
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
                         respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent);
 
@@ -969,9 +973,12 @@ class CtrlApi{
                         
                     }else{
                         console.log("GET query", `select ${f} from ${rel.table} ${findcondition}` );
-
+                        let customroute = group.apicustom.find( aa => aa.relroute==api.route );
+                        console.log("customroute",customroute);
+                        
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
                         console.log("query_parent",query_parent);
+                        console.log("api.out",api.out);
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
                         respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent);
                     }                        

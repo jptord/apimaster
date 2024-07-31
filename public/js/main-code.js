@@ -803,6 +803,7 @@ function getAllApis(group,customApi,database,grp){
 			console.log("rel",rel);
 			console.log("api",api);
 			console.log("group.data",group.data);
+            api['relroute']= `:${rel.field}/${api.route}`;
 			apis.unshift({
 				method: api.method?api.method.toUpperCase():'GET',
 				route:  `:${rel.field}/${api.route}`,
