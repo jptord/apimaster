@@ -6271,6 +6271,17 @@
                             "ownfield": "id",
                             "array": true
                         }
+                    },
+                    {
+                        "name": "records",
+                        "value": "[[claim_states_record|claim_id|id]]",
+                        "rel": {
+                            "index": "records",
+                            "name": "claim_states_record",
+                            "field": "claim_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "seeder": [],
@@ -6403,6 +6414,46 @@
                         "rel": "[[claims_images|claim_id|id]]",
                         "type": "rel",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":claim_id/claim_states_record",
+                        "in": null,
+                        "rel": "[[claim_states_record|claim_id|id]]",
+                        "type": "rel",
+                        "out": "select_claim_states_record"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":claim_id/claim_states_record/:id",
+                        "in": null,
+                        "rel": "[[claim_states_record|claim_id|id]]",
+                        "type": "rel",
+                        "out": "select_claim_states_record"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":claim_id/claim_states_record",
+                        "in": "insert_claim_states_record",
+                        "rel": "[[claim_states_record|claim_id|id]]",
+                        "type": "rel",
+                        "out": "select_claim_states_record"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":claim_id/claim_states_record/:id",
+                        "in": "insert_claim_states_record",
+                        "rel": "[[claim_states_record|claim_id|id]]",
+                        "type": "rel",
+                        "out": "select_claim_states_record"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":claim_id/claim_states_record/:id",
+                        "in": null,
+                        "rel": "[[claim_states_record|claim_id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
@@ -6415,7 +6466,8 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[claims_images|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]",
+                        "records": "[[claim_states_record|claim_id|id]]"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -6426,7 +6478,8 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[claims_images|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]",
+                        "records": "[[claim_states_record|claim_id|id]]"
                     },
                     "insert": {
                         "title": "string",
@@ -6436,7 +6489,8 @@
                         "lon": "number",
                         "session_id": "number",
                         "session": "[session|id|session_id]",
-                        "images": "[[claims_images|claim_id|id]]"
+                        "images": "[[claims_images|claim_id|id]]",
+                        "records": "[[claim_states_record|claim_id|id]]"
                     },
                     "claimlist": {
                         "id": "uuid|pk",
@@ -6444,6 +6498,7 @@
                         "description": "string",
                         "lat": "number",
                         "lon": "number",
+                        "records": "[[claim_states_record|claim_id|id]]",
                         "images": "[[claims_images|claim_id|id]]",
                         "date_time": "date",
                         "session": "[session|id|session_id]",
@@ -6455,6 +6510,7 @@
                         "description": "string",
                         "lat": "number",
                         "lon": "number",
+                        "records": "[[claim_states_record|claim_id|id]]",
                         "images": "[[claims_images|claim_id|id]]",
                         "date_time": "date",
                         "session_id": "number",
@@ -6494,6 +6550,48 @@
                         "claim_id": "number",
                         "image_id": "number",
                         "image": "[images|id|image_id]"
+                    },
+                    "select_claim_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "claim_id": "number",
+                        "claim": "[claims|id|claim_id]",
+                        "claim_state_id": "number",
+                        "claim_state": "[claim_states|id|claim_state_id]",
+                        "comments": "string"
+                    },
+                    "create_claim_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "claim_id": "number",
+                        "claim": "[claims|id|claim_id]",
+                        "claim_state_id": "number",
+                        "claim_state": "[claim_states|id|claim_state_id]",
+                        "comments": "string"
+                    },
+                    "insert_claim_states_record": {
+                        "create_date": "date",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "claim_id": "number",
+                        "claim": "[claims|id|claim_id]",
+                        "claim_state_id": "number",
+                        "claim_state": "[claim_states|id|claim_state_id]",
+                        "comments": "string"
+                    },
+                    "claimlist_claim_states_record": {
+                        "id": "uuid|pk",
+                        "create_date": "date",
+                        "claim_id": "number",
+                        "user_id": "number",
+                        "user": "[users|id|user_id]",
+                        "comments": "string",
+                        "claim_state_id": "number",
+                        "claim_state": "[claim_states|id|claim_state_id]"
                     }
                 }
             }
