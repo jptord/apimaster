@@ -824,7 +824,7 @@ class CtrlApi{
 					});
 				}
 				else{
-					res.write(`<html>NOT FOUND</html>`);
+					res.write(`<html>IMAGE NOT FOUND</html>`);
 					res.end();
 				}
 				
