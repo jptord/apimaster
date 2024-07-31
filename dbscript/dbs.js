@@ -501,7 +501,19 @@
                         "out": "id"
                     }
                 ],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "info_brand",
+                            "info_device",
+                            "info_manufacturer",
+                            "info_model",
+                            "info_product"
+                        ]
+                    }
+                ],
                 "apilink": [],
                 "apis": [
                     {
@@ -617,6 +629,14 @@
                         "registred_date": "date",
                         "last_connect": "date",
                         "first_connect": "date"
+                    },
+                    "suggestionlist": {
+                        "id": "string|pk",
+                        "info_brand": "string",
+                        "info_device": "string",
+                        "info_manufacturer": "string",
+                        "info_model": "string",
+                        "info_product": "string"
                     },
                     "custom_sync": {
                         "id": "string|pk"
@@ -2204,6 +2224,17 @@
                             "route_id",
                             "route"
                         ]
+                    },
+                    {
+                        "name": "suggestionlist",
+                        "fields": [
+                            "id",
+                            "name",
+                            "code",
+                            "personal_type_id",
+                            "image_id",
+                            "personal_type"
+                        ]
                     }
                 ],
                 "apilink": [
@@ -2418,6 +2449,14 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
+                    "suggestionlist": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "image_id": "number",
+                        "personal_type": "[personal_types|id|personal_type_id]"
+                    },
                     "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
@@ -2526,8 +2565,9 @@
                         "id": "uuid|pk",
                         "personal_id": "number",
                         "personal": "[personal|id|personal_id]",
-                        "device": "[devices|id|device_id]",
                         "device_id": "number",
+                        "device": "[devices|id|device_id]",
+                        "login_date": "date",
                         "start_lat": "number",
                         "start_lon": "number"
                     },
@@ -5472,9 +5512,9 @@
                             "id",
                             "personal_id",
                             "personal",
-                            "device",
                             "device_id",
-                            "logind_date",
+                            "device",
+                            "login_date",
                             "start_lat",
                             "start_lon"
                         ]
@@ -5570,8 +5610,9 @@
                         "id": "uuid|pk",
                         "personal_id": "number",
                         "personal": "[personal|id|personal_id]",
-                        "device": "[devices|id|device_id]",
                         "device_id": "number",
+                        "device": "[devices|id|device_id]",
+                        "login_date": "date",
                         "start_lat": "number",
                         "start_lon": "number"
                     },
@@ -5827,7 +5868,7 @@
                         "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,title,description,lat,lon,records,images,date_time"
+                        "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
                     },
                     {
                         "method": "post",
@@ -5849,7 +5890,9 @@
                             "lon",
                             "records",
                             "images",
-                            "date_time"
+                            "date_time",
+                            "session_id",
+                            "session"
                         ]
                     }
                 ],
@@ -6032,7 +6075,9 @@
                         "lon": "number",
                         "records": "[[suggestion_states_record|suggestion_id|id]]",
                         "images": "[[suggestion_images|suggestion_id|id]]",
-                        "date_time": "date"
+                        "date_time": "date",
+                        "session_id": "number",
+                        "session": "[session|id|session_id]"
                     },
                     "custom_suggestionlist": {
                         "id": "uuid|pk",
@@ -6042,7 +6087,9 @@
                         "lon": "number",
                         "records": "[[suggestion_states_record|suggestion_id|id]]",
                         "images": "[[suggestion_images|suggestion_id|id]]",
-                        "date_time": "date"
+                        "date_time": "date",
+                        "session_id": "number",
+                        "session": "[session|id|session_id]"
                     },
                     "custom_sync": {
                         "id": "uuid|pk"

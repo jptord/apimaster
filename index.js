@@ -129,6 +129,7 @@ fs.readdirSync(dbscript).forEach((file) => {
     );
     db_array = db_array_content;
     //createPlant(toPlants(db_array_content));
+    console.log("saved ok");
     res.end(JSON.stringify({ mesage: "ok" }));
   });
 
