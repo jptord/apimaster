@@ -24,20 +24,23 @@ class CtrlApi{
 
     toColumnName(column, value){
         let values = value.split("|");
-        let name = values[0];
+        let name = value.trim();
+        if (values.length>1)
+            name = values[0].trim();
         let pk = values.includes("pk");
         if (name == "number" && pk==true) return `'${column}' INTEGER PRIMARY KEY AUTOINCREMENT`;
         if (name == "uuid" && pk==true) return `'${column}' UUID PRIMARY KEY`;
 		if (name == "string" && pk==true) return `'${column}' STRING PRIMARY KEY`;
-        if (name == "number" || "integer" ) return `'${column}' INTEGER`;
+        if (name == "number" || name == "integer" ) return `'${column}' INTEGER`;
         if (name == "float" ) return `'${column}' FLOAT`;
         if (name == "double" ) return `'${column}' FLOAT`;
         if (name == "date" ) return `'${column}' DATE`;
         if (name == "time" ) return `'${column}' DATETIME`;
         if (name == "boolean" ) return `'${column}' BOOLEAN DEFAULT false NOT NULL`;
-        if (name == "string" ) return `'${column}' VARCHAR(255)`;
+        if (name == "string" ) return `'${column}' TEXT`;
         if (name == "b64" ) return `'${column}' TEXT`;
         if (name == "b64zip" ) return `'${column}' TEXT`;
+        if (name == "b64img" ) return `'${column}' TEXT`;
     }
     toFields(data){
         let strArr = [];
@@ -153,6 +156,35 @@ class CtrlApi{
         return fields;        
     }
 
+    getB64img(data_fields){
+        let fields = [];
+        Object.keys(data_fields).forEach( k=> {
+            if (data_fields[k] == 'b64img')
+                fields.push(k);
+        });
+        return fields;        
+    }
+	b64ToImage(id, b64){	
+		try{
+            
+			let interal_path = `public/_images/${id}.jpg`;
+			let external_path = `/_images/${id}.jpg`;
+			if (!fs.existsSync(interal_path)) {
+                if (b64 == "") return "";    
+                let b64x = b64.replace(/^data:image\/png;base64,/,"");
+                b64x = b64x.replace(/^data:image\/jpg;base64,/,"");
+                b64x = b64x.replace(/^data:image\/jpeg;base64,/,"");                
+                let buff = Buffer.from(b64x, 'base64');
+				fs.writeFileSync(interal_path, buff);
+                
+			}
+			return external_path;
+		}
+		catch {
+			return "";
+		}
+		//resolve(path);
+	}
 	
 	unzip(b64) {
 		return new Promise((resolve, reject) => {
@@ -178,12 +210,14 @@ class CtrlApi{
 		});
 	}
 	
-    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
+    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel){
         //console.log("-----appendSubquerys.req:",req);    
+        console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
         const special_b64zip = this.getB64zip(data_fields);
+        const special_b64img = this.getB64img(data_fields);
 
         //console.log("appendSubquerys.data_fields",data_fields);
         //console.log("relations.length",relations.length);
@@ -197,13 +231,27 @@ class CtrlApi{
 				resolve(r);
 			} );
 		}));
-        content.forEach( c=>{
+		content = await Promise.all( content.map( r => {
+			return new Promise( async (resolve,reject)=>{
+				for (let i = 0; i < special_b64img.length; i++){
+					//console.log("special_b64img[i]",special_b64img[i]);
+					r['path'] = await me.b64ToImage(r.id, r[special_b64img[i]]);
+					r[special_b64img[i]] = ''
+					
+				}
+				resolve(r);
+			} );
+		}));
+      /*  content.forEach( c=>{
             special_b64zip.forEach( async sk =>{
                 c[sk] = await this.unzip(c[sk]);
 				//console.log( c[sk]);
             } );
-        } );
+        } );*/
 		//relations.forEach(async r => {
+			console.log("typerel",typerel);
+            if (typerel=="customrel")
+				parent_data_name = "__no_chain__";
         for(let ij = 0; ij < relations.length; ij++){
 			let r = relations[ij];
             let idArr = [];
@@ -218,10 +266,13 @@ class CtrlApi{
             //console.log("relGroup,",relGroup,r.table);
 
             let chain_data = false;
+            console.log("r.table",r.table);
+            //console.log("relGroup",relGroup);
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
-                chain_data=true;
+				chain_data=true;               
             }
-            //console.log("is_chain_",chain_data, data_fields);
+            console.log("is_chain_",chain_data, data_fields);
+            console.log("parent_data_name",parent_data_name);
             let f, fr;
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
@@ -232,14 +283,14 @@ class CtrlApi{
             }
              
 
-            //console.log("relGroup.f ",f);
-            //console.log("---fr:",fr);
-            //console.log("---r:",r);
-            //console.log("---req.query:",req.query);
+            console.log("relGroup.f ",f);
+            console.log("---fr:",fr);
+            console.log("---r:",r);
+            console.log("---req.query:",req.query);
             let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
 			
-            //console.log("---r.name:",r.name);
-            //console.log("---req_query_rel:",req_query_rel);
+            console.log("---r.name:",r.name);
+            console.log("---req_query_rel:",req_query_rel);
 			let tableAlias = "r"+nanoUuid();
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
 			let findconditionAlias = me.buildQueryApiFilter('',relGroup,f,req_query_rel.query,tableAlias);
@@ -256,28 +307,27 @@ class CtrlApi{
            // throw console.log("here");
 			if(idArr.length == 0)
 				return content;
-
+				
             let res_temp = me.database.db.prepare(relQuery).all();
            // console.log("res_temp ",res_temp);
             //console.log("---content ",content);
-            
             for (let i = 0; i< content.length; i++){  
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-			/*	console.log("cc[r.name] r.name:",r.name);
+				console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);		
 				console.log("--f ",f);				
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
-                console.log("--req_query_rel ",req_query_rel);			*/	
+                console.log("--req_query_rel ",req_query_rel);			
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
-                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query);
+                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel);
 				else
-					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query);
+					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -361,7 +411,7 @@ class CtrlApi{
 					if (rel == null )
 						campos.push(`\t${data_create[d]} ${d}`);
 					else if (rel.array==false)
-						relations.push({field: `FOREIGN KEY (${rel.ownfield}) REFERENCES ${rel.name}(${rel.field})`,rel:rel});
+						relations.push({field: `FOREIGN KEY (${rel.ownfield}) REFERENCES ${rel.name}(${rel.field}) ON DELETE CASCADE`,rel:rel});
 				});
 				group['foreignRelations'] = relations;
 				group['foreignRelationsCount'] = relations.length;
@@ -472,7 +522,9 @@ class CtrlApi{
 
                         if (rowsNumber < group.seeder.length ){
                             //this.database.writeSQL(`DELETE  ${group.name}`);
-                            me.database.db.prepare(`DELETE FROM ${group.name}`).run();
+                            let query_del =`DELETE FROM ${group.name}`;
+                            console.log("query_del", query_del);
+                            me.database.db.prepare(query_del).run();
 
                             group.seeder.forEach( (seed)=> {                        
                                 let f = me.toFields(group.data[seed.data]);
@@ -774,6 +826,22 @@ class CtrlApi{
         group.apis.forEach(api => {
             let rel;
             console.log("api",api);
+
+			/* GENERATE _IMAGES SOURCE */
+			router.get(`/_images/:file`,function (req, res){
+				if (fs.existsSync(`public/_images/${req.params.file}`)) {
+					var fileStream = fs.createReadStream(`public/_images/${req.params.file}`);
+					fileStream.on('open', function () {
+						fileStream.pipe(res);
+					});
+				}
+				else{
+					res.write(`<html>IMAGE NOT FOUND</html>`);
+					res.end();
+				}
+				
+			});
+
             if (api.type == "rel") rel = me.toRelation('',api.rel);
             if (api.method == "GET" && (api.type == "auto" || api.type == "custom" )){
                 console.log(`route ${api.type} GET /${group.alias===undefined?group.name:group.alias}/${api.route}`);
@@ -819,14 +887,14 @@ class CtrlApi{
                         let offset = (page ) * size;
                         let tot = me.database.db.prepare(`select count (*) as total from ${group.name} ${findcondition}`).all();
                         let rowsNumber = tot[0]['total'];
-                        respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size )+1 ;
+                        respuesta.pagination.pages = ((rowsNumber - rowsNumber%size) / size ) ;
                         respuesta.pagination.rowsNumber = rowsNumber;                        
                         console.log("--sel--", `select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`);
                         //respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ORDER BY ${sort} ${descending} LIMIT ${offset},${size}`).all();                            
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} `).all();
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
-
+						
                         respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
                         
                         if (req.query.keyword != undefined){
@@ -845,6 +913,8 @@ class CtrlApi{
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
 						console.log(" ----- GET ALL -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
+			
+
                         respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
 						console.log(" ----- GET ALL END -----");
                     }
@@ -890,9 +960,9 @@ class CtrlApi{
 
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending} LIMIT ${offset},${size}`;
 
-
+                        
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent);
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -905,11 +975,21 @@ class CtrlApi{
                         
                     }else{
                         console.log("GET query", `select ${f} from ${rel.table} ${findcondition}` );
-
+                        let customroute = group.apicustom.find( aa => aa.relroute==api.route );
+                        console.log("customroute",customroute);
+                        
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
                         console.log("query_parent",query_parent);
+                        console.log("api.out",api.out);
+
+						let isCustomrel = group.apicustom.find(aaa=> aaa.type=="customrel" && aaa.out.includes(api.out));
+						let typeApi = "";
+						if (isCustomrel!=null) typeApi = "rel";
+						else typeApi = "customrel";
+						//console.log("isCustomrel",isCustomrel);
+
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent, typeApi);
                     }                        
 
 

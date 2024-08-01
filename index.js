@@ -17,7 +17,7 @@ const JSZip = require("jszip");
 const database = new Database();
 const ctrlApi = new CtrlApi();
 database.iniciar();
-const port = 9988;
+const port = 9987;
 var public = path.join(__dirname, "public");
 
 app.use(cors());
@@ -52,7 +52,7 @@ fs.readdirSync(dbscript).forEach((file) => {
 
   console.log(db_array);
 
-  let apiDoc = new ApiDoc("192.168.100.7", "9988");
+  let apiDoc = new ApiDoc("192.168.100.7", port);
   //let apiDoc = new ApiDoc('172.20.50.67','9988');
 
   db_array.forEach((db_var) => {
@@ -102,6 +102,11 @@ fs.readdirSync(dbscript).forEach((file) => {
   app.get("/import_pg", (req, res) => {
     let importerpg = new ImporterPG(db_array, req, res);
     let result = importerpg.start();
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify("ok"));
+  });
+
+  app.get("/postman", (req, res) => {    
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify("ok"));
   });
