@@ -38,12 +38,14 @@ class ImporterPG {
 			return 'null';
 		else{		
 			if (col_data.dataTypeID == 3802) return `'${JSON.stringify(val)}'`;
+			if (col_data.dataTypeID == 16) return `${val}`;
 			return `'${val}'`;
 		}
 	}
 	formatValueIn(val,col_data){		
 		//jsonb '::TEXT'
 		if ([1114].includes(col_data.dataTypeID)) return `EXTRACT(EPOCH FROM "${col_data.name}"::timestamp AT TIME ZONE 'UTC') as "${col_data.name}"`;
+		if ([1082].includes(col_data.dataTypeID)) return `EXTRACT(EPOCH FROM ${col_data.name}::timestamp ) as ${col_data.name}`;
 		//if ([1700,1082].includes(col_data.dataTypeID)) return `EXTRACT(EPOCH FROM ${col_data.name}::timestamp ) as ${col_data.name}`;
 		
 		return `"${col_data.name}"`;
@@ -53,7 +55,7 @@ class ImporterPG {
 		let me = this;
 		//let db = me.database.db.prepare(relQuery).all();
 		//this.dbData.groups.forEach(group => {
-		let fromTable = "job_routes";
+		let fromTable = "persons";
 		let sw = false;
 		client.connect(async (err) => {
 			for (let i = 0; i < this.dbData.groups.length; i++) {
@@ -79,12 +81,12 @@ class ImporterPG {
 				//console.log("fr",fr);
 
 				let query_sel_formatter = `SELECT ${fr} from public.${group.name} ${orderby}`;					
-				console.log("query_sel_formatter",query_sel_formatter);
+				//console.log("query_sel_formatter",query_sel_formatter);
 				//throw "here";
 
 				const res = await client.query(query_sel_formatter);	
 				let frr = res_temp.fields.map(fld=> `'${fld.name}'`).join(',');
-				//console.log("--res.fields",res.fields);
+				console.log("--res.fields",res.fields);
 				for (let j = 0; j < res.rows.length; j++) {
 					let row=res.rows[j];
 					let f_data = res.fields.map(col => `${me.formatValue(row[col.name],col)}`);
