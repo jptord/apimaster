@@ -785,7 +785,7 @@ function getAllApislinks(apiLinks){
     apiLinks.forEach( (api) => {		
 		apis.unshift({
 			method: api.method?api.method.toUpperCase():'GET',
-			conn:   api.con,
+			con:   api.con,
 			filter:  api.filter,
 			filterin:  api.filterin,
 			addfield:  api.addfield,
@@ -848,6 +848,8 @@ function dataCustomFormat(value){
         let values = op.trim().split("=");
         if (values[0].trim()=="name") objdata['name'] = values[1].trim();
         if (values[0].trim()=="fields") objdata['fields'] = values[1].trim().split(",");
+        
+
         //objapi[values[0].trim()] = values[1].trim();
     });
     
@@ -934,8 +936,22 @@ function formatearArray(groupNor){
       	groupNor.datacustom.forEach(dc => {
 			group.data[`${dc.name}`]= {};
 			dc.fields.forEach( f => {
-				if ( group.data.select.hasOwnProperty(f) )
-					group.data[`${dc.name}`][f] = group.data.select[f];
+                let name = '';
+                let valuetype = '';
+                let field_array = f.split(".");
+                if (field_array.length == 2){
+                    name = field_array[0];
+                    valuetype = field_array[1];
+                }else{
+                    name = f;
+                }
+
+				if ( group.data.select.hasOwnProperty(name) ){
+                    if (valuetype == "")           
+                        group.data[`${dc.name}`][f] = group.data.select[f];
+                    else
+                        group.data[`${dc.name}`][name] = valuetype;
+                }					
 			});
 		});
     return group;
@@ -1105,7 +1121,7 @@ function toHuman(dbs){
             data_apis.forEach(api => {
                 if(api.type=="custom"){
                     let custom_api_array = [];
-                    Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':searchData(group,k,api[k])}` ));                
+                    Object.keys(api).forEach( k => custom_api_array.push(`${k.toLowerCase()}=${api[k]==null?'':searchData(group,k,api[k],api)}` ));                
                     //console.log("custom_api_array[custom_api_array.length-1]",custom_api_array[custom_api_array.length-1]);
                     //custom_api_array[custom_api_array.length-1] = searchData(group,custom_api_array[custom_api_array.length-1]);
                     //console.log("@custom_api_array[custom_api_array.length-1]",custom_api_array[custom_api_array.length-1]);
@@ -1186,7 +1202,7 @@ function toHuman(dbs){
 
     return testX;
 }
-function searchData(group, key, apiValue){
+function searchData(group, key, apiValue,api){
     //let regOut = /(?<=out=)\w+/g;
     //let valueOut = apiValue.match(regOut); 
     
@@ -1195,6 +1211,9 @@ function searchData(group, key, apiValue){
     let selectData = Object.keys(group.data).filter( k=> k == apiValue );
 
     let apiCustom =  group.apicustom.filter(ac => ac.route == apiValue)[0]; 
+    
+    let apiCustomApi =  group.apicustom.filter(ac => ac.route == api.route)[0]; 
+
     console.log('---apiCustom',apiCustom,apiValue);
     if (apiCustom!=undefined)
         if (apiCustom.out == "*"+apiValue) return apiCustom.out;
@@ -1207,6 +1226,9 @@ function searchData(group, key, apiValue){
         selectData = selectData[0];
         console.log("selectData",selectData);
         console.log("group.data[selectData]",group.data[selectData]);
+
+        
+
         Object.keys(group.data[selectData]).forEach(k => {fieldNames.push(k)});
     }
         
@@ -1221,9 +1243,17 @@ function searchDataInverse(group, api, api_out){
         data_name = `custom_${api.route}`;
         group.data[data_name] = {}
         api_out.split(",").forEach(field_custom => {
-            let field_type = group.data.select[field_custom];
-            console.log("field_type",field_type);
-            group.data[data_name][field_custom] = field_type;
+            let name = field_custom;
+            let splitName = field_custom.split(".");
+            console.log("splitName.length",splitName.length);
+            if (splitName.length==0){
+                let field_type = group.data.select[name];
+                console.log("field_type",name);
+                group.data[data_name][name] = field_type;
+            }else{
+                name = splitName[0];
+                group.data[data_name][name] = splitName[1];
+            }
         })
     }
     //group.data[data_name] = 

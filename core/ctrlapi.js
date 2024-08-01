@@ -164,7 +164,27 @@ class CtrlApi{
             if (data_fields[k] == 'b64img')
                 fields.push(k);
         });
-        return fields;        
+        return fields;
+    }
+    getApiLink(data_fields,group){
+        let apilinks = [];
+        let me = this;
+        //console.log("getApiLink.data_fields:",data_fields);
+        group.apilink.forEach( (apilink)=>{
+            let haveLink = false;
+            apilink.filterin.split(",").forEach( f => {
+                if ( Object.keys(data_fields).includes( f )!=null)
+                    haveLink = true;           
+            });
+            if (  Object.keys(data_fields).includes( apilink.addfield )!=null)
+                haveLink = true;
+            if (haveLink){
+                if ( me.dbData.apiconn[apilink.con]!=null)
+                    apilink['url'] = me.dbData.apiconn[apilink.con].url;
+                apilinks.push(apilink);
+            }
+        });
+        return apilinks;
     }
 	b64ToImage(id, b64){	
 		try{
@@ -212,26 +232,28 @@ class CtrlApi{
 		});
 	}
 
-	getLinkData(row_content, group){
+	getLinkDataTemp(row_content, apilink){
 		return new Promise((resolve, reject) => {
-			let adr = 'http://192.168.100.7:9987/tre_personal/persons?code[equal]=P23RZ5';
+			//let adr = 'http://192.168.100.7:9987/tre_personal/persons?code[equal]=P23RZ5';
+            if (apilink.url == undefined)
+                throw "getLinkData: apilink.url undefined";
+
+            let adr = apilink.url;
 			let address = URL.parse(adr, true);
 			var options = {
 				host: address.hostname,
 				port: address.port,
-				path: address.path
+				path: address.path,
+                timeout: 100,
 				};
 		
 				var req = http.get(options, function(res) {
-					console.log('STATUS: ' + res.statusCode);
-					//console.log('HEADERS: ' + JSON.stringify(res.headers));					
+					//console.log('STATUS: ' + res.statusCode);//console.log('HEADERS: ' + JSON.stringify(res.headers));
 					var bodyChunks = [];
-					res.on('data', function(chunk) {					
+					res.on('data', function(chunk) {
 						bodyChunks.push(chunk);
 					}).on('end', function() {
 						var body = Buffer.concat(bodyChunks);
-						//console.log('BODY: ' + body);						
-						//row_content['link'] = 'BODY ' + body;
 						resolve(JSON.parse(body).content);
 					})
 				});
@@ -241,6 +263,85 @@ class CtrlApi{
 					//row_content['link'] = 'ERROR ' + e.message;
 					resolve(e.message);
 				});
+                req.on('timeout', () => {
+                    req.destroy();
+					resolve("timeout");
+                });
+		});		
+	}
+	getLinkData(row_content, apilink){
+		return new Promise((resolve, reject) => {
+			//let adr = 'http://192.168.100.7:9987/tre_personal/persons?code[equal]=P23RZ5';
+            if (apilink.url == undefined)
+                throw "getLinkData: apilink.url undefined";
+
+            let adr = apilink.url;
+			let address = URL.parse(adr, true);
+            let path = address.path;
+
+            let filter_api = apilink.filter.split(",");
+            let filter_in = apilink.filterin.split(",");
+            if (filter_api.length != filter_in.length) throw "getLinkData.filter fields are different";
+            for (let ij = 0; ij <= filter_api.length; ij++ ){
+                if (row_content.hasOwnProperty(filter_in[ij])){
+                    path = path.replaceAll("$"+filter_api[ij],row_content[filter_in[ij]]);
+                    //console.log(`replaceAll $`+filter_api[ij] + " with " + row_content[filter_in[ij]]);
+                }
+            }
+            console.log("getLinkData.path",path, filter_api, row_content, apilink.type);
+            
+			var options = {
+				host: address.hostname,
+				port: address.port,
+				path: path,
+                timeout: 100,
+				};
+		
+				var req = http.get(options, function(res) {					
+					var bodyChunks = [];
+					res.on('data', function(chunk) {
+						bodyChunks.push(chunk);
+					}).on('end', function() {
+						let body = Buffer.concat(bodyChunks);
+                        let json = JSON.parse(body);
+                        if (json == null) throw "getLinkData: json is null";
+                        let content_link = json.content;
+                        if (content_link == null) throw "getLinkData: content_link is null";
+                        if (content_link.length == 0) {
+                            resolve(row_content);                            
+                        }else{
+                            let first_content = content_link[0];
+                            if (apilink.type == "mix"){
+                                Object.keys(first_content).forEach( (k) => {
+                                    row_content[k] = first_content[k];
+                                });
+                            }
+                            if (apilink.type == "add"){
+                                let addField = apilink.addfield;
+                                if (addField == null) throw "getLinkData: addField is null";
+                                row_content[addField] = first_content;                                
+                            }
+                            if (apilink.type == "exc"){//exclude
+                                //fields_content = Object.keys(row_content);
+                                Object.keys(first_content).forEach( (k) => {
+                                    if (row_content.hasOwnProperty(k))
+                                        row_content[k] = first_content[k];
+                                });                                
+                            }
+                            resolve(row_content);
+                        }
+					})
+				});
+		
+				req.on('error', function(e) {
+					console.log('ERROR: ' + e.message);
+					//row_content['link'] = 'ERROR ' + e.message;
+					resolve(row_content);
+				});
+                req.on('timeout', () => {
+                    req.destroy();
+					resolve(row_content);
+                });
 		});		
 	}
 	
@@ -252,6 +353,7 @@ class CtrlApi{
         let relations = this.toRelations(data_fields);
         const special_b64zip = this.getB64zip(data_fields);
         const special_b64img = this.getB64img(data_fields);
+        const special_apilink = this.getApiLink(data_fields,parent_group);
 
 
         //console.log("appendSubquerys.data_fields",data_fields);
@@ -280,7 +382,9 @@ class CtrlApi{
 		
 		content = await Promise.all( content.map( r => {
 			return new Promise( async (resolve,reject)=>{
-				r['link'] = await me.getLinkData(r,parent_group);
+				for (let i = 0; i < special_apilink.length; i++){
+                    r = await me.getLinkData(r,special_apilink[i]);                    
+                }				
 				resolve(r);
 			});
 		}));
@@ -368,9 +472,9 @@ class CtrlApi{
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
-                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel, parent_group);
+                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel, relGroup);
 				else
-					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel, parent_group);
+					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel, relGroup);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){

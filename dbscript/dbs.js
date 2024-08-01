@@ -227,11 +227,28 @@
                         "in": "select",
                         "type": "custom",
                         "out": "id"
+                    },
+                    {
+                        "method": "post",
+                        "route": "fullsync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id,base64.string,path,create_date,update_date"
                     }
                 ],
                 "datacustom": [],
                 "apilink": [],
                 "apis": [
+                    {
+                        "method": "POST",
+                        "route": "fullsync",
+                        "query": "",
+                        "rel": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_fullsync"
+                    },
                     {
                         "method": "POST",
                         "route": "sync",
@@ -300,6 +317,13 @@
                     },
                     "custom_sync": {
                         "id": "uuid|pk"
+                    },
+                    "custom_fullsync": {
+                        "id": "uuid|pk",
+                        "base64": "string",
+                        "path": "string",
+                        "create_date": "date",
+                        "update_date": "date"
                     }
                 }
             },
@@ -2239,10 +2263,11 @@
                 "apilink": [
                     {
                         "method": "GET",
+                        "con": "tre_personal_persons",
                         "filter": "code",
                         "filterin": "code",
-                        "addfield": "link",
-                        "type": "add"
+                        "addfield": "trebol",
+                        "type": "exc"
                     }
                 ],
                 "apis": [
@@ -2714,8 +2739,7 @@
                             "max_split_mt",
                             "distance",
                             "create_date",
-                            "update_date",
-                            "points"
+                            "update_date"
                         ]
                     }
                 ],
@@ -2881,8 +2905,7 @@
                         "max_split_mt": "number",
                         "distance": "number",
                         "create_date": "date",
-                        "update_date": "date",
-                        "points": "[[points|route_id|id]]"
+                        "update_date": "date"
                     },
                     "custom_sync": {
                         "id": "uuid|pk",
@@ -6562,7 +6585,7 @@
         ],
         "apiconn": {
             "tre_personal_persons": {
-                "url": "http://172.20.50.67:9987/tre_personal/persons?code[equal]=$code"
+                "url": "http://localhost:9987/tre_personal/persons?code[equal]=$code"
             }
         }
     }
