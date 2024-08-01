@@ -210,7 +210,7 @@ class CtrlApi{
 		});
 	}
 	
-    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent){
+    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel){
         //console.log("-----appendSubquerys.req:",req);    
         console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
@@ -249,6 +249,9 @@ class CtrlApi{
             } );
         } );*/
 		//relations.forEach(async r => {
+			console.log("typerel",typerel);
+            if (typerel=="customrel")
+				parent_data_name = "__no_chain__";
         for(let ij = 0; ij < relations.length; ij++){
 			let r = relations[ij];
             let idArr = [];
@@ -266,9 +269,7 @@ class CtrlApi{
             console.log("r.table",r.table);
             //console.log("relGroup",relGroup);
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
-                let isCustomrel = relGroup.apicustom.find(aaa=> aaa.out.includes("parent_data_name"));
-                if (isCustomrel==null)
-                    chain_data=true;
+				chain_data=true;               
             }
             console.log("is_chain_",chain_data, data_fields);
             console.log("parent_data_name",parent_data_name);
@@ -306,11 +307,10 @@ class CtrlApi{
            // throw console.log("here");
 			if(idArr.length == 0)
 				return content;
-
+				
             let res_temp = me.database.db.prepare(relQuery).all();
            // console.log("res_temp ",res_temp);
             //console.log("---content ",content);
-            
             for (let i = 0; i< content.length; i++){  
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
@@ -325,9 +325,9 @@ class CtrlApi{
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
-                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query);
+                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel);
 				else
-					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query);
+					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -894,7 +894,7 @@ class CtrlApi{
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} `).all();
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
-
+						
                         respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
                         
                         if (req.query.keyword != undefined){
@@ -913,6 +913,8 @@ class CtrlApi{
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
 						console.log(" ----- GET ALL -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
+			
+
                         respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
 						console.log(" ----- GET ALL END -----");
                     }
@@ -979,8 +981,15 @@ class CtrlApi{
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
                         console.log("query_parent",query_parent);
                         console.log("api.out",api.out);
+
+						let isCustomrel = group.apicustom.find(aaa=> aaa.type=="customrel" && aaa.out.includes(api.out));
+						let typeApi = "";
+						if (isCustomrel!=null) typeApi = "rel";
+						else typeApi = "customrel";
+						//console.log("isCustomrel",isCustomrel);
+
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent, typeApi);
                     }                        
 
 
