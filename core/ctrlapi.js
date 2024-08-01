@@ -1,5 +1,7 @@
 const express = require('express')
 const util = require('util')
+const http = require('http');
+const URL = require('url');
 
 var JSZip = require("jszip");
 
@@ -209,8 +211,40 @@ class CtrlApi{
 			return {t:Number(sp[0]),lat:Number(sp[1]),lon:Number(sp[2]),bat:Number(sp[3]),acc:Number(sp[5])}
 		});
 	}
+
+	getLinkData(row_content, group){
+		return new Promise((resolve, reject) => {
+			let adr = 'http://192.168.100.7:9987/tre_personal/persons?code[equal]=P23RZ5';
+			let address = URL.parse(adr, true);
+			var options = {
+				host: address.hostname,
+				port: address.port,
+				path: address.path
+				};
+		
+				var req = http.get(options, function(res) {
+					console.log('STATUS: ' + res.statusCode);
+					//console.log('HEADERS: ' + JSON.stringify(res.headers));					
+					var bodyChunks = [];
+					res.on('data', function(chunk) {					
+						bodyChunks.push(chunk);
+					}).on('end', function() {
+						var body = Buffer.concat(bodyChunks);
+						//console.log('BODY: ' + body);						
+						//row_content['link'] = 'BODY ' + body;
+						resolve(JSON.parse(body).content);
+					})
+				});
+		
+				req.on('error', function(e) {
+					console.log('ERROR: ' + e.message);
+					//row_content['link'] = 'ERROR ' + e.message;
+					resolve(e.message);
+				});
+		});		
+	}
 	
-    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel){
+    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel, parent_group){
         //console.log("-----appendSubquerys.req:",req);    
         console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
@@ -218,6 +252,7 @@ class CtrlApi{
         let relations = this.toRelations(data_fields);
         const special_b64zip = this.getB64zip(data_fields);
         const special_b64img = this.getB64img(data_fields);
+
 
         //console.log("appendSubquerys.data_fields",data_fields);
         //console.log("relations.length",relations.length);
@@ -242,6 +277,14 @@ class CtrlApi{
 				resolve(r);
 			} );
 		}));
+		
+		content = await Promise.all( content.map( r => {
+			return new Promise( async (resolve,reject)=>{
+				r['link'] = await me.getLinkData(r,parent_group);
+				resolve(r);
+			});
+		}));
+
       /*  content.forEach( c=>{
             special_b64zip.forEach( async sk =>{
                 c[sk] = await this.unzip(c[sk]);
@@ -325,9 +368,9 @@ class CtrlApi{
                 
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
-                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel);
+                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel, parent_group);
 				else
-					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel);
+					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel, parent_group);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -895,7 +938,7 @@ class CtrlApi{
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
 						
-                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent,null, group);
                         
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -915,7 +958,7 @@ class CtrlApi{
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
 			
 
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent,null, group);
 						console.log(" ----- GET ALL END -----");
                     }
                     me.contentACamelCase(respuesta);
@@ -960,9 +1003,14 @@ class CtrlApi{
 
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending} LIMIT ${offset},${size}`;
 
+						let isCustomrel = group.apicustom.find(aaa=> aaa.type=="customrel" && aaa.out.includes(api.out));
+						let typeApi = "";
+						if (isCustomrel!=null) typeApi = "rel";
+						else typeApi = "customrel";
                         
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent, typeApi, group );
+
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -989,7 +1037,7 @@ class CtrlApi{
 						//console.log("isCustomrel",isCustomrel);
 
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent, typeApi);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent, typeApi, group );
                     }                        
 
 
