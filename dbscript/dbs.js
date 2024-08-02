@@ -32,6 +32,9 @@
                     }
                 ],
                 "seeder": [],
+                "apicustom": [],
+                "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -151,6 +154,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -264,6 +268,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -363,6 +368,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -465,6 +471,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -559,6 +566,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -651,6 +659,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -754,6 +763,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -859,6 +869,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -961,6 +972,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1063,6 +1075,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1149,6 +1162,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1243,6 +1257,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1332,6 +1347,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1431,6 +1447,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1539,6 +1556,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1641,6 +1659,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1751,6 +1770,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1875,6 +1895,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -1981,6 +2002,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2096,6 +2118,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2234,6 +2257,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2354,6 +2378,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2460,6 +2485,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2569,6 +2595,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2689,6 +2716,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2812,6 +2840,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2932,6 +2961,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3058,6 +3088,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3169,6 +3200,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3376,12 +3408,60 @@
                     {
                         "name": "type_job",
                         "value": "string"
+                    },
+                    {
+                        "name": "personroutes",
+                        "value": "[[person_routes|person_id|id]]",
+                        "rel": {
+                            "index": "personroutes",
+                            "name": "person_routes",
+                            "field": "person_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "seeder": [],
-                "apicustom": [],
-                "datacustom": [],
+                "apicustom": [
+                    {
+                        "method": "get",
+                        "route": "personlist",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,names,last_name_1,last_name_2,last_name_3,document_number,code,area,position,routes,type_job,personroutes"
+                    }
+                ],
+                "datacustom": [
+                    {
+                        "name": "personlist",
+                        "fields": [
+                            "id",
+                            "names",
+                            "last_name_1",
+                            "last_name_2",
+                            "last_name_3",
+                            "document_number",
+                            "code",
+                            "area",
+                            "position",
+                            "routes",
+                            "type_job",
+                            "personroutes"
+                        ]
+                    }
+                ],
+                "apilink": [],
                 "apis": [
+                    {
+                        "method": "GET",
+                        "route": "personlist",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_personlist"
+                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -3416,6 +3496,46 @@
                         "in": null,
                         "type": "auto",
                         "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":person_id/person_routes",
+                        "in": null,
+                        "rel": "[[person_routes|person_id|id]]",
+                        "type": "rel",
+                        "out": "select_person_routes"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":person_id/person_routes/:id",
+                        "in": null,
+                        "rel": "[[person_routes|person_id|id]]",
+                        "type": "rel",
+                        "out": "select_person_routes"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":person_id/person_routes",
+                        "in": "insert_person_routes",
+                        "rel": "[[person_routes|person_id|id]]",
+                        "type": "rel",
+                        "out": "select_person_routes"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":person_id/person_routes/:id",
+                        "in": "insert_person_routes",
+                        "rel": "[[person_routes|person_id|id]]",
+                        "type": "rel",
+                        "out": "select_person_routes"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":person_id/person_routes/:id",
+                        "in": null,
+                        "rel": "[[person_routes|person_id|id]]",
+                        "type": "rel",
+                        "out": null
                     }
                 ],
                 "data": {
@@ -3448,7 +3568,8 @@
                         "updated_at": "date",
                         "deleted_at": "date",
                         "area": "string",
-                        "type_job": "string"
+                        "type_job": "string",
+                        "personroutes": "[[person_routes|person_id|id]]"
                     },
                     "create": {
                         "id": "number|pk",
@@ -3479,7 +3600,8 @@
                         "updated_at": "date",
                         "deleted_at": "date",
                         "area": "string",
-                        "type_job": "string"
+                        "type_job": "string",
+                        "personroutes": "[[person_routes|person_id|id]]"
                     },
                     "insert": {
                         "names": "string",
@@ -3509,7 +3631,72 @@
                         "updated_at": "date",
                         "deleted_at": "date",
                         "area": "string",
-                        "type_job": "string"
+                        "type_job": "string",
+                        "personroutes": "[[person_routes|person_id|id]]"
+                    },
+                    "personlist": {
+                        "id": "number|pk",
+                        "names": "string",
+                        "last_name_1": "string",
+                        "last_name_2": "string",
+                        "last_name_3": "string",
+                        "document_number": "string",
+                        "code": "string",
+                        "area": "string",
+                        "position": "string",
+                        "routes": "string",
+                        "type_job": "string",
+                        "personroutes": "[[person_routes|person_id|id]]"
+                    },
+                    "custom_personlist": {
+                        "id": "number|pk",
+                        "names": "string",
+                        "last_name_1": "string",
+                        "last_name_2": "string",
+                        "last_name_3": "string",
+                        "document_number": "string",
+                        "code": "string",
+                        "area": "string",
+                        "position": "string",
+                        "routes": "string",
+                        "type_job": "string",
+                        "personroutes": "[[person_routes|person_id|id]]"
+                    },
+                    "select_person_routes": {
+                        "id": "number|pk",
+                        "persons": "[persons|id|person_id]",
+                        "person_id": "number",
+                        "job_routes": "[job_routes|id|job_route_id]",
+                        "job_route_id": "number",
+                        "created_at": "date",
+                        "updated_at": "date",
+                        "deleted_at": "date"
+                    },
+                    "create_person_routes": {
+                        "id": "number|pk",
+                        "persons": "[persons|id|person_id]",
+                        "person_id": "number",
+                        "job_routes": "[job_routes|id|job_route_id]",
+                        "job_route_id": "number",
+                        "created_at": "date",
+                        "updated_at": "date",
+                        "deleted_at": "date"
+                    },
+                    "insert_person_routes": {
+                        "persons": "[persons|id|person_id]",
+                        "person_id": "number",
+                        "job_routes": "[job_routes|id|job_route_id]",
+                        "job_route_id": "number",
+                        "created_at": "date",
+                        "updated_at": "date",
+                        "deleted_at": "date"
+                    },
+                    "personlist_person_routes": {
+                        "id": "number|pk",
+                        "person_id": "number",
+                        "job_route_id": "number",
+                        "job_routes": "[job_routes|id|job_route_id]",
+                        "created_at": "date"
                     }
                 }
             },
@@ -3567,6 +3754,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3690,6 +3878,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3813,6 +4002,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -3924,6 +4114,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4042,6 +4233,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4172,6 +4364,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4290,6 +4483,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4399,6 +4593,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4513,6 +4708,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4639,6 +4835,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4750,6 +4947,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -4887,6 +5085,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5034,6 +5233,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5155,6 +5355,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5342,6 +5543,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5509,7 +5711,19 @@
                 ],
                 "seeder": [],
                 "apicustom": [],
-                "datacustom": [],
+                "datacustom": [
+                    {
+                        "name": "personlist",
+                        "fields": [
+                            "id",
+                            "person_id",
+                            "job_route_id",
+                            "job_routes",
+                            "created_at"
+                        ]
+                    }
+                ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5576,6 +5790,13 @@
                         "created_at": "date",
                         "updated_at": "date",
                         "deleted_at": "date"
+                    },
+                    "personlist": {
+                        "id": "number|pk",
+                        "person_id": "number",
+                        "job_route_id": "number",
+                        "job_routes": "[job_routes|id|job_route_id]",
+                        "created_at": "date"
                     }
                 }
             },
@@ -5637,6 +5858,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5748,6 +5970,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -5903,6 +6126,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6032,6 +6256,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6138,6 +6363,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6244,6 +6470,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6402,6 +6629,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6547,6 +6775,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6661,6 +6890,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6775,6 +7005,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6898,6 +7129,7 @@
                 "seeder": [],
                 "apicustom": [],
                 "datacustom": [],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -6967,6 +7199,7 @@
                     }
                 }
             }
-        ]
+        ],
+        "apiconn": {}
     }
 ]

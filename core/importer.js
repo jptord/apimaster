@@ -7,7 +7,7 @@ const dbConfig = {
 	password: 'postgres',
 	host: 'localhost',
 	port: '5432',
-	database: 'reg_personal',
+	database: 'trebol_personal',
 };
 
 // Create a new PostgreSQL client
@@ -44,6 +44,7 @@ class ImporterPG {
 	formatValueIn(val,col_data){		
 		//jsonb '::TEXT'
 		if ([1114].includes(col_data.dataTypeID)) return `EXTRACT(EPOCH FROM "${col_data.name}"::timestamp AT TIME ZONE 'UTC') as "${col_data.name}"`;
+		if ([1082].includes(col_data.dataTypeID)) return `EXTRACT(EPOCH FROM ${col_data.name}::timestamp ) as ${col_data.name}`;
 		//if ([1700,1082].includes(col_data.dataTypeID)) return `EXTRACT(EPOCH FROM ${col_data.name}::timestamp ) as ${col_data.name}`;
 		
 		return `"${col_data.name}"`;
@@ -53,7 +54,7 @@ class ImporterPG {
 		let me = this;
 		//let db = me.database.db.prepare(relQuery).all();
 		//this.dbData.groups.forEach(group => {
-		let fromTable = "job_routes";
+		let fromTable = "persons";
 		let sw = false;
 		client.connect(async (err) => {
 			for (let i = 0; i < this.dbData.groups.length; i++) {
@@ -66,7 +67,7 @@ class ImporterPG {
 					console.log("err", err);
 				/*if ((fromTable != group.name)&& !sw) continue;
 				else sw = true;*/ // from to end
-				//if ((fromTable != group.name)) continue; // only equal
+				if ((fromTable != group.name)) continue; // only equal
 				
 				let pk_field = group.fields.find(fld => fld.value.includes("pk"));
 				let orderby = "";
@@ -74,7 +75,7 @@ class ImporterPG {
 					orderby = ` ORDER BY ${pk_field.name}`;
 				let query_sel = `SELECT * from public.${group.name} ${orderby} LIMIT 1`;				
 				const res_temp = await client.query(query_sel);	
-				//console.log("res_temp.fields",res_temp.fields);
+				console.log("res_temp.fields",res_temp.fields);
 				let fr = res_temp.fields.map(fld=> me.formatValueIn(fld.name,fld)).join(',');	
 				//console.log("fr",fr);
 

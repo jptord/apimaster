@@ -1,5 +1,7 @@
 const express = require('express')
 const util = require('util')
+const http = require('http');
+const URL = require('url');
 
 var JSZip = require("jszip");
 
@@ -162,7 +164,28 @@ class CtrlApi{
             if (data_fields[k] == 'b64img')
                 fields.push(k);
         });
-        return fields;        
+        return fields;
+    }
+    getApiLink(data_fields,group){
+        let apilinks = [];
+        let me = this;
+        //console.log("getApiLink.data_fields:",data_fields);
+		if (!group.hasOwnProperty("apilink")) return apilinks;
+        group.apilink.forEach( (apilink)=>{
+            let haveLink = false;
+            apilink.filterin.split(",").forEach( f => {
+                if ( Object.keys(data_fields).includes( f )!=null)
+                    haveLink = true;           
+            });
+            if (  Object.keys(data_fields).includes( apilink.addfield )!=null)
+                haveLink = true;
+            if (haveLink){
+                if ( me.dbData.apiconn[apilink.con]!=null)
+                    apilink['url'] = me.dbData.apiconn[apilink.con].url;
+                apilinks.push(apilink);
+            }
+        });
+        return apilinks;
     }
 	b64ToImage(id, b64){	
 		try{
@@ -209,15 +232,130 @@ class CtrlApi{
 			return {t:Number(sp[0]),lat:Number(sp[1]),lon:Number(sp[2]),bat:Number(sp[3]),acc:Number(sp[5])}
 		});
 	}
+
+	getLinkDataTemp(row_content, apilink){
+		return new Promise((resolve, reject) => {
+			//let adr = 'http://192.168.100.7:9987/tre_personal/persons?code[equal]=P23RZ5';
+            if (apilink.url == undefined)
+                throw "getLinkData: apilink.url undefined";
+
+            let adr = apilink.url;
+			let address = URL.parse(adr, true);
+			var options = {
+				host: address.hostname,
+				port: address.port,
+				path: address.path,
+                timeout: 100,
+				};
+		
+				var req = http.get(options, function(res) {
+					//console.log('STATUS: ' + res.statusCode);//console.log('HEADERS: ' + JSON.stringify(res.headers));
+					var bodyChunks = [];
+					res.on('data', function(chunk) {
+						bodyChunks.push(chunk);
+					}).on('end', function() {
+						var body = Buffer.concat(bodyChunks);
+						resolve(JSON.parse(body).content);
+					})
+				});
+		
+				req.on('error', function(e) {
+					console.log('ERROR: ' + e.message);
+					//row_content['link'] = 'ERROR ' + e.message;
+					resolve(e.message);
+				});
+                req.on('timeout', () => {
+                    req.destroy();
+					resolve("timeout");
+                });
+		});		
+	}
+	getLinkData(row_content, apilink){
+		return new Promise((resolve, reject) => {
+			//let adr = 'http://192.168.100.7:9987/tre_personal/persons?code[equal]=P23RZ5';
+            if (apilink.url == undefined)
+                throw "getLinkData: apilink.url undefined";
+
+            let adr = apilink.url;
+			let address = URL.parse(adr, true);
+            let path = address.path;
+
+            let filter_api = apilink.filter.split(",");
+            let filter_in = apilink.filterin.split(",");
+            if (filter_api.length != filter_in.length) throw "getLinkData.filter fields are different";
+            for (let ij = 0; ij <= filter_api.length; ij++ ){
+                if (row_content.hasOwnProperty(filter_in[ij])){
+                    path = path.replaceAll("$"+filter_api[ij],row_content[filter_in[ij]]);
+                    //console.log(`replaceAll $`+filter_api[ij] + " with " + row_content[filter_in[ij]]);
+                }
+            }
+            console.log("getLinkData.path",path, filter_api, row_content, apilink.type);
+            
+			var options = {
+				host: address.hostname,
+				port: address.port,
+				path: path,
+                timeout: 100,
+				};
+		
+				var req = http.get(options, function(res) {					
+					var bodyChunks = [];
+					res.on('data', function(chunk) {
+						bodyChunks.push(chunk);
+					}).on('end', function() {
+						let body = Buffer.concat(bodyChunks);
+                        let json = JSON.parse(body);
+                        if (json == null) throw "getLinkData: json is null";
+                        let content_link = json.content;
+                        if (content_link == null) throw "getLinkData: content_link is null";
+                        if (content_link.length == 0) {
+                            resolve(row_content);                            
+                        }else{
+                            let first_content = content_link[0];
+                            if (apilink.type == "mix"){
+                                Object.keys(first_content).forEach( (k) => {
+                                    row_content[k] = first_content[k];
+                                });
+                            }
+                            if (apilink.type == "add"){
+                                let addField = apilink.addfield;
+                                if (addField == null) throw "getLinkData: addField is null";
+                                row_content[addField] = first_content;                                
+                            }
+                            if (apilink.type == "exc"){//exclude
+                                //fields_content = Object.keys(row_content);
+                                Object.keys(first_content).forEach( (k) => {
+                                    if (row_content.hasOwnProperty(k))
+                                        row_content[k] = first_content[k];
+                                });                                
+                            }
+                            resolve(row_content);
+                        }
+					})
+				});
+		
+				req.on('error', function(e) {
+					console.log('ERROR: ' + e.message);
+					//row_content['link'] = 'ERROR ' + e.message;
+					resolve(row_content);
+				});
+                req.on('timeout', () => {
+                    req.destroy();
+					resolve(row_content);
+                });
+		});		
+	}
 	
-    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel){
+    async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel, parent_group){
         //console.log("-----appendSubquerys.req:",req);    
-        console.log("--start---parent_data_name:",parent_data_name);    
+        //console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
         const special_b64zip = this.getB64zip(data_fields);
         const special_b64img = this.getB64img(data_fields);
+        const special_apilink = this.getApiLink(data_fields,parent_group);
+
 
         //console.log("appendSubquerys.data_fields",data_fields);
         //console.log("relations.length",relations.length);
@@ -242,6 +380,16 @@ class CtrlApi{
 				resolve(r);
 			} );
 		}));
+		
+		content = await Promise.all( content.map( r => {
+			return new Promise( async (resolve,reject)=>{
+				for (let i = 0; i < special_apilink.length; i++){
+                    r = await me.getLinkData(r,special_apilink[i]);                    
+                }				
+				resolve(r);
+			});
+		}));
+
       /*  content.forEach( c=>{
             special_b64zip.forEach( async sk =>{
                 c[sk] = await this.unzip(c[sk]);
@@ -249,7 +397,7 @@ class CtrlApi{
             } );
         } );*/
 		//relations.forEach(async r => {
-			console.log("typerel",typerel);
+			//console.log("typerel",typerel);
             if (typerel=="customrel")
 				parent_data_name = "__no_chain__";
         for(let ij = 0; ij < relations.length; ij++){
@@ -266,13 +414,13 @@ class CtrlApi{
             //console.log("relGroup,",relGroup,r.table);
 
             let chain_data = false;
-            console.log("r.table",r.table);
+            //console.log("r.table",r.table);
             //console.log("relGroup",relGroup);
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
 				chain_data=true;               
             }
-            console.log("is_chain_",chain_data, data_fields);
-            console.log("parent_data_name",parent_data_name);
+            //console.log("is_chain_",chain_data, data_fields);
+            //console.log("parent_data_name",parent_data_name);
             let f, fr;
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
@@ -281,16 +429,16 @@ class CtrlApi{
                 f = me.toFields(relGroup.data['select']);
                 fr = relGroup.data['select'];
             }
-             
+             /*
 
             console.log("relGroup.f ",f);
             console.log("---fr:",fr);
             console.log("---r:",r);
-            console.log("---req.query:",req.query);
+            console.log("---req.query:",req.query);*/
             let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
 			
-            console.log("---r.name:",r.name);
-            console.log("---req_query_rel:",req_query_rel);
+            //console.log("---r.name:",r.name);
+            //console.log("---req_query_rel:",req_query_rel);
 			let tableAlias = "r"+nanoUuid();
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
 			let findconditionAlias = me.buildQueryApiFilter('',relGroup,f,req_query_rel.query,tableAlias);
@@ -303,7 +451,7 @@ class CtrlApi{
 //			console.log ("parent_rel_query",parent_rel_query);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${query_parent_build}) ${findcondition.replaceAll('WHERE',' AND ')}`;
 
-            console.log("----relQuery: " , relQuery);
+            //console.log("----relQuery: " , relQuery);
            // throw console.log("here");
 			if(idArr.length == 0)
 				return content;
@@ -315,19 +463,19 @@ class CtrlApi{
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-				console.log("cc[r.name] r.name:",r.name);
+			/*	console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);		
 				console.log("--f ",f);				
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
                 console.log("--req_query_rel ",req_query_rel);			
-                
+                */
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
-                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel);
+                    subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel, relGroup);
 				else
-					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel);
+					subcontent = await me.appendSubquerys(cc[r.name],this.noFieldRel(fr),req_query_rel,parent_data_name,parent_rel_query,typerel, relGroup);
                 cc[r.name] = subcontent;
                 //console.log("subcontent:", subcontent);
                 if (!r.array){
@@ -895,7 +1043,7 @@ class CtrlApi{
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
 						
-                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent,null, group);
                         
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -915,7 +1063,7 @@ class CtrlApi{
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
 			
 
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent,null, group);
 						console.log(" ----- GET ALL END -----");
                     }
                     me.contentACamelCase(respuesta);
@@ -960,9 +1108,14 @@ class CtrlApi{
 
                         let query_parent = `select ${tableAlias}.::parent_id:: from ${rel.table} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: ORDER BY ${tableAlias}.${sort} ${descending} LIMIT ${offset},${size}`;
 
+						let isCustomrel = group.apicustom.find(aaa=> aaa.type=="customrel" && aaa.out.includes(api.out));
+						let typeApi = "";
+						if (isCustomrel!=null) typeApi = "rel";
+						else typeApi = "customrel";
                         
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table} ${findcondition} ORDER BY ${sort} ${descending}  `).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out], api.out, query_parent, typeApi, group );
+
 
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -989,7 +1142,7 @@ class CtrlApi{
 						//console.log("isCustomrel",isCustomrel);
 
                         respuesta.content = me.database.db.prepare(`select ${f} from ${rel.table}  ${findcondition}`).all();
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent, typeApi);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.out, query_parent, typeApi, group );
                     }                        
 
 
