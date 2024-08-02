@@ -222,18 +222,16 @@
                 "apicustom": [
                     {
                         "method": "post",
-                        "route": "fullsync",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id,base64,path,create_date,update_date"
                     },
                     {
                         "method": "post",
-                        "route": "sync",
+                        "route": "fullsync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -244,19 +242,21 @@
                 "apis": [
                     {
                         "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
-                        "method": "POST",
                         "route": "fullsync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_fullsync"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -315,8 +315,16 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_fullsync": {},
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "base64": "b64img",
+                        "path": "string",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_fullsync": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -497,7 +505,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -533,6 +540,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -658,7 +666,9 @@
                         "info_model": "string",
                         "info_product": "string"
                     },
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "string|pk"
+                    }
                 }
             },
             {
@@ -1395,7 +1405,7 @@
                             "1",
                             "Emergencia Recibida",
                             "Se recibió una emergencia",
-                            "#00ff00",
+                            "#ee1c25",
                             "0",
                             "1"
                         ]
@@ -1406,7 +1416,7 @@
                             "2",
                             "Atendiendo Emergencia",
                             "Se recibió una emergencia",
-                            "#00ff00",
+                            "#ed403c",
                             "0",
                             "2"
                         ]
@@ -1417,7 +1427,7 @@
                             "3",
                             "Buscando supervisor",
                             "Se recibió una emergencia",
-                            "#00ff00",
+                            "#f58225",
                             "0",
                             "2"
                         ]
@@ -1428,7 +1438,7 @@
                             "4",
                             "Derivando",
                             "",
-                            "#00ff00",
+                            "#f8a51b",
                             "0",
                             "2"
                         ]
@@ -1439,7 +1449,7 @@
                             "5",
                             "Otros",
                             "",
-                            "#00ff00",
+                            "#fef102",
                             "0",
                             "2"
                         ]
@@ -1450,7 +1460,7 @@
                             "6",
                             "Anulada",
                             "",
-                            "#00ff00",
+                            "#6fc041",
                             "0",
                             "3"
                         ]
@@ -1461,7 +1471,7 @@
                             "7",
                             "Atendida y finalizada",
                             "",
-                            "#00ff00",
+                            "#03a45e",
                             "0",
                             "4"
                         ]
@@ -1657,7 +1667,7 @@
                             "1",
                             "Recibido",
                             "Reclamo recibido",
-                            "#ef1b3e",
+                            "#ee1c25",
                             "0",
                             "1"
                         ]
@@ -1668,7 +1678,7 @@
                             "2",
                             "Leído",
                             "Reclamo leído",
-                            "#f0a51a",
+                            "#f58225",
                             "0",
                             "2"
                         ]
@@ -1679,7 +1689,7 @@
                             "3",
                             "Pendiente",
                             "Reclamo pendiente",
-                            "#e1f01a",
+                            "#f8a51b",
                             "0",
                             "2"
                         ]
@@ -1690,7 +1700,7 @@
                             "4",
                             "Atendido",
                             "Reclamo atendido y finalizado",
-                            "#1fdb02",
+                            "#fef102",
                             "0",
                             "4"
                         ]
@@ -1701,7 +1711,7 @@
                             "5",
                             "Rechazado",
                             "Reclamo Rechazado",
-                            "#aeaeae",
+                            "#03a45e",
                             "0",
                             "3"
                         ]
@@ -2124,56 +2134,7 @@
                         }
                     }
                 ],
-                "seeder": [
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-personal-1",
-                            "Jorge Tordoya",
-                            "JT0021",
-                            "uuid-images-1",
-                            "1",
-                            "1719099774",
-                            "1719099774"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-personal-2",
-                            "Jorge Paredes",
-                            "JP0051",
-                            "uuid-images-1",
-                            "1",
-                            "1719099774",
-                            "1719099774"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-personal-3",
-                            "Pablo Rojas",
-                            "PR0021",
-                            "uuid-images-1",
-                            "2",
-                            "1719099774",
-                            "1719039774"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "uuid-personal-4",
-                            "Abrahan Serrano",
-                            "AS0021",
-                            "uuid-images-1",
-                            "2",
-                            "1719099774",
-                            "1719599774"
-                        ]
-                    }
-                ],
+                "seeder": [],
                 "apicustom": [
                     {
                         "method": "get",
@@ -2477,8 +2438,23 @@
                         "personal_type_id": "number",
                         "personal_type": "[personal_types|id|personal_type_id]"
                     },
-                    "custom_applogin": {},
-                    "custom_sync": {},
+                    "custom_applogin": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
                     "select_assignments": {
                         "id": "uuid|pk",
                         "personal_id": "number",
@@ -2523,7 +2499,11 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
-                    "custom_bypersonal_assignments": {},
+                    "custom_bypersonal_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number"
+                    },
                     "select_session": {
                         "id": "uuid|pk",
                         "personal_id": "number",
@@ -2580,7 +2560,9 @@
                         "start_lat": "number",
                         "start_lon": "number"
                     },
-                    "custom_sync_session": {}
+                    "custom_sync_session": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -2627,7 +2609,7 @@
                         "value": "number"
                     },
                     {
-                        "name": "frecuency",
+                        "name": "frequency",
                         "value": "string"
                     },
                     {
@@ -2822,7 +2804,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
-                        "frecuency": "string",
+                        "frequency": "string",
                         "create_date": "date",
                         "update_date": "date",
                         "district_id": "number",
@@ -2839,7 +2821,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
-                        "frecuency": "string",
+                        "frequency": "string",
                         "create_date": "date",
                         "update_date": "date",
                         "district_id": "number",
@@ -2855,7 +2837,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
-                        "frecuency": "string",
+                        "frequency": "string",
                         "create_date": "date",
                         "update_date": "date",
                         "district_id": "number",
@@ -2883,8 +2865,26 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_syncfull": {},
-                    "custom_sync": {},
+                    "custom_syncfull": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distance": "number",
+                        "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "distance": "number",
+                        "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
                     "select_points": {
                         "id": "number|pk",
                         "route_id": "number",
@@ -2915,7 +2915,13 @@
                         "lat": "number",
                         "lon": "number"
                     },
-                    "custom_sync_points": {}
+                    "custom_sync_points": {
+                        "id": "number|pk",
+                        "route_id": "number",
+                        "section": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    }
                 }
             },
             {
@@ -3035,6 +3041,78 @@
                         "values": [
                             "10",
                             "2",
+                            "7"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "11",
+                            "3",
+                            "4"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "12",
+                            "3",
+                            "5"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "13",
+                            "3",
+                            "6"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "14",
+                            "3",
+                            "7"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "15",
+                            "4",
+                            "5"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "16",
+                            "4",
+                            "6"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "17",
+                            "4",
+                            "7"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "18",
+                            "5",
+                            "6"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "19",
+                            "5",
                             "7"
                         ]
                     }
@@ -3169,22 +3247,6 @@
                     {
                         "data": "create",
                         "values": [
-                            "4",
-                            "1",
-                            "5"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "5",
-                            "1",
-                            "6"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
                             "6",
                             "2",
                             "3"
@@ -3210,16 +3272,16 @@
                         "data": "create",
                         "values": [
                             "9",
-                            "2",
-                            "6"
+                            "3",
+                            "4"
                         ]
                     },
                     {
                         "data": "create",
                         "values": [
                             "10",
-                            "2",
-                            "7"
+                            "3",
+                            "5"
                         ]
                     }
                 ],
@@ -3423,7 +3485,13 @@
                         "lat": "number",
                         "lon": "number"
                     },
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "number|pk",
+                        "route_id": "number",
+                        "section": "number",
+                        "lat": "number",
+                        "lon": "number"
+                    }
                 }
             },
             {
@@ -3760,7 +3828,11 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
-                    "custom_bypersonal": {},
+                    "custom_bypersonal": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number"
+                    },
                     "select_tracks": {
                         "id": "uuid|pk",
                         "assignment_id": "number",
@@ -3817,7 +3889,9 @@
                         "end_date": "date",
                         "trackb64": "b64zip"
                     },
-                    "custom_sync_tracks": {}
+                    "custom_sync_tracks": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -4356,7 +4430,9 @@
                         "emergency_id": "number",
                         "emergency": "[emergencys|id|emergency_id]"
                     },
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -4508,7 +4584,9 @@
                         "image_id": "number",
                         "image": "[images|id|image_id]"
                     },
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -4722,7 +4800,9 @@
                         "end_date": "date",
                         "trackb64": "b64zip"
                     },
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -4916,7 +4996,7 @@
                             "1",
                             "Sin leer",
                             "Se recibió una sugerencia",
-                            "#00ff00",
+                            "#ed403c",
                             "0",
                             "1"
                         ]
@@ -4926,8 +5006,8 @@
                         "values": [
                             "2",
                             "Leido",
-                            "Se recibió un sugerencia",
-                            "#00ff00",
+                            "La sugerencia fue vista",
+                            "#8ed162",
                             "0",
                             "2"
                         ]
@@ -4937,8 +5017,8 @@
                         "values": [
                             "3",
                             "Archivada",
-                            "Se recibió un sugerencia",
-                            "#00ff00",
+                            "Se archivó la sugerencia",
+                            "#e1edd7",
                             "0",
                             "2"
                         ]
@@ -5582,7 +5662,9 @@
                         "start_lat": "number",
                         "start_lon": "number"
                     },
-                    "custom_sync": {}
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -5752,7 +5834,9 @@
                         "emergency_id": "number",
                         "emergency": "[emergencys|id|emergency_id]"
                     },
-                    "custom_sync_emergency_images": {}
+                    "custom_sync_emergency_images": {
+                        "id": "uuid|pk"
+                    }
                 }
             },
             {
@@ -6041,8 +6125,21 @@
                         "session_id": "number",
                         "session": "[session|id|session_id]"
                     },
-                    "custom_sync": {},
-                    "custom_suggestionlist": {},
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    },
+                    "custom_suggestionlist": {
+                        "id": "uuid|pk",
+                        "title": "string",
+                        "description": "string",
+                        "lat": "number",
+                        "lon": "number",
+                        "records": "[[suggestion_states_record|suggestion_id|id]]",
+                        "images": "[[suggestion_images|suggestion_id|id]]",
+                        "date_time": "date",
+                        "session_id": "number",
+                        "session": "[session|id|session_id]"
+                    },
                     "select_suggestion_images": {
                         "id": "uuid|pk",
                         "suggestion_id": "number",
@@ -6075,7 +6172,9 @@
                         "image_id": "number",
                         "image": "[images|id|image_id]"
                     },
-                    "custom_sync_suggestion_images": {},
+                    "custom_sync_suggestion_images": {
+                        "id": "uuid|pk"
+                    },
                     "select_suggestion_states_record": {
                         "id": "uuid|pk",
                         "create_date": "date",
@@ -6406,8 +6505,21 @@
                         "session": "[session|id|session_id]",
                         "session_id": "number"
                     },
-                    "custom_sync": {},
-                    "custom_claimlist": {},
+                    "custom_sync": {
+                        "id": "uuid|pk"
+                    },
+                    "custom_claimlist": {
+                        "id": "uuid|pk",
+                        "title": "string",
+                        "description": "string",
+                        "lat": "number",
+                        "lon": "number",
+                        "records": "[[claim_states_record|claim_id|id]]",
+                        "images": "[[claims_images|claim_id|id]]",
+                        "date_time": "date",
+                        "session_id": "number",
+                        "session": "[session|id|session_id]"
+                    },
                     "select_claims_images": {
                         "id": "uuid|pk",
                         "image_id": "number",

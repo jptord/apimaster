@@ -939,9 +939,13 @@ function formatearArray(groupNor){
                 let name = '';
                 let valuetype = '';
                 let field_array = f.split(".");
-                if (field_array.length == 2){
+				
+                if (field_array.length > 1){
                     name = field_array[0];
                     valuetype = field_array[1];
+					console.log("name",name);
+					console.log("valuetype",valuetype);
+					throw "here";
                 }else{
                     name = f;
                 }
@@ -1246,7 +1250,8 @@ function searchDataInverse(group, api, api_out){
             let name = field_custom;
             let splitName = field_custom.split(".");
             console.log("splitName.length",splitName.length);
-            if (splitName.length==0){
+			
+            if (splitName.length==1){
                 let field_type = group.data.select[name];
                 console.log("field_type",name);
                 group.data[data_name][name] = field_type;
