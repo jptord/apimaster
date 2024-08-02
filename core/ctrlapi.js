@@ -212,7 +212,7 @@ class CtrlApi{
 	
     async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel){
         //console.log("-----appendSubquerys.req:",req);    
-        console.log("--start---parent_data_name:",parent_data_name);    
+        //console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
         
         let relations = this.toRelations(data_fields);
@@ -271,8 +271,8 @@ class CtrlApi{
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
 				chain_data=true;               
             }
-            console.log("is_chain_",chain_data, data_fields);
-            console.log("parent_data_name",parent_data_name);
+            //console.log("is_chain_",chain_data, data_fields);
+            //console.log("parent_data_name",parent_data_name);
             let f, fr;
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
@@ -283,14 +283,14 @@ class CtrlApi{
             }
              
 
-            console.log("relGroup.f ",f);
-            console.log("---fr:",fr);
-            console.log("---r:",r);
-            console.log("---req.query:",req.query);
+            //console.log("relGroup.f ",f);
+            //console.log("---fr:",fr);
+            //console.log("---r:",r);
+            //console.log("---req.query:",req.query);
             let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
 			
-            console.log("---r.name:",r.name);
-            console.log("---req_query_rel:",req_query_rel);
+            //console.log("---r.name:",r.name);
+            //console.log("---req_query_rel:",req_query_rel);
 			let tableAlias = "r"+nanoUuid();
             findcondition = me.buildQueryApiFilter(findcondition,relGroup,f,req_query_rel.query);
 			let findconditionAlias = me.buildQueryApiFilter('',relGroup,f,req_query_rel.query,tableAlias);
@@ -303,7 +303,7 @@ class CtrlApi{
 //			console.log ("parent_rel_query",parent_rel_query);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${query_parent_build}) ${findcondition.replaceAll('WHERE',' AND ')}`;
 
-            console.log("----relQuery: " , relQuery);
+            //console.log("----relQuery: " , relQuery);
            // throw console.log("here");
 			if(idArr.length == 0)
 				return content;
@@ -315,14 +315,14 @@ class CtrlApi{
                 if (Object.keys(content[i]).length == 0 ) continue;
                 let cc = content[i];
                 cc[r.name] = res_temp.filter(rt => rt[r.field] == cc[r.ownfield] );
-				console.log("cc[r.name] r.name:",r.name);
+			/*	console.log("cc[r.name] r.name:",r.name);
 				console.log("r.array ",r.array);		
 				console.log("--f ",f);				
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
                 console.log("--req_query_rel ",req_query_rel);			
-                
+              */  
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
                     subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel);
