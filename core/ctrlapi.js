@@ -289,7 +289,7 @@ class CtrlApi{
                     //console.log(`replaceAll $`+filter_api[ij] + " with " + row_content[filter_in[ij]]);
                 }
             }
-            console.log("getLinkData.path",path, filter_api, row_content, apilink.type);
+            //console.log("getLinkData.path",path, filter_api, row_content, apilink.type);
             
 			var options = {
 				host: address.hostname,
@@ -374,8 +374,7 @@ class CtrlApi{
 				for (let i = 0; i < special_b64img.length; i++){
 					//console.log("special_b64img[i]",special_b64img[i]);
 					r['path'] = await me.b64ToImage(r.id, r[special_b64img[i]]);
-					r[special_b64img[i]] = ''
-					
+					r[special_b64img[i]] = '';					
 				}
 				resolve(r);
 			} );
@@ -397,9 +396,9 @@ class CtrlApi{
             } );
         } );*/
 		//relations.forEach(async r => {
-			//console.log("typerel",typerel);
-            if (typerel=="customrel")
-				parent_data_name = "__no_chain__";
+		//console.log("typerel",typerel);
+        if (typerel=="customrel")
+            parent_data_name = "__no_chain__";
         for(let ij = 0; ij < relations.length; ij++){
 			let r = relations[ij];
             let idArr = [];

@@ -338,6 +338,14 @@
                     {
                         "name": "name",
                         "value": "string"
+                    },
+                    {
+                        "name": "icon",
+                        "value": "b64img"
+                    },
+                    {
+                        "name": "color",
+                        "value": "string"
                     }
                 ],
                 "seeder": [
@@ -345,14 +353,126 @@
                         "data": "create",
                         "values": [
                             "1",
-                            "Operador"
+                            "AYUDANTE DE RECOLECCIÓN",
+                            "",
+                            "#c60000"
                         ]
                     },
                     {
                         "data": "create",
                         "values": [
                             "2",
-                            "Supervisor"
+                            "OPERADOR DE RETROEXCAVADORA",
+                            "",
+                            "#ffc600"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "3",
+                            "SOLDADOR",
+                            "",
+                            "#003100"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "4",
+                            "BARREDOR 3 EA",
+                            "",
+                            "#086308"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "5",
+                            "AYUDANTE DE RECOLECCIÓN 3 EA",
+                            "",
+                            "#003142"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "6",
+                            "RECOLECTOR",
+                            "",
+                            "#001084"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "7",
+                            "OL SERVICIOS ESPECIALES",
+                            "",
+                            "#000842"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "8",
+                            "RECOLECTOR 2",
+                            "",
+                            "#080852"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "9",
+                            "CHOFER",
+                            "",
+                            "#4a0852"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "10",
+                            "AGENTE DE CAMPAÑA SAC",
+                            "",
+                            "#de004a"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "11",
+                            "AUXILIAR DE BÁSCULA",
+                            "",
+                            "#ef008c"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "12",
+                            "OL SERVICIOS ESPECIALES EA",
+                            "",
+                            "#f7739c"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "13",
+                            "O.P.S.",
+                            "",
+                            "#ef1021"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "14",
+                            "BARREDOR",
+                            "",
+                            "#ff8c21"
                         ]
                     }
                 ],
@@ -399,14 +519,20 @@
                 "data": {
                     "select": {
                         "id": "number|pk",
-                        "name": "string"
+                        "name": "string",
+                        "icon": "b64img",
+                        "color": "string"
                     },
                     "create": {
                         "id": "number|pk",
-                        "name": "string"
+                        "name": "string",
+                        "icon": "b64img",
+                        "color": "string"
                     },
                     "insert": {
-                        "name": "string"
+                        "name": "string",
+                        "icon": "b64img",
+                        "color": "string"
                     }
                 }
             },
@@ -2221,7 +2347,7 @@
                         "filter": "code",
                         "filterin": "code",
                         "addfield": "trebol",
-                        "type": "exc"
+                        "type": "add"
                     }
                 ],
                 "apis": [
@@ -2660,7 +2786,7 @@
                         "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
+                        "out": "id,name,min_split_mt,max_split_mt,distance,color,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
@@ -2669,7 +2795,7 @@
                         "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
+                        "out": "id,name,min_split_mt,max_split_mt,distance,color,image_id,create_date,update_date"
                     }
                 ],
                 "datacustom": [
@@ -2681,7 +2807,8 @@
                             "description",
                             "distance",
                             "district_id",
-                            "district"
+                            "district",
+                            "frequency"
                         ]
                     },
                     {
@@ -2851,7 +2978,8 @@
                         "description": "string",
                         "distance": "number",
                         "district_id": "number",
-                        "district": "[district|id|district_id]"
+                        "district": "[district|id|district_id]",
+                        "frequency": "string"
                     },
                     "assignmentsyncselect": {
                         "id": "uuid|pk",
@@ -2871,6 +2999,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
+                        "color": "string",
                         "image_id": "number",
                         "create_date": "date",
                         "update_date": "date"
@@ -2881,6 +3010,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
+                        "color": "string",
                         "image_id": "number",
                         "create_date": "date",
                         "update_date": "date"
