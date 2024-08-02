@@ -38,6 +38,7 @@ class ImporterPG {
 			return 'null';
 		else{		
 			if (col_data.dataTypeID == 3802) return `'${JSON.stringify(val)}'`;
+			if (col_data.dataTypeID == 16) return `${val}`;
 			return `'${val}'`;
 		}
 	}
@@ -80,12 +81,12 @@ class ImporterPG {
 				//console.log("fr",fr);
 
 				let query_sel_formatter = `SELECT ${fr} from public.${group.name} ${orderby}`;					
-				console.log("query_sel_formatter",query_sel_formatter);
+				//console.log("query_sel_formatter",query_sel_formatter);
 				//throw "here";
 
 				const res = await client.query(query_sel_formatter);	
 				let frr = res_temp.fields.map(fld=> `'${fld.name}'`).join(',');
-				//console.log("--res.fields",res.fields);
+				console.log("--res.fields",res.fields);
 				for (let j = 0; j < res.rows.length; j++) {
 					let row=res.rows[j];
 					let f_data = res.fields.map(col => `${me.formatValue(row[col.name],col)}`);

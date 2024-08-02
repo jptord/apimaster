@@ -470,7 +470,7 @@ class CtrlApi{
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
                 console.log("--req_query_rel ",req_query_rel);			
-                */
+              */  
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
                     subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel, relGroup);
