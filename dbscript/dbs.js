@@ -222,19 +222,21 @@
                 "apicustom": [
                     {
                         "method": "post",
-                        "route": "sync",
+                        "route": "fullsync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
-                        "out": "id"
+                        "out": "id,base64,path,create_date,update_date"
                     },
                     {
                         "method": "post",
-                        "route": "fullsync",
+                        "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
-                        "out": "id,base64.string,path,create_date,update_date"
+                        "out": "id"
                     }
                 ],
                 "datacustom": [],
@@ -242,21 +244,19 @@
                 "apis": [
                     {
                         "method": "POST",
-                        "route": "fullsync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_fullsync"
-                    },
-                    {
-                        "method": "POST",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "fullsync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_fullsync"
                     },
                     {
                         "method": "GET",
@@ -315,16 +315,8 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    },
-                    "custom_fullsync": {
-                        "id": "uuid|pk",
-                        "base64": "string",
-                        "path": "string",
-                        "create_date": "date",
-                        "update_date": "date"
-                    }
+                    "custom_fullsync": {},
+                    "custom_sync": {}
                 }
             },
             {
@@ -505,6 +497,7 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -540,7 +533,6 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -666,9 +658,7 @@
                         "info_model": "string",
                         "info_product": "string"
                     },
-                    "custom_sync": {
-                        "id": "string|pk"
-                    }
+                    "custom_sync": {}
                 }
             },
             {
@@ -2187,27 +2177,30 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
+                        "out": "*dashboard"
                     },
                     {
                         "method": "get",
                         "route": "applogin",
                         "query": "code",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "*dashboard"
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     },
                     {
                         "method": "get",
@@ -2281,30 +2274,27 @@
                     },
                     {
                         "method": "GET",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "dashboard"
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
                         "route": "applogin",
                         "query": "code",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_applogin"
                     },
                     {
                         "method": "GET",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_sync"
+                        "out": "dashboard"
                     },
                     {
                         "method": "GET",
@@ -2487,23 +2477,8 @@
                         "personal_type_id": "number",
                         "personal_type": "[personal_types|id|personal_type_id]"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
-                    "custom_applogin": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
-                        "image_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
+                    "custom_applogin": {},
+                    "custom_sync": {},
                     "select_assignments": {
                         "id": "uuid|pk",
                         "personal_id": "number",
@@ -2548,11 +2523,7 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
-                    "custom_bypersonal_assignments": {
-                        "id": "uuid|pk",
-                        "personal_id": "number",
-                        "route_id": "number"
-                    },
+                    "custom_bypersonal_assignments": {},
                     "select_session": {
                         "id": "uuid|pk",
                         "personal_id": "number",
@@ -2609,9 +2580,7 @@
                         "start_lat": "number",
                         "start_lon": "number"
                     },
-                    "custom_sync_session": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync_session": {}
                 }
             },
             {
@@ -2658,6 +2627,10 @@
                         "value": "number"
                     },
                     {
+                        "name": "frecuency",
+                        "value": "string"
+                    },
+                    {
                         "name": "create_date",
                         "value": "date"
                     },
@@ -2700,16 +2673,18 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,image_id,create_date,update_date"
@@ -2747,21 +2722,19 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "syncfull",
-                        "query": "",
-                        "rel": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_syncfull"
-                    },
-                    {
-                        "method": "GET",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "syncfull",
+                        "query": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_syncfull"
                     },
                     {
                         "method": "GET",
@@ -2849,6 +2822,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
+                        "frecuency": "string",
                         "create_date": "date",
                         "update_date": "date",
                         "district_id": "number",
@@ -2865,6 +2839,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
+                        "frecuency": "string",
                         "create_date": "date",
                         "update_date": "date",
                         "district_id": "number",
@@ -2880,6 +2855,7 @@
                         "min_split_mt": "number",
                         "max_split_mt": "number",
                         "distance": "number",
+                        "frecuency": "string",
                         "create_date": "date",
                         "update_date": "date",
                         "district_id": "number",
@@ -2907,26 +2883,8 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distance": "number",
-                        "image_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
-                    "custom_syncfull": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "min_split_mt": "number",
-                        "max_split_mt": "number",
-                        "distance": "number",
-                        "image_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
+                    "custom_syncfull": {},
+                    "custom_sync": {},
                     "select_points": {
                         "id": "number|pk",
                         "route_id": "number",
@@ -2957,13 +2915,7 @@
                         "lat": "number",
                         "lon": "number"
                     },
-                    "custom_sync_points": {
-                        "id": "number|pk",
-                        "route_id": "number",
-                        "section": "number",
-                        "lat": "number",
-                        "lon": "number"
-                    }
+                    "custom_sync_points": {}
                 }
             },
             {
@@ -3376,6 +3328,7 @@
                         "method": "get",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,route_id,section,lat,lon"
@@ -3399,7 +3352,6 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -3471,13 +3423,7 @@
                         "lat": "number",
                         "lon": "number"
                     },
-                    "custom_sync": {
-                        "id": "number|pk",
-                        "route_id": "number",
-                        "section": "number",
-                        "lat": "number",
-                        "lon": "number"
-                    }
+                    "custom_sync": {}
                 }
             },
             {
@@ -3654,6 +3600,7 @@
                         "method": "get",
                         "route": "bypersonal",
                         "query": "personal_id",
+                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,personal_id,route_id"
@@ -3688,7 +3635,6 @@
                         "method": "GET",
                         "route": "bypersonal",
                         "query": "personal_id",
-                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_bypersonal"
@@ -3814,11 +3760,7 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
-                    "custom_bypersonal": {
-                        "id": "uuid|pk",
-                        "personal_id": "number",
-                        "route_id": "number"
-                    },
+                    "custom_bypersonal": {},
                     "select_tracks": {
                         "id": "uuid|pk",
                         "assignment_id": "number",
@@ -3875,9 +3817,7 @@
                         "end_date": "date",
                         "trackb64": "b64zip"
                     },
-                    "custom_sync_tracks": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync_tracks": {}
                 }
             },
             {
@@ -4336,6 +4276,7 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4348,7 +4289,6 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4416,9 +4356,7 @@
                         "emergency_id": "number",
                         "emergency": "[emergencys|id|emergency_id]"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync": {}
                 }
             },
             {
@@ -4474,6 +4412,7 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4496,7 +4435,6 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4570,9 +4508,7 @@
                         "image_id": "number",
                         "image": "[images|id|image_id]"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync": {}
                 }
             },
             {
@@ -4663,6 +4599,7 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4688,7 +4625,6 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4786,9 +4722,7 @@
                         "end_date": "date",
                         "trackb64": "b64zip"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync": {}
                 }
             },
             {
@@ -5513,6 +5447,7 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -5550,7 +5485,6 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5648,9 +5582,7 @@
                         "start_lat": "number",
                         "start_lon": "number"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync": {}
                 }
             },
             {
@@ -5820,9 +5752,7 @@
                         "emergency_id": "number",
                         "emergency": "[emergencys|id|emergency_id]"
                     },
-                    "custom_sync_emergency_images": {
-                        "id": "uuid|pk"
-                    }
+                    "custom_sync_emergency_images": {}
                 }
             },
             {
@@ -5894,21 +5824,21 @@
                 "seeder": [],
                 "apicustom": [
                     {
-                        "method": "get",
-                        "route": "suggestionlist",
-                        "query": "",
-                        "rel": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
-                    },
-                    {
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
+                    },
+                    {
+                        "method": "get",
+                        "route": "suggestionlist",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
                     }
                 ],
                 "datacustom": [
@@ -5931,21 +5861,21 @@
                 "apilink": [],
                 "apis": [
                     {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
                         "method": "GET",
                         "route": "suggestionlist",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_suggestionlist"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -6111,21 +6041,8 @@
                         "session_id": "number",
                         "session": "[session|id|session_id]"
                     },
-                    "custom_suggestionlist": {
-                        "id": "uuid|pk",
-                        "title": "string",
-                        "description": "string",
-                        "lat": "number",
-                        "lon": "number",
-                        "records": "[[suggestion_states_record|suggestion_id|id]]",
-                        "images": "[[suggestion_images|suggestion_id|id]]",
-                        "date_time": "date",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    },
+                    "custom_sync": {},
+                    "custom_suggestionlist": {},
                     "select_suggestion_images": {
                         "id": "uuid|pk",
                         "suggestion_id": "number",
@@ -6158,9 +6075,7 @@
                         "image_id": "number",
                         "image": "[images|id|image_id]"
                     },
-                    "custom_sync_suggestion_images": {
-                        "id": "uuid|pk"
-                    },
+                    "custom_sync_suggestion_images": {},
                     "select_suggestion_states_record": {
                         "id": "uuid|pk",
                         "create_date": "date",
@@ -6274,21 +6189,21 @@
                 "seeder": [],
                 "apicustom": [
                     {
-                        "method": "get",
-                        "route": "claimlist",
-                        "query": "",
-                        "rel": "",
-                        "in": "",
-                        "type": "custom",
-                        "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
-                    },
-                    {
                         "method": "post",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
+                    },
+                    {
+                        "method": "get",
+                        "route": "claimlist",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
                     }
                 ],
                 "datacustom": [
@@ -6311,21 +6226,21 @@
                 "apilink": [],
                 "apis": [
                     {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
                         "method": "GET",
                         "route": "claimlist",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_claimlist"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -6491,21 +6406,8 @@
                         "session": "[session|id|session_id]",
                         "session_id": "number"
                     },
-                    "custom_claimlist": {
-                        "id": "uuid|pk",
-                        "title": "string",
-                        "description": "string",
-                        "lat": "number",
-                        "lon": "number",
-                        "records": "[[claim_states_record|claim_id|id]]",
-                        "images": "[[claims_images|claim_id|id]]",
-                        "date_time": "date",
-                        "session_id": "number",
-                        "session": "[session|id|session_id]"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    },
+                    "custom_sync": {},
+                    "custom_claimlist": {},
                     "select_claims_images": {
                         "id": "uuid|pk",
                         "image_id": "number",
