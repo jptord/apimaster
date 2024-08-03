@@ -260,9 +260,9 @@ class CtrlApi{
 				});
 		
 				req.on('error', function(e) {
-					console.log('ERROR: ' + e.message);
+					//console.log('ERROR: ' + e.message);
 					//row_content['link'] = 'ERROR ' + e.message;
-					resolve(e.message);
+					resolve("");
 				});
                 req.on('timeout', () => {
                     req.destroy();
@@ -434,7 +434,7 @@ class CtrlApi{
             console.log("---fr:",fr);
             console.log("---r:",r);
             console.log("---req.query:",req.query);*/
-            let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:{}};
+            let req_query_rel = typeof req.query !='undefined' ? {query:req.query[r.name]}:{query:undefined};    /// SI HAY PROBLEMAS query: {}
 			
             //console.log("---r.name:",r.name);
             //console.log("---req_query_rel:",req_query_rel);
@@ -455,6 +455,8 @@ class CtrlApi{
 			if(idArr.length == 0)
 				return content;
 				
+			
+			//console.log("req_query_rel",req_query_rel);
             let res_temp = me.database.db.prepare(relQuery).all();
            // console.log("res_temp ",res_temp);
             //console.log("---content ",content);
@@ -482,7 +484,7 @@ class CtrlApi{
                 }
                 if ((subcontent.length ==0 ) && req_query_rel.query != undefined ){
                     //console.log("no valid req_query_rel",req_query_rel);
-                    content[i] = {};                     
+                    content[i] = {};  
                 }
             };
 			//if (req_query_rel == undefined) return;                        

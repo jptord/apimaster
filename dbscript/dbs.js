@@ -222,33 +222,24 @@
                 "apicustom": [
                     {
                         "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id,base64,path,create_date,update_date"
-                    },
-                    {
-                        "method": "post",
                         "route": "fullsync",
                         "query": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
+                    },
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id,base64,path,create_date,update_date"
                     }
                 ],
                 "datacustom": [],
                 "apilink": [],
                 "apis": [
-                    {
-                        "method": "POST",
-                        "route": "fullsync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_fullsync"
-                    },
                     {
                         "method": "POST",
                         "route": "sync",
@@ -257,6 +248,15 @@
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
+                    },
+                    {
+                        "method": "POST",
+                        "route": "fullsync",
+                        "query": "",
+                        "rel": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_fullsync"
                     },
                     {
                         "method": "GET",
@@ -315,15 +315,15 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
+                    "custom_fullsync": {
+                        "id": "uuid|pk"
+                    },
                     "custom_sync": {
                         "id": "uuid|pk",
                         "base64": "b64img",
                         "path": "string",
                         "create_date": "date",
                         "update_date": "date"
-                    },
-                    "custom_fullsync": {
-                        "id": "uuid|pk"
                     }
                 }
             },
@@ -973,11 +973,11 @@
                         "value": "string"
                     },
                     {
-                        "name": "frecuency",
-                        "value": "[[schedule_frecuency|schedule_id|id]]",
+                        "name": "frequency",
+                        "value": "[[schedule_frequency|schedule_id|id]]",
                         "rel": {
-                            "index": "frecuency",
-                            "name": "schedule_frecuency",
+                            "index": "frequency",
+                            "name": "schedule_frequency",
                             "field": "schedule_id",
                             "ownfield": "id",
                             "array": true
@@ -1014,7 +1014,7 @@
                         "fields": [
                             "id",
                             "name",
-                            "frecuency"
+                            "frequency"
                         ]
                     }
                 ],
@@ -1057,41 +1057,41 @@
                     },
                     {
                         "method": "GET",
-                        "route": ":schedule_id/schedule_frecuency",
+                        "route": ":schedule_id/schedule_frequency",
                         "in": null,
-                        "rel": "[[schedule_frecuency|schedule_id|id]]",
+                        "rel": "[[schedule_frequency|schedule_id|id]]",
                         "type": "rel",
-                        "out": "select_schedule_frecuency"
+                        "out": "select_schedule_frequency"
                     },
                     {
                         "method": "GET",
-                        "route": ":schedule_id/schedule_frecuency/:id",
+                        "route": ":schedule_id/schedule_frequency/:id",
                         "in": null,
-                        "rel": "[[schedule_frecuency|schedule_id|id]]",
+                        "rel": "[[schedule_frequency|schedule_id|id]]",
                         "type": "rel",
-                        "out": "select_schedule_frecuency"
+                        "out": "select_schedule_frequency"
                     },
                     {
                         "method": "POST",
-                        "route": ":schedule_id/schedule_frecuency",
-                        "in": "insert_schedule_frecuency",
-                        "rel": "[[schedule_frecuency|schedule_id|id]]",
+                        "route": ":schedule_id/schedule_frequency",
+                        "in": "insert_schedule_frequency",
+                        "rel": "[[schedule_frequency|schedule_id|id]]",
                         "type": "rel",
-                        "out": "select_schedule_frecuency"
+                        "out": "select_schedule_frequency"
                     },
                     {
                         "method": "PUT",
-                        "route": ":schedule_id/schedule_frecuency/:id",
-                        "in": "insert_schedule_frecuency",
-                        "rel": "[[schedule_frecuency|schedule_id|id]]",
+                        "route": ":schedule_id/schedule_frequency/:id",
+                        "in": "insert_schedule_frequency",
+                        "rel": "[[schedule_frequency|schedule_id|id]]",
                         "type": "rel",
-                        "out": "select_schedule_frecuency"
+                        "out": "select_schedule_frequency"
                     },
                     {
                         "method": "DELETE",
-                        "route": ":schedule_id/schedule_frecuency/:id",
+                        "route": ":schedule_id/schedule_frequency/:id",
                         "in": null,
-                        "rel": "[[schedule_frecuency|schedule_id|id]]",
+                        "rel": "[[schedule_frequency|schedule_id|id]]",
                         "type": "rel",
                         "out": null
                     }
@@ -1100,47 +1100,47 @@
                     "select": {
                         "id": "number|pk",
                         "name": "string",
-                        "frecuency": "[[schedule_frecuency|schedule_id|id]]"
+                        "frequency": "[[schedule_frequency|schedule_id|id]]"
                     },
                     "create": {
                         "id": "number|pk",
                         "name": "string",
-                        "frecuency": "[[schedule_frecuency|schedule_id|id]]"
+                        "frequency": "[[schedule_frequency|schedule_id|id]]"
                     },
                     "insert": {
                         "name": "string",
-                        "frecuency": "[[schedule_frecuency|schedule_id|id]]"
+                        "frequency": "[[schedule_frequency|schedule_id|id]]"
                     },
                     "dashboard": {
                         "id": "number|pk",
                         "name": "string",
-                        "frecuency": "[[schedule_frecuency|schedule_id|id]]"
+                        "frequency": "[[schedule_frequency|schedule_id|id]]"
                     },
-                    "select_schedule_frecuency": {
-                        "id": "uuid|pk",
+                    "select_schedule_frequency": {
+                        "id": "number|pk",
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "start_time": "time",
                         "end_time": "time",
                         "weekday": "number"
                     },
-                    "create_schedule_frecuency": {
-                        "id": "uuid|pk",
+                    "create_schedule_frequency": {
+                        "id": "number|pk",
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "start_time": "time",
                         "end_time": "time",
                         "weekday": "number"
                     },
-                    "insert_schedule_frecuency": {
+                    "insert_schedule_frequency": {
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "start_time": "time",
                         "end_time": "time",
                         "weekday": "number"
                     },
-                    "dashboard_schedule_frecuency": {
-                        "id": "uuid|pk",
+                    "dashboard_schedule_frequency": {
+                        "id": "number|pk",
                         "schedule_id": "number",
                         "start_time": "time",
                         "end_time": "time",
@@ -1353,12 +1353,12 @@
                 }
             },
             {
-                "name": "schedule_frecuency",
-                "alias": "schedule_frecuency",
+                "name": "schedule_frequency",
+                "alias": "schedule_frequency",
                 "fields": [
                     {
                         "name": "id",
-                        "value": "uuid|pk"
+                        "value": "number|pk"
                     },
                     {
                         "name": "schedule_id",
@@ -1388,7 +1388,168 @@
                         "value": "number"
                     }
                 ],
-                "seeder": [],
+                "seeder": [
+                    {
+                        "data": "create",
+                        "values": [
+                            "1",
+                            "1",
+                            "0800",
+                            "1200",
+                            "1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "2",
+                            "1",
+                            "0800",
+                            "1200",
+                            "2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "3",
+                            "1",
+                            "0800",
+                            "1200",
+                            "3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "4",
+                            "1",
+                            "0800",
+                            "1200",
+                            "4"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "5",
+                            "1",
+                            "0800",
+                            "1200",
+                            "5"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "6",
+                            "1",
+                            "0800",
+                            "1200",
+                            "6"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "7",
+                            "2",
+                            "1400",
+                            "1800",
+                            "1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "8",
+                            "2",
+                            "1400",
+                            "1800",
+                            "2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "9",
+                            "2",
+                            "1400",
+                            "1800",
+                            "3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "10",
+                            "2",
+                            "1400",
+                            "1800",
+                            "4"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "11",
+                            "2",
+                            "1400",
+                            "1800",
+                            "5"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "12",
+                            "3",
+                            "2000",
+                            "0600",
+                            "1"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "13",
+                            "3",
+                            "2000",
+                            "0600",
+                            "2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "14",
+                            "3",
+                            "2000",
+                            "0600",
+                            "3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "15",
+                            "3",
+                            "2000",
+                            "0600",
+                            "4"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "16",
+                            "3",
+                            "2000",
+                            "0600",
+                            "5"
+                        ]
+                    }
+                ],
                 "apicustom": [],
                 "datacustom": [
                     {
@@ -1442,7 +1603,7 @@
                 ],
                 "data": {
                     "select": {
-                        "id": "uuid|pk",
+                        "id": "number|pk",
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "start_time": "time",
@@ -1450,7 +1611,7 @@
                         "weekday": "number"
                     },
                     "create": {
-                        "id": "uuid|pk",
+                        "id": "number|pk",
                         "schedule_id": "number",
                         "schedule": "[schedule|id|schedule_id]",
                         "start_time": "time",
@@ -1465,7 +1626,7 @@
                         "weekday": "number"
                     },
                     "dashboard": {
-                        "id": "uuid|pk",
+                        "id": "number|pk",
                         "schedule_id": "number",
                         "start_time": "time",
                         "end_time": "time",
@@ -1541,7 +1702,7 @@
                         "values": [
                             "2",
                             "Atendiendo Emergencia",
-                            "Se recibió una emergencia",
+                            "Se está atendiendo la emergencia",
                             "#ed403c",
                             "0",
                             "2"
@@ -1551,55 +1712,22 @@
                         "data": "create",
                         "values": [
                             "3",
-                            "Buscando supervisor",
-                            "Se recibió una emergencia",
+                            "Atendida y finalizada",
+                            "Se atendió la emergencia",
                             "#f58225",
                             "0",
-                            "2"
+                            "4"
                         ]
                     },
                     {
                         "data": "create",
                         "values": [
                             "4",
-                            "Derivando",
-                            "",
+                            "Cancelada",
+                            "Emergencia cancelada por el usuario",
                             "#f8a51b",
                             "0",
-                            "2"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "5",
-                            "Otros",
-                            "",
-                            "#fef102",
-                            "0",
-                            "2"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "6",
-                            "Anulada",
-                            "",
-                            "#6fc041",
-                            "0",
                             "3"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "7",
-                            "Atendida y finalizada",
-                            "",
-                            "#03a45e",
-                            "0",
-                            "4"
                         ]
                     }
                 ],
@@ -2264,30 +2392,27 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "*dashboard"
+                        "out": "id,name,code,personal_type_id,create_date,update_date"
                     },
                     {
                         "method": "get",
                         "route": "applogin",
                         "query": "code",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,code,personal_type_id,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
-                        "out": "id,name,code,personal_type_id,create_date,update_date"
+                        "out": "*dashboard"
                     },
                     {
                         "method": "get",
@@ -2361,27 +2486,30 @@
                     },
                     {
                         "method": "GET",
-                        "route": "sync",
+                        "route": "dashboard",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "custom_sync"
+                        "out": "dashboard"
                     },
                     {
                         "method": "GET",
                         "route": "applogin",
                         "query": "code",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_applogin"
                     },
                     {
                         "method": "GET",
-                        "route": "dashboard",
+                        "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
-                        "out": "dashboard"
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2564,20 +2692,20 @@
                         "personal_type_id": "number",
                         "personal_type": "[personal_types|id|personal_type_id]"
                     },
+                    "custom_sync": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
                     "custom_applogin": {
                         "id": "uuid|pk",
                         "name": "string",
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
-                        "create_date": "date",
-                        "update_date": "date"
-                    },
-                    "custom_sync": {
-                        "id": "uuid|pk",
-                        "name": "string",
-                        "code": "string",
-                        "personal_type_id": "number",
                         "create_date": "date",
                         "update_date": "date"
                     },
@@ -2781,18 +2909,16 @@
                 "apicustom": [
                     {
                         "method": "get",
-                        "route": "syncfull",
+                        "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,color,image_id,create_date,update_date"
                     },
                     {
                         "method": "get",
-                        "route": "sync",
+                        "route": "syncfull",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,name,min_split_mt,max_split_mt,distance,color,image_id,create_date,update_date"
@@ -2831,19 +2957,21 @@
                 "apis": [
                     {
                         "method": "GET",
-                        "route": "sync",
-                        "query": "",
-                        "in": null,
-                        "type": "custom",
-                        "out": "custom_sync"
-                    },
-                    {
-                        "method": "GET",
                         "route": "syncfull",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_syncfull"
+                    },
+                    {
+                        "method": "GET",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -2993,7 +3121,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_syncfull": {
+                    "custom_sync": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -3004,7 +3132,7 @@
                         "create_date": "date",
                         "update_date": "date"
                     },
-                    "custom_sync": {
+                    "custom_syncfull": {
                         "id": "uuid|pk",
                         "name": "string",
                         "min_split_mt": "number",
@@ -3121,31 +3249,7 @@
                     {
                         "data": "create",
                         "values": [
-                            "4",
-                            "1",
-                            "5"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
                             "5",
-                            "1",
-                            "6"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "6",
-                            "2",
-                            "3"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "7",
                             "2",
                             "4"
                         ]
@@ -3156,94 +3260,6 @@
                             "8",
                             "2",
                             "5"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "9",
-                            "2",
-                            "6"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "10",
-                            "2",
-                            "7"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "11",
-                            "3",
-                            "4"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "12",
-                            "3",
-                            "5"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "13",
-                            "3",
-                            "6"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "14",
-                            "3",
-                            "7"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "15",
-                            "4",
-                            "5"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "16",
-                            "4",
-                            "6"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "17",
-                            "4",
-                            "7"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "18",
-                            "5",
-                            "6"
-                        ]
-                    },
-                    {
-                        "data": "create",
-                        "values": [
-                            "19",
-                            "5",
-                            "7"
                         ]
                     }
                 ],
@@ -3520,7 +3536,6 @@
                         "method": "get",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,route_id,section,lat,lon"
@@ -3544,6 +3559,7 @@
                         "method": "GET",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_sync"
@@ -3798,7 +3814,6 @@
                         "method": "get",
                         "route": "bypersonal",
                         "query": "personal_id",
-                        "rel": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,personal_id,route_id"
@@ -3833,6 +3848,7 @@
                         "method": "GET",
                         "route": "bypersonal",
                         "query": "personal_id",
+                        "rel": "",
                         "in": null,
                         "type": "custom",
                         "out": "custom_bypersonal"
@@ -4480,7 +4496,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4493,6 +4508,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4618,7 +4634,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4641,6 +4656,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -4807,7 +4823,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -4833,6 +4848,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -5146,11 +5162,33 @@
                         "data": "create",
                         "values": [
                             "3",
-                            "Archivada",
-                            "Se archivó la sugerencia",
+                            "En revisión",
+                            "La sugerencie se está revisando",
                             "#e1edd7",
                             "0",
                             "2"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "4",
+                            "Tomar en cuenta",
+                            "La sugerencia es importante y se ha tomado en cuenta",
+                            "#73b2af",
+                            "0",
+                            "4"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "5",
+                            "Aceptar",
+                            "Se tomó en cuenta y no se realizará ninguna acción",
+                            "#888888",
+                            "0",
+                            "4"
                         ]
                     }
                 ],
@@ -5358,8 +5396,32 @@
                         "data": "create",
                         "values": [
                             "2",
+                            "1",
+                            "3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "3",
+                            "1",
+                            "4"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "4",
                             "2",
                             "3"
+                        ]
+                    },
+                    {
+                        "data": "create",
+                        "values": [
+                            "5",
+                            "2",
+                            "4"
                         ]
                     }
                 ],
@@ -5657,7 +5719,6 @@
                         "method": "post",
                         "route": "sync",
                         "query": "",
-                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "id"
@@ -5695,6 +5756,7 @@
                         "method": "POST",
                         "route": "sync",
                         "query": "",
+                        "rel": "",
                         "in": "select",
                         "type": "custom",
                         "out": "custom_sync"
@@ -6038,21 +6100,20 @@
                 "seeder": [],
                 "apicustom": [
                     {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    },
-                    {
                         "method": "get",
                         "route": "suggestionlist",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
+                    },
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
                     }
                 ],
                 "datacustom": [
@@ -6075,6 +6136,15 @@
                 "apilink": [],
                 "apis": [
                     {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
+                    {
                         "method": "GET",
                         "route": "suggestionlist",
                         "query": "",
@@ -6082,14 +6152,6 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_suggestionlist"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -6255,9 +6317,6 @@
                         "session_id": "number",
                         "session": "[session|id|session_id]"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    },
                     "custom_suggestionlist": {
                         "id": "uuid|pk",
                         "title": "string",
@@ -6269,6 +6328,9 @@
                         "date_time": "date",
                         "session_id": "number",
                         "session": "[session|id|session_id]"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
                     },
                     "select_suggestion_images": {
                         "id": "uuid|pk",
@@ -6418,21 +6480,20 @@
                 "seeder": [],
                 "apicustom": [
                     {
-                        "method": "post",
-                        "route": "sync",
-                        "query": "",
-                        "rel": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "id"
-                    },
-                    {
                         "method": "get",
                         "route": "claimlist",
                         "query": "",
                         "in": "",
                         "type": "custom",
                         "out": "id,title,description,lat,lon,records,images,date_time,session_id,session"
+                    },
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
                     }
                 ],
                 "datacustom": [
@@ -6455,6 +6516,15 @@
                 "apilink": [],
                 "apis": [
                     {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
+                    {
                         "method": "GET",
                         "route": "claimlist",
                         "query": "",
@@ -6462,14 +6532,6 @@
                         "in": null,
                         "type": "custom",
                         "out": "custom_claimlist"
-                    },
-                    {
-                        "method": "POST",
-                        "route": "sync",
-                        "query": "",
-                        "in": "select",
-                        "type": "custom",
-                        "out": "custom_sync"
                     },
                     {
                         "method": "GET",
@@ -6635,9 +6697,6 @@
                         "session": "[session|id|session_id]",
                         "session_id": "number"
                     },
-                    "custom_sync": {
-                        "id": "uuid|pk"
-                    },
                     "custom_claimlist": {
                         "id": "uuid|pk",
                         "title": "string",
@@ -6649,6 +6708,9 @@
                         "date_time": "date",
                         "session_id": "number",
                         "session": "[session|id|session_id]"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
                     },
                     "select_claims_images": {
                         "id": "uuid|pk",
