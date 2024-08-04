@@ -347,7 +347,13 @@ class CtrlApi{
 	}
 	
     async appendSubquerys(content,data_fields,req,parent_data_name,query_parent,typerel, parent_group){
-        //console.log("-----appendSubquerys.req:",req);    
+        console.log("-----appendSubquerys-----");    
+		//console.log("req:",req);
+	/*	console.log("parent_data_name:",parent_data_name);
+		console.log("query_parent:",query_parent);
+		console.log("data_fields:",data_fields);
+		console.log("typerel:",typerel);*/
+		//console.log("parent_group:",parent_group);
         //console.log("--start---parent_data_name:",parent_data_name);    
         let me = this;
         
@@ -415,6 +421,9 @@ class CtrlApi{
             let chain_data = false;
             //console.log("r.table",r.table);
             //console.log("relGroup",relGroup);
+			/*console.log("r.table",r.table);
+			console.log("relGroup.data",Object.keys(relGroup.data));
+			console.log("relGroup.data.hasOwnProperty.parent_data_name",parent_data_name );*/
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
 				chain_data=true;               
             }
@@ -424,9 +433,15 @@ class CtrlApi{
             if (chain_data){
                 f = me.toFields(relGroup.data[parent_data_name]);
                 fr = relGroup.data[parent_data_name];
-            }else{
-                f = me.toFields(relGroup.data['select']);
-                fr = relGroup.data['select'];
+            }else{				
+				/*if( parent_data_name == ":id"){
+					f = me.toFields(relGroup.data['select']);
+                	fr = relGroup.data['select'];
+					parent_data_name = "--onlyone--";
+				}else{*/
+					f = me.toFields(relGroup.data['select']);
+					fr = relGroup.data['select'];
+				//}
             }
              /*
 
@@ -450,7 +465,7 @@ class CtrlApi{
 //			console.log ("parent_rel_query",parent_rel_query);
             let relQuery = `select ${f} from ${relGroup.name} where ${r.field} in (${query_parent_build}) ${findcondition.replaceAll('WHERE',' AND ')}`;
 
-            //console.log("----relQuery: " , relQuery);
+            console.log("----relQuery: " , relQuery);
            // throw console.log("here");
 			if(idArr.length == 0)
 				return content;
@@ -470,8 +485,8 @@ class CtrlApi{
                 console.log("--fr ",fr);		
                 console.log("--chain_data ",chain_data);	
                 console.log("--data_fields ",data_fields);		
-                console.log("--req_query_rel ",req_query_rel);			
-                */
+                console.log("--req_query_rel ",req_query_rel);			*/
+                
                 let subcontent;
 			    if (chain_data || req_query_rel.query != undefined ) 
                     subcontent = await me.appendSubquerys(cc[r.name],fr,req_query_rel,parent_data_name,parent_rel_query,typerel, relGroup);
@@ -1043,8 +1058,9 @@ class CtrlApi{
                         respuesta.content = me.database.db.prepare(`select ${f} from ${group.name} ${findcondition} ORDER BY ${sort} ${descending} `).all();
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
-						
-                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api.route, query_parent,null, group);
+						let api_route = api.route;
+						if( api.hasOwnProperty('odata')) api_route = api['odata'];
+                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api_route, query_parent,null, group);
                         
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -1062,9 +1078,10 @@ class CtrlApi{
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id::`;
 						console.log(" ----- GET ALL -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
-			
+						let api_route = api.route;
+						if( api.hasOwnProperty('odata')) api_route = api['odata'];
 
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api.route,query_parent,null, group);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api_route,query_parent,null, group);
 						console.log(" ----- GET ALL END -----");
                     }
                     me.contentACamelCase(respuesta);

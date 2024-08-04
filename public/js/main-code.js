@@ -675,7 +675,7 @@ function toJson(texto){
                     acLink = {name: Tabs[2].trim().replaceAll("[","").replaceAll("]",""),attributes:[]};
                     acDb.apiconn.push(acLink);
                 }else{
-                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[],apilink:[]};
+                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],overdata:[],datacustom:[],apilink:[]};
                     acDb.groups.push(acGroup);}
                 return;
             }            
@@ -693,13 +693,17 @@ function toJson(texto){
                     acLink = {name: Tabs[2].trim().replaceAll("[","").replaceAll("]",""),attributes:[]};
                     acDb.apiconn.push(acLink);
                 }else{
-                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],datacustom:[],apilink:[]};
+                    acGroup = {name: Tabs[2].trim(),alias: Tabs[2].trim(), fields:[],seeder:[],apicustom:[],overdata:[],datacustom:[],apilink:[]};
                     acDb.groups.push(acGroup);}                    
                 return;
             }            
             if (cTabs == 3){
                 modo="field";
-                let values = Tabs[3].trim().split(":",2);
+                //let values = Tabs[3].trim().split(":",2);
+				let values = [];
+                console.log("Tabs[3]",Tabs[3]);
+				values[0] = Tabs[3].trim().match(/^[a-z0-9\_\]\[]*(?=:)/)[0];
+				values[1] = Tabs[3].trim().match(/(?<=^[a-z0-9\_\]\[]*\:).*/)[0];
                 console.log("line",l);
                 console.log("Tabs",Tabs);
                 console.log("values",values,l);           
@@ -722,6 +726,10 @@ function toJson(texto){
                 }
                 if (values[0].trim() == "[data]"){
                     acGroup.datacustom.push(dataCustomFormat(values[1].trim().toLowerCase()));
+                    return;
+                }
+                if (values[0].trim() == "[odata]"){
+                    acGroup.overdata.push(overdataFormat(values[1].trim().toLowerCase()));
                     return;
                 }
                 if (values[0].trim() == "[url]"){
@@ -756,8 +764,9 @@ function toJson(texto){
         d.groups.forEach( g => {
             let apilink  = getAllApislinks(g.apilink);
             let grouptemp = formatearArrayRel( g, d.groups );
+			grouptemp = setoverData(grouptemp);
             g['apis'] = grouptemp.apis;
-            g['data'] = grouptemp.data;    
+            g['data'] = grouptemp.data;
 			g['apilink'] = apilink;        
         });
     });
@@ -766,6 +775,20 @@ function toJson(texto){
    // generarPlant(toPlants(arDb));
     console.log(`arDb: `, arDb);
     return arDb;
+}
+function setoverData(group){
+	let overdata = group.overdata;
+	if (overdata == undefined) return group;
+	if (overdata.length==0) return group;
+	overdata.forEach( od => {
+		group.apis.forEach(api=>{
+			console.log("od.route",od.route, api.route);
+			console.log("api.method",api.method, od.method );
+			if (api.route == od.route && api.method == od.method)
+				api['odata'] = od.data;
+		});
+	});
+	return group;
 }
 function formatLink(apiconn){
 	let apiconsFormatter = {};
@@ -819,9 +842,11 @@ function getAllApis(group,customApi,database,grp){
 			if (tempRelGroup){				
 				group.data[api_out]={};
 				let gcd = grp.datacustom.find(g=>g.name==api_out);
+				console.log("api_out",api_out);
 				console.log("gcd",gcd);
-				gcd.fields.forEach(f => {
+				gcd.fields.forEach(f => {					
 					let field = tempRelGroup.fields.find( fff=> fff.name == f);
+					console.log("f",f);
 					console.log("field",field);
 					group.data[api_out][f] = field.value;
 				});
@@ -840,6 +865,17 @@ function getAllApis(group,customApi,database,grp){
         
     } );
     return apis;
+}
+function overdataFormat(value){
+	let options = value.split("|");
+	let objdata = {};
+	options.forEach(op => {		
+        let values = op.trim().split("=");
+        if (values[0].trim()=="method") objdata['method'] = values[1].trim().toUpperCase();
+        if (values[0].trim()=="route") objdata['route'] = values[1].trim();
+        if (values[0].trim()=="data") objdata['data'] = values[1].trim();
+	});	
+    return objdata;
 }
 function dataCustomFormat(value){
     let options = value.split("|");
@@ -1197,8 +1233,16 @@ function toHuman(dbs){
                     api_custom_rel.push(`\n\t\t\t[api]:${Object.keys(data).map(dkey=>`${dkey}=${data[dkey]}`).join("|")}`);
                 });
             }
-
 			testX += api_custom_rel.join(""); 
+			let overdata_array = [];
+            if (group.overdata!=undefined){                
+                group.overdata.forEach(data => {
+                    overdata_array.push(`\n\t\t\t[odata]:${Object.keys(data).map(dkey=>`${dkey}=${data[dkey]}`).join("|")}`);
+                });
+				testX += overdata_array.join(""); 
+            }
+
+			
 
             testX += `\n\n`;             
         });
