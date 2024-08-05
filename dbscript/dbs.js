@@ -1058,6 +1058,14 @@
                             "name",
                             "frequency"
                         ]
+                    },
+                    {
+                        "name": "personalfindsel",
+                        "fields": [
+                            "id",
+                            "name",
+                            "frequency"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -1154,6 +1162,11 @@
                         "frequency": "[[schedule_frequency|schedule_id|id]]"
                     },
                     "dashboard": {
+                        "id": "number|pk",
+                        "name": "string",
+                        "frequency": "[[schedule_frequency|schedule_id|id]]"
+                    },
+                    "personalfindsel": {
                         "id": "number|pk",
                         "name": "string",
                         "frequency": "[[schedule_frequency|schedule_id|id]]"
@@ -2434,6 +2447,21 @@
                             "ownfield": "id",
                             "array": true
                         }
+                    },
+                    {
+                        "name": "schedule_id",
+                        "value": "number"
+                    },
+                    {
+                        "name": "schedule",
+                        "value": "[schedule|id|schedule_id]",
+                        "rel": {
+                            "index": "schedule",
+                            "name": "schedule",
+                            "field": "id",
+                            "ownfield": "schedule_id",
+                            "array": false
+                        }
                     }
                 ],
                 "seeder": [],
@@ -2476,7 +2504,13 @@
                         "relroute": ":personal_id/assignmentssync"
                     }
                 ],
-                "overdata": [],
+                "overdata": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "data": "personalfindsel"
+                    }
+                ],
                 "datacustom": [
                     {
                         "name": "dashboard",
@@ -2514,6 +2548,22 @@
                             "id",
                             "personal_type_id",
                             "personal_type"
+                        ]
+                    },
+                    {
+                        "name": "personalfindsel",
+                        "fields": [
+                            "id",
+                            "name",
+                            "code",
+                            "personal_type_id",
+                            "image_id",
+                            "create_date",
+                            "update_date",
+                            "schedule_id",
+                            "schedule",
+                            "assignments",
+                            "sessions"
                         ]
                     }
                 ],
@@ -2565,7 +2615,8 @@
                         "route": "",
                         "in": null,
                         "type": "auto",
-                        "out": "select"
+                        "out": "select",
+                        "odata": "personalfindsel"
                     },
                     {
                         "method": "GET",
@@ -2688,7 +2739,9 @@
                         "create_date": "date",
                         "update_date": "date",
                         "assignments": "[[assignments|personal_id|id]]",
-                        "sessions": "[[session|personal_id|id]]"
+                        "sessions": "[[session|personal_id|id]]",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -2701,7 +2754,9 @@
                         "create_date": "date",
                         "update_date": "date",
                         "assignments": "[[assignments|personal_id|id]]",
-                        "sessions": "[[session|personal_id|id]]"
+                        "sessions": "[[session|personal_id|id]]",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]"
                     },
                     "insert": {
                         "name": "string",
@@ -2713,7 +2768,9 @@
                         "create_date": "date",
                         "update_date": "date",
                         "assignments": "[[assignments|personal_id|id]]",
-                        "sessions": "[[session|personal_id|id]]"
+                        "sessions": "[[session|personal_id|id]]",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]"
                     },
                     "dashboard": {
                         "id": "uuid|pk",
@@ -2740,6 +2797,19 @@
                         "id": "uuid|pk",
                         "personal_type_id": "number",
                         "personal_type": "[personal_types|id|personal_type_id]"
+                    },
+                    "personalfindsel": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "code": "string",
+                        "personal_type_id": "number",
+                        "image_id": "number",
+                        "create_date": "date",
+                        "update_date": "date",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "assignments": "[[assignments|personal_id|id]]",
+                        "sessions": "[[session|personal_id|id]]"
                     },
                     "custom_applogin": {
                         "id": "uuid|pk",
