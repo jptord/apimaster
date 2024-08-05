@@ -53,6 +53,16 @@ class CtrlApi{
         });
         return strArr.join(",");
     }
+    toFieldsXor(data,req_body){
+        let strArr = [];
+        Object.keys(data).forEach( c => {
+            //evitar las subconsultas
+            if (!data[c].includes('[[') && !data[c].includes('[') ) 
+                if ( req_body.hasOwnProperty(c))
+                    strArr.push(c);
+        });
+        return strArr.join(",");
+    }
     //incluye relaciones y campos, solo para subquerys, como el out de api
     toFieldsAll(data){
         let strArr = [];
@@ -77,11 +87,13 @@ class CtrlApi{
     toValuesUpd(data,req){
         let strArr = [];
         Object.keys(data).forEach( c => {
-            if (!data[c].includes('[[') && !data[c].includes('[') ) 
+            if (!data[c].includes('[[') && !data[c].includes('[') ) {                
+                if (!req.hasOwnProperty(c)) return;
 				if (req[c]==null || req[c]=='null')
 					strArr.push(`${c} = null`);
 				else
                 	strArr.push(`${c} = '${req[c]}'`);
+            }
         });
         return strArr.join(",");
     }
@@ -1239,8 +1251,14 @@ class CtrlApi{
                         pagination: { pages : 0, rowsNumber: 0 }
                     };
                     let f = me.toFields(group.data[api.in]);
+                    //let f = me.toFieldsXor(group.data[api.in],req.body);
+                    
+                    console.log("req.body: ", req.body);
                     let v = me.toValuesUpd(group.data[api.in],me.contentASnakeCase(req.body));
+                    console.log("v: ", v);
                     let id = req.params.id;
+                    let sqlUpdate = `UPDATE ${group.name} SET ${v} WHERE id = '${id}'`;
+					console.log("sqlUpdate: ", sqlUpdate);
                     me.database.db.prepare(`UPDATE ${group.name} SET ${v} WHERE id = '${id}'`).run();
                     respuesta.content = req.body;
                     res.end(JSON.stringify(respuesta));
@@ -1255,7 +1273,9 @@ class CtrlApi{
                     };
                     group.data[api.in][rel.field] = "number";
                     req.body[rel.field] = req.params[rel.field];
-                    let f = me.toFields(group.data[api.in]);
+                    let f = me.toFields(group.data[api.in]);                    
+                    //let f = me.toFieldsXor(group.data[api.in],req.body);
+
                     let v = me.toValuesUpd(group.data[api.in],req.body);
                     let id = req.params.id;
 					let sqlUpdate = `UPDATE ${rel.table} SET ${v} WHERE id = '${id}'`;
