@@ -239,9 +239,9 @@ class CtrlApi{
 	}
 	transformTxt (txt){
 		let lines = txt.split("\n");		
-		return lines.map(l=>{
+		return lines.map(l=>{                  
 			let sp = l.split("\t");
-            if (sp.length<4)return;
+            //if (sp.length<4)return;
 			return {t:Number(sp[0]),lat:Number(sp[1]),lon:Number(sp[2]),bat:Number(sp[3]),acc:Number(sp[5])}
 		});
 	}
