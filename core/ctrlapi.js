@@ -241,6 +241,7 @@ class CtrlApi{
 		let lines = txt.split("\n");		
 		return lines.map(l=>{
 			let sp = l.split("\t");
+            if (sp.length<4)return;
 			return {t:Number(sp[0]),lat:Number(sp[1]),lon:Number(sp[2]),bat:Number(sp[3]),acc:Number(sp[5])}
 		});
 	}
@@ -383,6 +384,7 @@ class CtrlApi{
 					r[special_b64zip[i]] = await me.unzip(r[special_b64zip[i]]);
 					r[special_b64zip[i]] = me.transformTxt(r[special_b64zip[i]]);
 					r['coords'] = r[special_b64zip[i]].map(s=>[s.lon, s.lat]);
+                    r[special_b64zip[i]] = ""; //para que muestre los tracks
 				}
 				resolve(r);
 			} );
