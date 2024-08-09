@@ -368,6 +368,7 @@ class CtrlApi{
 		console.log("typerel:",typerel);*/
 		//console.log("parent_group:",parent_group);
         //console.log("--start---parent_data_name:",parent_data_name);    
+        
         let me = this;
         
         let relations = this.toRelations(data_fields);
@@ -439,13 +440,13 @@ class CtrlApi{
 			console.log("relGroup.data",Object.keys(relGroup.data));
 			console.log("relGroup.data.hasOwnProperty.parent_data_name",parent_data_name );*/
             if ( relGroup.data.hasOwnProperty(parent_data_name)){
-				chain_data=true;               
+				chain_data=true;
             }
             //console.log("is_chain_",chain_data, data_fields);
             //console.log("parent_data_name",parent_data_name);
             let f, fr;
             if (chain_data){
-                f = me.toFields(relGroup.data[parent_data_name]);
+                f = me.toFields(relGroup.data[parent_data_name]);                
                 fr = relGroup.data[parent_data_name];
             }else{				
 				/*if( parent_data_name == ":id"){
@@ -1073,8 +1074,11 @@ class CtrlApi{
                         
 						let query_parent = `select ${tableAlias}.::parent_id:: from ${group.name} as ${tableAlias} ${findconditionAlias} group by ${tableAlias}.::parent_id:: LIMIT ${offset},${size}`;
 						let api_route = api.route;
-						if( api.hasOwnProperty('odata')) api_route = api['odata'];
-                        respuesta.content = await me.appendSubquerys(respuesta.content, group.data[api.out], req, api_route, query_parent,null, group);
+                        let data_field = group.data[api.out];
+
+						if( api.hasOwnProperty('odata')) { api_route = api['odata']; data_field = group.data[api['odata']]; };
+                        
+                        respuesta.content = await me.appendSubquerys(respuesta.content, data_field, req, api_route, query_parent,null, group);
                         
                         if (req.query.keyword != undefined){
                             if (req.query.keyword != ""){
@@ -1093,9 +1097,16 @@ class CtrlApi{
 						console.log(" ----- GET ALL -----");
                         let deep = req.query['deep'] != undefined ? req.query['deep']:0;
 						let api_route = api.route;
-						if( api.hasOwnProperty('odata')) api_route = api['odata'];
+                        let data_field = group.data[api.out];
+                        console.log(" group.data",group.data);
+                        console.log(" api.hasOwnProperty('odata')", api.hasOwnProperty('odata'));
+                        console.log(" api_route",api_route);
+                        console.log(" data_field",data_field);
+						if( api.hasOwnProperty('odata')) { api_route = api['odata']; data_field = group.data[api['odata']]; };
+                        console.log(" api_route",api_route);
+                        console.log(" data_field",data_field);
 
-                        respuesta.content = await me.appendSubquerys(respuesta.content,group.data[api.out],req, api_route,query_parent,null, group);
+                        respuesta.content = await me.appendSubquerys(respuesta.content,data_field,req, api_route,query_parent,null, group);
 						console.log(" ----- GET ALL END -----");
                     }
                     me.contentACamelCase(respuesta);

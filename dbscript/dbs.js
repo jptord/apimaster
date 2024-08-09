@@ -2385,6 +2385,14 @@
                         "value": "string"
                     },
                     {
+                        "name": "lastname",
+                        "value": "string"
+                    },
+                    {
+                        "name": "firstname",
+                        "value": "string"
+                    },
+                    {
                         "name": "code",
                         "value": "string"
                     },
@@ -2514,6 +2522,8 @@
                         "fields": [
                             "id",
                             "name",
+                            "firstname",
+                            "lastname",
                             "code",
                             "assignments"
                         ]
@@ -2532,6 +2542,8 @@
                         "fields": [
                             "id",
                             "name",
+                            "firstname",
+                            "lastname",
                             "code",
                             "personal_type_id",
                             "image_id",
@@ -2552,6 +2564,8 @@
                         "fields": [
                             "id",
                             "name",
+                            "firstname",
+                            "lastname",
                             "code",
                             "personal_type_id",
                             "image_id",
@@ -2564,16 +2578,7 @@
                         ]
                     }
                 ],
-                "apilink": [
-                    {
-                        "method": "GET",
-                        "con": "tre_personal_persons",
-                        "filter": "code",
-                        "filterin": "code",
-                        "addfield": "trebol",
-                        "type": "add"
-                    }
-                ],
+                "apilink": [],
                 "apis": [
                     {
                         "method": "GET",
@@ -2731,6 +2736,8 @@
                     "select": {
                         "id": "uuid|pk",
                         "name": "string",
+                        "lastname": "string",
+                        "firstname": "string",
                         "code": "string",
                         "image_id": "number",
                         "image": "[images|id|image_id]",
@@ -2746,6 +2753,8 @@
                     "create": {
                         "id": "uuid|pk",
                         "name": "string",
+                        "lastname": "string",
+                        "firstname": "string",
                         "code": "string",
                         "image_id": "number",
                         "image": "[images|id|image_id]",
@@ -2760,6 +2769,8 @@
                     },
                     "insert": {
                         "name": "string",
+                        "lastname": "string",
+                        "firstname": "string",
                         "code": "string",
                         "image_id": "number",
                         "image": "[images|id|image_id]",
@@ -2775,6 +2786,8 @@
                     "dashboard": {
                         "id": "uuid|pk",
                         "name": "string",
+                        "firstname": "string",
+                        "lastname": "string",
                         "code": "string",
                         "assignments": "[[assignments|personal_id|id]]"
                     },
@@ -2787,6 +2800,8 @@
                     "suggestionlist": {
                         "id": "uuid|pk",
                         "name": "string",
+                        "firstname": "string",
+                        "lastname": "string",
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
@@ -2801,6 +2816,8 @@
                     "personalfindsel": {
                         "id": "uuid|pk",
                         "name": "string",
+                        "firstname": "string",
+                        "lastname": "string",
                         "code": "string",
                         "personal_type_id": "number",
                         "image_id": "number",
@@ -2871,6 +2888,14 @@
                         "personal_id": "number",
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
+                    },
+                    "routelist_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
                     },
                     "custom_bypersonal_assignments": {
                         "id": "uuid|pk",
@@ -3022,10 +3047,29 @@
                             "ownfield": "id",
                             "array": true
                         }
+                    },
+                    {
+                        "name": "assignments",
+                        "value": "[[assignments|route_id|id]]",
+                        "rel": {
+                            "index": "assignments",
+                            "name": "assignments",
+                            "field": "route_id",
+                            "ownfield": "id",
+                            "array": true
+                        }
                     }
                 ],
                 "seeder": [],
                 "apicustom": [
+                    {
+                        "method": "get",
+                        "route": "routelist",
+                        "query": "",
+                        "in": "",
+                        "type": "custom",
+                        "out": "id,name,distance,frequency,district_id,district,color,points,assignments"
+                    },
                     {
                         "method": "get",
                         "route": "sync",
@@ -3043,7 +3087,13 @@
                         "out": "id,name,min_split_mt,max_split_mt,distance,color,image_id,create_date,update_date"
                     }
                 ],
-                "overdata": [],
+                "overdata": [
+                    {
+                        "method": "GET",
+                        "route": "",
+                        "data": "routefindsel"
+                    }
+                ],
                 "datacustom": [
                     {
                         "name": "dashboard",
@@ -3071,6 +3121,24 @@
                             "create_date",
                             "update_date"
                         ]
+                    },
+                    {
+                        "name": "routefindsel",
+                        "fields": [
+                            "id",
+                            "name",
+                            "description",
+                            "distance",
+                            "color",
+                            "min_split_mt",
+                            "max_split_mt",
+                            "district_id",
+                            "district",
+                            "frequency",
+                            "points",
+                            "create_date",
+                            "update_date"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -3095,10 +3163,20 @@
                     },
                     {
                         "method": "GET",
+                        "route": "routelist",
+                        "query": "",
+                        "rel": "",
+                        "in": null,
+                        "type": "custom",
+                        "out": "custom_routelist"
+                    },
+                    {
+                        "method": "GET",
                         "route": "",
                         "in": null,
                         "type": "auto",
-                        "out": "select"
+                        "out": "select",
+                        "odata": "routefindsel"
                     },
                     {
                         "method": "GET",
@@ -3165,6 +3243,46 @@
                         "route": ":route_id/points/:id",
                         "in": null,
                         "rel": "[[points|route_id|id]]",
+                        "type": "rel",
+                        "out": null
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":route_id/assignments",
+                        "in": null,
+                        "rel": "[[assignments|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_assignments"
+                    },
+                    {
+                        "method": "GET",
+                        "route": ":route_id/assignments/:id",
+                        "in": null,
+                        "rel": "[[assignments|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_assignments"
+                    },
+                    {
+                        "method": "POST",
+                        "route": ":route_id/assignments",
+                        "in": "insert_assignments",
+                        "rel": "[[assignments|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_assignments"
+                    },
+                    {
+                        "method": "PUT",
+                        "route": ":route_id/assignments/:id",
+                        "in": "insert_assignments",
+                        "rel": "[[assignments|route_id|id]]",
+                        "type": "rel",
+                        "out": "select_assignments"
+                    },
+                    {
+                        "method": "DELETE",
+                        "route": ":route_id/assignments/:id",
+                        "in": null,
+                        "rel": "[[assignments|route_id|id]]",
                         "type": "rel",
                         "out": null
                     }
@@ -3185,7 +3303,8 @@
                         "district_id": "number",
                         "color": "string",
                         "district": "[district|id|district_id]",
-                        "points": "[[points|route_id|id]]"
+                        "points": "[[points|route_id|id]]",
+                        "assignments": "[[assignments|route_id|id]]"
                     },
                     "create": {
                         "id": "uuid|pk",
@@ -3202,7 +3321,8 @@
                         "district_id": "number",
                         "color": "string",
                         "district": "[district|id|district_id]",
-                        "points": "[[points|route_id|id]]"
+                        "points": "[[points|route_id|id]]",
+                        "assignments": "[[assignments|route_id|id]]"
                     },
                     "insert": {
                         "name": "string",
@@ -3218,7 +3338,8 @@
                         "district_id": "number",
                         "color": "string",
                         "district": "[district|id|district_id]",
-                        "points": "[[points|route_id|id]]"
+                        "points": "[[points|route_id|id]]",
+                        "assignments": "[[assignments|route_id|id]]"
                     },
                     "dashboard": {
                         "id": "uuid|pk",
@@ -3240,6 +3361,32 @@
                         "distance": "number",
                         "create_date": "date",
                         "update_date": "date"
+                    },
+                    "routefindsel": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "description": "string",
+                        "distance": "number",
+                        "color": "string",
+                        "min_split_mt": "number",
+                        "max_split_mt": "number",
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "frequency": "string",
+                        "points": "[[points|route_id|id]]",
+                        "create_date": "date",
+                        "update_date": "date"
+                    },
+                    "custom_routelist": {
+                        "id": "uuid|pk",
+                        "name": "string",
+                        "distance": "number",
+                        "frequency": "string",
+                        "district_id": "number",
+                        "district": "[district|id|district_id]",
+                        "color": "string",
+                        "points": "[[points|route_id|id]]",
+                        "assignments": "[[assignments|route_id|id]]"
                     },
                     "custom_sync": {
                         "id": "uuid|pk",
@@ -3299,6 +3446,63 @@
                         "section": "number",
                         "lat": "number",
                         "lon": "number"
+                    },
+                    "select_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "create_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "insert_assignments": {
+                        "personal_id": "number",
+                        "personal": "[personal|id|personal_id]",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "dashboard_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "assignmentsyncselect_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "route": "[routes|id|route_id]"
+                    },
+                    "routelist_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
+                    },
+                    "custom_bypersonal_assignments": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number"
                     }
                 }
             },
@@ -3965,6 +4169,17 @@
                             "route_id",
                             "route"
                         ]
+                    },
+                    {
+                        "name": "routelist",
+                        "fields": [
+                            "id",
+                            "personal_id",
+                            "route_id",
+                            "schedule_id",
+                            "schedule",
+                            "tracks"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -4099,6 +4314,14 @@
                         "route_id": "number",
                         "route": "[routes|id|route_id]"
                     },
+                    "routelist": {
+                        "id": "uuid|pk",
+                        "personal_id": "number",
+                        "route_id": "number",
+                        "schedule_id": "number",
+                        "schedule": "[schedule|id|schedule_id]",
+                        "tracks": "[[tracks|assignment_id|id]]"
+                    },
                     "custom_bypersonal": {
                         "id": "uuid|pk",
                         "personal_id": "number",
@@ -4152,6 +4375,14 @@
                         "trackb64": "b64zip"
                     },
                     "dashboard_tracks": {
+                        "id": "uuid|pk",
+                        "assignment_id": "number",
+                        "abandoned": "boolean",
+                        "complete": "number",
+                        "start_date": "date",
+                        "end_date": "date"
+                    },
+                    "routelist_tracks": {
                         "id": "uuid|pk",
                         "assignment_id": "number",
                         "abandoned": "boolean",
@@ -4366,7 +4597,16 @@
                     }
                 ],
                 "seeder": [],
-                "apicustom": [],
+                "apicustom": [
+                    {
+                        "method": "post",
+                        "route": "sync",
+                        "query": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "id"
+                    }
+                ],
                 "overdata": [],
                 "datacustom": [
                     {
@@ -4385,6 +4625,15 @@
                 ],
                 "apilink": [],
                 "apis": [
+                    {
+                        "method": "POST",
+                        "route": "sync",
+                        "query": "",
+                        "rel": "",
+                        "in": "select",
+                        "type": "custom",
+                        "out": "custom_sync"
+                    },
                     {
                         "method": "GET",
                         "route": "",
@@ -4463,6 +4712,9 @@
                         "comments": "string",
                         "claim_state_id": "number",
                         "claim_state": "[claim_states|id|claim_state_id]"
+                    },
+                    "custom_sync": {
+                        "id": "uuid|pk"
                     }
                 }
             },
@@ -4984,6 +5236,17 @@
                             "start_date",
                             "end_date"
                         ]
+                    },
+                    {
+                        "name": "routelist",
+                        "fields": [
+                            "id",
+                            "assignment_id",
+                            "abandoned",
+                            "complete",
+                            "start_date",
+                            "end_date"
+                        ]
                     }
                 ],
                 "apilink": [],
@@ -5082,6 +5345,14 @@
                         "trackb64": "b64zip"
                     },
                     "dashboard": {
+                        "id": "uuid|pk",
+                        "assignment_id": "number",
+                        "abandoned": "boolean",
+                        "complete": "number",
+                        "start_date": "date",
+                        "end_date": "date"
+                    },
+                    "routelist": {
                         "id": "uuid|pk",
                         "assignment_id": "number",
                         "abandoned": "boolean",
@@ -6304,7 +6575,7 @@
                         ]
                     },
                     {
-                        "name": "sugestionfindsel",
+                        "name": "suggestionfindsel",
                         "fields": [
                             "id",
                             "title",
@@ -6504,7 +6775,7 @@
                         "session_id": "number",
                         "session": "[session|id|session_id]"
                     },
-                    "sugestionfindsel": {
+                    "suggestionfindsel": {
                         "id": "uuid|pk",
                         "title": "string",
                         "description": "string",
@@ -7031,6 +7302,9 @@
                         "comments": "string",
                         "claim_state_id": "number",
                         "claim_state": "[claim_states|id|claim_state_id]"
+                    },
+                    "custom_sync_claim_states_record": {
+                        "id": "uuid|pk"
                     }
                 }
             }
